@@ -1,77 +1,90 @@
-<!DOCTYPE html>
 <html>
-<head>
-  <meta charset='utf-8'>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Picture Show Introduction</title>
+        <link href="assets/css/show.css" type="text/css" rel="stylesheet" />
+        <link href="assets/css/prettify.css" type="text/css" rel="stylesheet" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0">
+       <div class="container"><h1><a href="https://github.com/softprops/picture-show" >Picture Show</a></h1><h2>ためしてみたお（ ＾ω＾）</h2></div>
+      </div><div class="content" id="slide-1">
+       <div class="container"><p><a href="https://twitter.com/#!/yuroyoro" >@yuroyoro</a> さんが、
+</p><p><a href="http://dl.dropbox.com/u/261418/20110828_scalaconf01_introducing_unfiltered_and_finagle/index.html" >Scala会議の発表</a>で使っていたあれですよあれ
+</p></div>
+      </div><div class="content" id="slide-2">
+       <div class="container"><iframe src="https://github.com/softprops/picture-show" height="400px" width="1000px"></iframe>
+<h4>↑ iframe で他のサイト埋め込みとかできちゃう！</h4></div>
+      </div><div class="content" id="slide-3">
+       <div class="container"><p><a href="http://ja.wikipedia.org/wiki/Markdown" >Markdown</a> っていう、githubなどで使われてるマークアップ言語でスライドが作れます(｀・ω・´)
+</p></div>
+      </div><div class="content" id="slide-4">
+       <div class="container"><p>jqueryのアニメーションがカッコイイですね
+</p></div>
+      </div><div class="content" id="slide-5">
+       <div class="container"><h2>参考:</h2><h3><a href="https://github.com/softprops/" >Picture Show 自体を作った人</a>による、<a href="http://unfiltered.lessis.me/" >Unfiltered</a>っていうScalaのWeb Framework紹介のスライド</h3><p><a href="http://unfiltered.lessis.me/" >http://unfiltered.lessis.me/</a>
+</p></div>
+      </div><div class="content" id="slide-6">
+       <div class="container"><p>一番便利なのは、シンタックスハイライトを有効にしたソースコードが超簡単に埋め込めることでしょうか
+</p></div>
+      </div><div class="content" id="slide-7">
+       <div class="container"><pre><code class="prettyprint lang-scala">
+scalaVersion := &quot;2.9.0&quot;
 
-  <title>xuwei-k/slides @ GitHub</title>
+addCompilerPlugin(&quot;org.scala-tools.sxr&quot; % &quot;sxr_2.9.0&quot; % &quot;0.2.7&quot;)
 
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #1dd501;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #e22afe; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #e22afe; }
-    h3 { text-align: center; color: #e22afe; }
-    a { color: #e22afe; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
+libraryDependencies &lt;+= scalaVersion(
+  &quot;org.scala-lang&quot; % &quot;scala-compiler&quot; % _ 
+)
 
-<body>
-  <a href="http://github.com/xuwei-k/slides"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+</code></pre></div>
+      </div><div class="content" id="slide-8">
+       <div class="container"><p>シンタックスハイライトは
+Scalaだけじゃないですよ!
+</p><pre><code class="prettyprint lang-ruby">
+class A 
+  def hello
+    &quot;hello&quot;
+  end
+end
 
-  <div id="container">
-
-    <div class="download">
-      <a href="http://github.com/xuwei-k/slides/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/xuwei-k/slides/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
-    <h1><a href="http://github.com/xuwei-k/slides">slides</a>
-      <span class="small">by <a href="http://github.com/xuwei-k">xuwei-k</a></span></h1>
-
-    <div class="description">
-      my slides
-    </div>
-
-    <h2>Authors</h2>
-<p>xuewi-k (6b656e6a69@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>kenji yoshida (6b656e6a69@gmail.com)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/xuwei-k/slides/zipball/master">zip</a> or
-      <a href="http://github.com/xuwei-k/slides/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/xuwei-k/slides</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/xuwei-k/slides">xuwei-k/slides</a>
-    </div>
-
-  </div>
-
-  
-</body>
-</html>
+</code></pre></div>
+      </div><div class="content" id="slide-9">
+       <div class="container"><p>画像の埋め込みもできます！
+</p><p><img  src="./scalachan.jpg" alt="Scalaちゃん" />
+</p></div>
+      </div><div class="content" id="slide-10">
+       <div class="container"><p>インストールには<a href="https://github.com/n8han/conscript" >conscript</a>
+</p><p>っていうものを使います
+</p><iframe src="https://github.com/n8han/conscript" height="300" width="1000"></iframe>
+<h4>インストール含めその他色々くわしい使い方は、<a href="https://github.com/softprops/picture-show/blob/master/README.md" >picture-show の README</a> 読んでね</h4></div>
+      </div><div class="content" id="slide-11">
+       <div class="container"><p><a href="https://github.com/softprops/picture-show/" >Picture Show</a> 自体はScalaで作られてますが、単にコマンドラインから使うだけなので、Scalaがわからなくてもつかえます
+</p></div>
+      </div><div class="content" id="slide-12">
+       <div class="container"><ul><li>元のファイルが単に一つのmarkdownファイルで書ける
+</li><li>出力も単にひとつのhtmlファイルにできる
+</li></ul><p>ので、githubに置いたりしてのversion管理がしやすくてとても便利!
+</p></div>
+      </div><div class="content" id="slide-13">
+       <div class="container"><p>このスライド自体の元ファイルを以下のリポジトリに置いておきました
+</p><p><a href="https://github.com/xuwei-k/slides/tree/master/picture-show-introduction" >https://github.com/xuwei-k/slides/tree/master/picture-show-introduction</a>
+</p></div>
+      </div><div class="content" id="slide-14">
+       <div class="container"><p>というわけでみんな使いましょう :)
+</p></div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
