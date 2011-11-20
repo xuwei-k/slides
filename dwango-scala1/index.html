@@ -1,5 +1,5 @@
 
-<!-- saved from url=(0055)http://gist-slide.appspot.com/4abef06e9616c5055997/1#22 -->
+<!-- saved from url=(0054)http://gist-slide.appspot.com/4abef06e9616c5055997/1#0 -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
         <meta http-equiv="Expires" content="0">
@@ -16,7 +16,7 @@
       </head>
       <body>
         <div id="slides" style="height: 607px; width: 1299px; ">
-          <div id="reel" style="margin-left: -28578px; ">
+          <div id="reel" style="margin-left: 0px; ">
             <div class="content" id="slide-0" style="height: 607px; width: 1299px; ">
        <div class="container"><p>静的型付言語としてのScala
 </p></div>
@@ -141,16 +141,7 @@
       </div><div class="content" id="slide-32" style="height: 607px; width: 1299px; ">
        <div class="container"><p>ネストした場合のアクセス制御
 (Javaではできない・・・？)
-</p><pre><code class="">object A{
-  object B{
-    private    val c = 1
-    private[A] val d = 2
-  }
-
-  val e = B.c // これはコンパイルエラー
-  val f = B.d // これはOK
-}
-</code></pre></div>
+</p><pre><code class="prettyprint lang-scala"><span class="kwd">object</span><span class="pln"> A</span><span class="pun">{</span><span class="pln"><br>&nbsp; </span><span class="kwd">object</span><span class="pln"> B</span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">private</span><span class="pln"> &nbsp; &nbsp;</span><span class="kwd">val</span><span class="pln"> c </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">private</span><span class="pun">[</span><span class="pln">A</span><span class="pun">]</span><span class="pln"> </span><span class="kwd">val</span><span class="pln"> d </span><span class="pun">=</span><span class="pln"> </span><span class="lit">2</span><span class="pln"><br>&nbsp; </span><span class="pun">}</span><span class="pln"><br><br>&nbsp; </span><span class="kwd">val</span><span class="pln"> e </span><span class="pun">=</span><span class="pln"> B</span><span class="pun">.</span><span class="pln">c </span><span class="com">// これはコンパイルエラー</span><span class="pln"><br>&nbsp; </span><span class="kwd">val</span><span class="pln"> f </span><span class="pun">=</span><span class="pln"> B</span><span class="pun">.</span><span class="pln">d </span><span class="com">// これはOK</span><span class="pln"><br></span><span class="pun">}</span></code></pre></div>
       </div><div class="content" id="slide-33" style="height: 607px; width: 1299px; ">
        <div class="container"><p>sealed
 </p><p><span style="font-color: blue"> そのファイル内からのみ継承ができる </span> というclassやtraitを定義できる
