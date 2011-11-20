@@ -1,0 +1,228 @@
+
+<!-- saved from url=(0055)http://gist-slide.appspot.com/4abef06e9616c5055997/1#22 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <meta http-equiv="Expires" content="0">
+        <title></title>
+        <link href="./DwScala_files/show.css" type="text/css" rel="stylesheet">
+        <link href="./DwScala_files/prettify.css" type="text/css" rel="stylesheet">
+        <script type="text/javascript" src="./DwScala_files/jquery.min.js"></script>
+        <script type="text/javascript" src="./DwScala_files/show.js"></script>
+        <script type="text/javascript" src="./DwScala_files/prettify.js"></script>
+        <script type="text/javascript" src="./DwScala_files/lang-apollo.js"></script><script type="text/javascript" src="./DwScala_files/lang-css.js"></script><script type="text/javascript" src="./DwScala_files/lang-hs.js"></script><script type="text/javascript" src="./DwScala_files/lang-lisp.js"></script><script type="text/javascript" src="./DwScala_files/lang-lua.js"></script><script type="text/javascript" src="./DwScala_files/lang-ml.js"></script><script type="text/javascript" src="./DwScala_files/lang-proto.js"></script><script type="text/javascript" src="./DwScala_files/lang-scala.js"></script><script type="text/javascript" src="./DwScala_files/lang-sql.js"></script><script type="text/javascript" src="./DwScala_files/lang-sql.js"></script><script type="text/javascript" src="./DwScala_files/lang-vb.js"></script><script type="text/javascript" src="./DwScala_files/lang-vhdl.js"></script><script type="text/javascript" src="./DwScala_files/lang-wiki.js"></script><script type="text/javascript" src="./DwScala_files/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides" style="height: 607px; width: 1299px; ">
+          <div id="reel" style="margin-left: -28578px; ">
+            <div class="content" id="slide-0" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>静的型付言語としてのScala
+</p></div>
+      </div><div class="content" id="slide-1" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>自己紹介 <img src="./DwScala_files/xuwei_normal.gif" alt="アイコン">
+</p><ul><li>twitter <a href="https://twitter.com/#!/xuwei_k">@xuwei_k</a>
+</li><li>blog    <a href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
+</li><li>Github  <a href="https://github.com/xuwei-k">https://github.com/xuwei-k</a>
+</li></ul><p>Scala使ってお仕事してます。
+最近やっと、Scalaで作ったものが本格的に使われ始めました(そのうちどこかで発表したい・・・)
+</p></div>
+      </div><div class="content" id="slide-2" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Scala とは・・・？
+</p></div>
+      </div><div class="content" id="slide-3" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>関数型言語・・・？
+</p></div>
+      </div><div class="content" id="slide-4" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>関数型といえば？
+</p><ul><li>高階関数？
+</li><li>参照透過性？
+</li><li>遅延評価？
+</li></ul><p>など特徴は色々・・・
+</p></div>
+      </div><div class="content" id="slide-5" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>しかし、今回は<span style="font-size:100px;">型</span>というものを中心に考えてScalaの特徴を解説してみる(けど脱線するかも・・・?)
+</p></div>
+      </div><div class="content" id="slide-6" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>なんのための静的型付なのか？
+</p></div>
+      </div><div class="content" id="slide-7" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>「Scalaスケーラブルプログラミング第2版」43ページより引用
+</p><span style="font-size: 30px;">
+静的な型に対するもっとも一般的な反対論は、プログラムを無駄に長くして、プログラマーが自分の思考を表現する上で妨げになること、そしてソフトウェアシステムのある種のダイナミックな変更が不可能になることである。しかし、こういった議論は冗長で柔軟性が低いと感じられる特定の型システムに対する反対にしかなっておらず、静的な型付けという一般的な思想に反対するものにはなっていない。
+</span>
+</div>
+      </div><div class="content" id="slide-8" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>静的型といえば・・・ジェネリクス!?
+</p></div>
+      </div><div class="content" id="slide-9" style="height: 607px; width: 1299px; ">
+       <div class="container"><ul><li>今ではJavaでも当たり前になった(?)ジェネリクス
+</li><li>古いJavaには存在しなかった
+</li><li>ジェネリクスがないとキャストしないといけなくなる・・・
+</li></ul></div>
+      </div><div class="content" id="slide-10" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>キャストｪ・・・(´・ω・｀)
+</p></div>
+      </div><div class="content" id="slide-11" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>キャスト
+</p><ul><li>記述が冗長になる
+</li><li>実行時エラーの可能性
+</li></ul></div>
+      </div><div class="content" id="slide-12" style="height: 607px; width: 1299px; ">
+       <div class="container"><ul><li>Scalaは最初から、ジェネリクスが前提で作られている！
+</li></ul><p>(Javaは、あとからジェネリクス入れたことによって、raw型とかｪ・・・)
+</p></div>
+      </div><div class="content" id="slide-13" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>これはなんの言語でしょうか？
+</p><pre><code class="prettyprint lang-java"><span class="kwd">class</span><span class="pln"> </span><span class="typ">StoreSomething</span><span class="pun">&lt;</span><span class="pln">A</span><span class="pun">&gt;</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; A something</span><span class="pun">;</span><span class="pln"><br><br>&nbsp; </span><span class="typ">StoreSomething</span><span class="pun">(</span><span class="pln">A something</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">something </span><span class="pun">=</span><span class="pln"> something</span><span class="pun">;</span><span class="pln"><br>&nbsp; </span><span class="pun">}</span><span class="pln"><br><br>&nbsp; </span><span class="kwd">void</span><span class="pln"> set</span><span class="pun">(</span><span class="pln">A something</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">something </span><span class="pun">=</span><span class="pln"> something</span><span class="pun">;</span><span class="pln"><br>&nbsp; </span><span class="pun">}</span><span class="pln"><br><br>&nbsp; A get</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">return</span><span class="pln"> something</span><span class="pun">;</span><span class="pln"><br>&nbsp; </span><span class="pun">}</span><span class="pln"><br></span><span class="pun">}</span></code></pre></div>
+      </div><div class="content" id="slide-14" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Java・・・ではなくpizzaという言語
+</p><p><a href="http://pizzacompiler.sourceforge.net/">http://pizzacompiler.sourceforge.net/</a>
+</p><p>以前blogにちょっとだけ書いたことが
+</p><p><a href="http://d.hatena.ne.jp/xuwei/20110424/1303652276">http://d.hatena.ne.jp/xuwei/20110424/1303652276</a>
+</p></div>
+      </div><div class="content" id="slide-15" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Scalaの作者であるodersky先生は、Javaがでてからすぐに、pizzaという(現在のJava5以降のような)ジェネリクスがある言語つくってる
+</p></div>
+      </div><div class="content" id="slide-16" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>そもそも、Javaのジェネリクスのコンパイラの制作に関わってる
+</p><p><a href="http://homepages.inf.ed.ac.uk/wadler/gj/">http://homepages.inf.ed.ac.uk/wadler/gj/</a>
+</p></div>
+      </div><div class="content" id="slide-17" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>そのあたりの話は魔導書2に載ってますよ！
+</p><p><a href="http://longgate.co.jp/products.html">http://longgate.co.jp/products.html</a>
+</p></div>
+      </div><div class="content" id="slide-18" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>6〜7年前くらいの scala.collection.Map のソースコード↓
+</p><p><a href="http://lampsvn.epfl.ch/trac/scala/browser/scala/tags/R_1_4_0_3/sources/scala/collection/Map.scala#L23">http://lampsvn.epfl.ch/trac/scala/browser/scala/tags/R<em>1</em>4<em>0</em>3/sources/scala/collection/Map.scala#L23</a>
+</p></div>
+      </div><div class="content" id="slide-19" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>具体的にJavaと比較 ( <del>Javaのdis?</del> )
+</p></div>
+      </div><div class="content" id="slide-20" style="height: 607px; width: 1299px; ">
+       <div class="container"><span style="font-size: 30px;">わりと有名な(?)話</span>
+<p>Javaは配列だけなぜか共変！
+</p><p>そして、他のクラスは共変にできない！
+</p></div>
+      </div><div class="content" id="slide-21" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>そもそも共変( covariance ) とは？
+</p></div>
+      </div><div class="content" id="slide-22" style="height: 607px; width: 1299px; ">
+       <div class="container"><pre><code class="prettyprint lang-java"><span class="pln"><br></span><span class="com">//Integerの配列を生成</span><span class="pln"><br></span><span class="typ">Integer</span><span class="pun">[]</span><span class="pln"> intArray </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Integer</span><span class="pun">[</span><span class="lit">10</span><span class="pun">];</span><span class="pln"><br><br></span><span class="com">// Numberの配列の型の変数に、Integerの配列が代入可能</span><span class="pln"><br></span><span class="typ">Number</span><span class="pun">[]</span><span class="pln"> numArray </span><span class="pun">=</span><span class="pln"> intArray</span><span class="pun">;</span><span class="pln"><br><br></span><span class="com">//実行時エラー！</span><span class="pln"><br>numArray</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Long</span><span class="pun">(</span><span class="lit">0</span><span class="pun">);</span><span class="pln"><br></span></code></pre></div>
+      </div><div class="content" id="slide-23" style="height: 607px; width: 1299px; ">
+       <div class="container"><pre><code class="prettyprint lang-scala"><span class="pln"><br></span><span class="com">//Integerの配列を生成</span><span class="pln"><br></span><span class="kwd">val</span><span class="pln"> intArray </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Array</span><span class="pun">[</span><span class="pln">java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">Integer</span><span class="pun">](</span><span class="lit">10</span><span class="pun">)</span><span class="pln"><br><br></span><span class="com">//これをやろうとすると・・・？</span><span class="pln"><br></span><span class="kwd">val</span><span class="pln"> numArray</span><span class="pun">:</span><span class="typ">Array</span><span class="pun">[</span><span class="typ">Number</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> intArray<br></span></code></pre></div>
+      </div><div class="content" id="slide-24" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>コンパイラに怒られます(´・ω・｀)
+</p><pre><code class="prettyprint lang-scala"><span class="pun">:</span><span class="pln"> error</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">type</span><span class="pln"> mismatch</span><span class="pun">;</span><span class="pln"><br>&nbsp;found &nbsp; </span><span class="pun">:</span><span class="pln"> </span><span class="typ">Array</span><span class="pun">[</span><span class="pln">java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">Integer</span><span class="pun">]</span><span class="pln"><br>&nbsp;required</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Array</span><span class="pun">[</span><span class="pln">java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">Number</span><span class="pun">]</span><span class="pln"><br></span><span class="typ">Note</span><span class="pun">:</span><span class="pln"> java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">Integer</span><span class="pln"> </span><span class="pun">&lt;:</span><span class="pln"> java</span><span class="pun">.</span><span class="pln">lang</span><span class="pun">.</span><span class="typ">Number</span><span class="pun">,</span><span class="pln"> but </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">Array</span><span class="pln"> is invariant in </span><span class="kwd">type</span><span class="pln"> T</span><span class="pun">.</span><span class="pln"><br></span><span class="typ">You</span><span class="pln"> may wish to investigate a wildcard </span><span class="kwd">type</span><span class="pln"> such as </span><span class="lit">`_ &lt;: java.lang.Number`</span><span class="pun">.</span><span class="pln"> </span><span class="pun">(</span><span class="pln">SLS </span><span class="lit">3.2</span><span class="pun">.</span><span class="lit">10</span><span class="pun">)</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp;</span><span class="kwd">val</span><span class="pln"> numArray</span><span class="pun">:</span><span class="typ">Array</span><span class="pun">[</span><span class="typ">Number</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> intArray<br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="pun">^</span></code></pre></div>
+      </div><div class="content" id="slide-25" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>だがしかしListだと、以下のことができる
+</p><pre><code class="prettyprint lang-scala"><span class="kwd">val</span><span class="pln"> intList </span><span class="pun">=</span><span class="pln"> </span><span class="typ">List</span><span class="pun">[</span><span class="typ">Integer</span><span class="pun">](</span><span class="lit">10</span><span class="pun">,</span><span class="lit">20</span><span class="pun">,</span><span class="lit">30</span><span class="pun">)</span><span class="pln"><br><br></span><span class="kwd">val</span><span class="pln"> numList</span><span class="pun">:</span><span class="typ">List</span><span class="pun">[</span><span class="typ">Number</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> intList<br></span></code></pre></div>
+      </div><div class="content" id="slide-26" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>scalaのListは immutable なので、共変にしてもJavaの配列で起きたような実行時エラーが発生することがない
+</p></div>
+      </div><div class="content" id="slide-27" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Liskov substitution principle (リスコフ置換原則)
+</p></div>
+      </div><div class="content" id="slide-28" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>その他、ジェネリクスの機能に関しても "型パラメータの下限" など、Javaより機能が豊富
+</p><p><a href="http://d.hatena.ne.jp/kmizushima/20101109/1289264947">JavaとScalaとC#のジェネリクス機能比較表</a>
+@kmizu さん
+</p></div>
+      </div><div class="content" id="slide-29" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>アクセス制御(スコープ)について
+</p></div>
+      </div><div class="content" id="slide-30" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Javaと似ているが、微妙に異なる
+</p></div>
+      </div><div class="content" id="slide-31" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>自身のインスタンスのみからしかアクセスできない
+</p><pre><code class="prettyprint lang-scala"><span class="kwd">class</span><span class="pln"> A</span><span class="pun">{</span><span class="pln"><br>&nbsp; </span><span class="kwd">private</span><span class="pun">[</span><span class="lit">this</span><span class="pun">]</span><span class="pln"> </span><span class="kwd">val</span><span class="pln"> a </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pln"><br><br>&nbsp; </span><span class="kwd">def</span><span class="pln"> hoge</span><span class="pun">(</span><span class="pln">i</span><span class="pun">:</span><span class="pln">A</span><span class="pun">){</span><span class="pln"><br>&nbsp; &nbsp; print</span><span class="pun">(</span><span class="pln"> i</span><span class="pun">.</span><span class="pln">a </span><span class="pun">)</span><span class="pln"> </span><span class="com">//これがコンパイルエラー</span><span class="pln"><br>&nbsp; </span><span class="pun">}</span><span class="pln"><br></span><span class="pun">}</span></code></pre></div>
+      </div><div class="content" id="slide-32" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>ネストした場合のアクセス制御
+(Javaではできない・・・？)
+</p><pre><code class="">object A{
+  object B{
+    private    val c = 1
+    private[A] val d = 2
+  }
+
+  val e = B.c // これはコンパイルエラー
+  val f = B.d // これはOK
+}
+</code></pre></div>
+      </div><div class="content" id="slide-33" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>sealed
+</p><p><span style="font-color: blue"> そのファイル内からのみ継承ができる </span> というclassやtraitを定義できる
+</p><p>match式で使うとパターンが網羅されているかチェックが効いてとても便利
+</p></div>
+      </div><div class="content" id="slide-34" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>抽象型という概念
+</p></div>
+      </div><div class="content" id="slide-35" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>そもそも、Scalaは <span style="font-color: blue"> 型をメンバーとして持つ </span> ことができる
+</p></div>
+      </div><div class="content" id="slide-36" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Javaをはじめ、大体のClassベースのオブジェクト指向言語にあるもの
+</p><p>抽象メンバー(メソッドやフィールド)
+</p></div>
+      </div><div class="content" id="slide-37" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>abstract method があるならば、なぜ  <span style="font-color: blue"> abstract type </span>がないのか？
+</p></div>
+      </div><div class="content" id="slide-38" style="height: 607px; width: 1299px; ">
+       <div class="container"><pre><code class="prettyprint lang-scala"><span class="pln"><br></span><span class="kwd">abstract</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> A</span><span class="pun">{</span><span class="pln"><br>&nbsp; </span><span class="kwd">type</span><span class="pln"> T </span><span class="com">// 抽象型</span><span class="pln"><br></span><span class="pun">}</span></code></pre></div>
+      </div><div class="content" id="slide-39" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>型をメンバーに持つのって、ジェネリクスとは違うの？
+</p></div>
+      </div><div class="content" id="slide-40" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>似ているけど違います!
+ジェネリクスではできないことができます!
+</p></div>
+      </div><div class="content" id="slide-41" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>例: lift json
+</p><p><a href="https://github.com/lift/framework/blob/2.4-M5-release/core/json/src/main/scala/net/liftweb/json/JsonAST.scala#L38">https://github.com/lift/framework/blob/2.4-M5-release/core/json/src/main/scala/net/liftweb/json/JsonAST.scala#L38</a>
+</p><pre><code class="prettyprint lang-scala"><span class="pln">&nbsp; </span><span class="kwd">sealed</span><span class="pln"> </span><span class="kwd">abstract</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">JValue</span><span class="pln"> </span><span class="kwd">extends</span><span class="pln"> </span><span class="typ">Diff</span><span class="pun">.</span><span class="typ">Diffable</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">type</span><span class="pln"> </span><span class="typ">Values</span><span class="pln"><br><br>&nbsp; </span><span class="com">//以下略</span></code></pre></div>
+      </div><div class="content" id="slide-42" style="height: 607px; width: 1299px; ">
+       <div class="container"><p><a href="https://github.com/lift/framework/blob/2.4-M5-release/core/json/src/main/scala/net/liftweb/json/JsonAST.scala#L344">https://github.com/lift/framework/blob/2.4-M5-release/core/json/src/main/scala/net/liftweb/json/JsonAST.scala#L344</a>
+</p><pre><code class="prettyprint lang-scala"><span class="pln">&nbsp; </span><span class="kwd">case</span><span class="pln"> </span><span class="kwd">object</span><span class="pln"> </span><span class="typ">JNothing</span><span class="pln"> </span><span class="kwd">extends</span><span class="pln"> </span><span class="typ">JValue</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">type</span><span class="pln"> </span><span class="typ">Values</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">None</span><span class="pun">.</span><span class="kwd">type</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">def</span><span class="pln"> values </span><span class="pun">=</span><span class="pln"> </span><span class="typ">None</span><span class="pln"><br>&nbsp; </span><span class="pun">}</span><span class="pln"><br>&nbsp; </span><span class="kwd">case</span><span class="pln"> </span><span class="kwd">object</span><span class="pln"> </span><span class="typ">JNull</span><span class="pln"> </span><span class="kwd">extends</span><span class="pln"> </span><span class="typ">JValue</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">type</span><span class="pln"> </span><span class="typ">Values</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Null</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">def</span><span class="pln"> values </span><span class="pun">=</span><span class="pln"> </span><span class="lit">null</span><span class="pln"><br>&nbsp; </span><span class="pun">}</span><span class="pln"><br>&nbsp; </span><span class="kwd">case</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">JString</span><span class="pun">(</span><span class="pln">s</span><span class="pun">:</span><span class="pln"> </span><span class="typ">String</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">extends</span><span class="pln"> </span><span class="typ">JValue</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">type</span><span class="pln"> </span><span class="typ">Values</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">String</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">def</span><span class="pln"> values </span><span class="pun">=</span><span class="pln"> s<br>&nbsp; </span><span class="pun">}</span><span class="pln"><br>&nbsp; </span><span class="kwd">case</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">JDouble</span><span class="pun">(</span><span class="pln">num</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Double</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">extends</span><span class="pln"> </span><span class="typ">JValue</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br>&nbsp; &nbsp; </span><span class="kwd">type</span><span class="pln"> </span><span class="typ">Values</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Double</span><span class="pln"><br><br></span><span class="com">// 以下略</span></code></pre></div>
+      </div><div class="content" id="slide-43" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>あともりそば <a href="http://d.hatena.ne.jp/yuroyoro/20110126/1296043346">http://d.hatena.ne.jp/yuroyoro/20110126/1296043346</a> とかあります
+</p></div>
+      </div><div class="content" id="slide-44" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>最後に、すぐには役に立つかどうかわからない、変態的な高度な話
+</p></div>
+      </div><div class="content" id="slide-45" style="height: 607px; width: 1299px; ">
+       <div class="container"><p><a href="http://etorreborre.blogspot.com/2011/11/practical-uses-for-unboxed-tagged-types.html">Unboxed Tagged Type</a>
+</p><pre><code class="prettyprint lang-scala"><span class="kwd">type</span><span class="pln"> A </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Int</span><span class="pln"> </span><span class="pun">@@</span><span class="pln"> </span><span class="typ">Foo</span><span class="pln"><br></span><span class="kwd">type</span><span class="pln"> B </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Int</span><span class="pln"> </span><span class="pun">@@</span><span class="pln"> </span><span class="typ">Bar</span></code></pre><p>AとBが、実行時には両方ともただのIntなのにも関わらず、コンパイル時には異なる型として使えるという、Haskellのnewtype的なことができるんじゃね？っていう話
+</p><p>これも抽象型つかったテクニック
+</p></div>
+      </div><div class="content" id="slide-46" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Scalaはコンパイル時計算がチューリング完全
+</p></div>
+      </div><div class="content" id="slide-47" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>・・・はぁ？(゜Д゜)
+</p></div>
+      </div><div class="content" id="slide-48" style="height: 607px; width: 1299px; ">
+       <div class="container"><p><a href="http://d.hatena.ne.jp/yuroyoro/20110614/1308048582">http://d.hatena.ne.jp/yuroyoro/20110614/1308048582</a>
+</p><p><a href="http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/">http://apocalisp.wordpress.com/2010/06/08/type-level-programming-in-scala/</a>
+</p></div>
+      </div><div class="content" id="slide-49" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>コンパイル時 fizzbuzzとかできます
+</p><p><a href="https://github.com/okomok/sing/blob/master/src/test/scala/example/FizzBuzzTest.scala#L7-41">https://github.com/okomok/sing/blob/master/src/test/scala/example/FizzBuzzTest.scala#L7-41</a>
+</p></div>
+      </div><div class="content" id="slide-50" style="height: 607px; width: 1299px; ">
+       <div class="container"><p>Union型
+</p><p>IntまたはStringを引数にとるメソッド
+</p><p><a href="https://gist.github.com/1017197">https://gist.github.com/1017197</a>
+</p><p>とか
+</p><p>AnyVal または String または Array[AnyVal] のどれかを引数にとるメソッド
+</p><p><a href="https://gist.github.com/cdb73c84a189f72f4789">https://gist.github.com/cdb73c84a189f72f4789</a>
+</p><p>とか定義できます(ｷﾘｯ
+</p></div>
+      </div>
+          </div>
+        </div>
+        
+      
+    
+</body></html>
