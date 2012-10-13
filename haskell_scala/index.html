@@ -1,0 +1,264 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Haskell と Scala</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0">
+       <div class="container"><h1 id="Haskell+%E3%81%A8+Scala">Haskell と Scala</h1><p>
+start haskell 2 第5回
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+</p>
+</div>
+      </div><div class="content" id="slide-1">
+       <div class="container"><h2 id="%E8%87%AA%E5%B7%B1%E7%B4%B9%E4%BB%8B">自己紹介</h2><img src="https://twimg0-a.akamaihd.net/profile_images/1931553270/xuwei.gif" width=200 height=200 />
+<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
+</li><li>github <a  href="http://github.com/xuwei-k">xuwei_k</a>
+</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei">@xuwei_k</a>
+</li><li>いま無職 ＼(^o^)／
+</li><li><a  href="http://www.slideshare.net/hitoasa/mongodb-13561725">Scalaを使って仕事をやっていた</a> 時期があった
+</li></ul></div>
+      </div><div class="content" id="slide-2">
+       <div class="container"><span style="font-size:200%;">
+<blockquote class="twitter-tweet" data-in-reply-to="249142255095525376"><p>@<a href="https://twitter.com/xuwei_k">xuwei_k</a> 需要全然あります！よければぜひとも！</p>&mdash; Seizan Shimazaki (@seizans) <a href="https://twitter.com/seizans/status/249147059276492800" data-datetime="2012-09-21T14:04:22+00:00">September 21, 2012</a></blockquote>
+</span>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+      </div><div class="content" id="slide-3">
+       <div class="container"><ul><li>Scalaは詳しいけど、Haskellはあまり詳しくありません(&gt;_&lt;)
+</li><li>なので、HaskellよりScalaの話が多いです(ぇ
+</li><li>Scalaをdisりに来ました(ぇ
+</li></ul></div>
+      </div><div class="content" id="slide-4">
+       <div class="container"><p><span style="font-size:50%;">すいません、宣伝</span><br /></p>
+<p><span style="font-size:200%;">Scala Conference in Japan</span> というのをやります！</p><br />
+<ul><li>海外から、Scala作ってる中の人やAkkaという有名なライブラリを作ってる人が来ます！
+</li><li><a  href="http://scalaconf.jp/">http://scalaconf.jp/</a>
+</li><li>2013年3月2日(土)
+</li><li>東京工業大学(大岡山キャンパス)
+</li></ul></div>
+      </div><div class="content" id="slide-5">
+       <div class="container"><ul><li>Haskell 使ってる人から見て、Scalaのイメージとは？
+</li><li>そもそもScala使ったことあるのか？
+</li><li>Scalaについてどれくらい知ってるのか？
+</li><li>Scalaは関数型言語なのか？
+</li></ul></div>
+      </div><div class="content" id="slide-6">
+       <div class="container"><h2 id="Haskell%E3%81%A8%E6%AF%94%E3%81%B9%E3%81%A6Scala%E3%81%AE%E3%81%A0%E3%82%81%E3%81%AA%E3%81%A8%E3%81%93%E3%82%8D+1">Haskellと比べてScalaのだめなところ 1</h2><ul><li>型推論弱い <span style="font-size: 50%;"> (一応overloadの関係などある程度理由はあるらしい) </span>
+</li><li><code>Option</code> を使うことにより減りますが <code>null</code> からは完全に逃れられない・・・
+</li><li>標準で、 <code>Monad</code> とか <code>Applicative</code> とかがない・・・？
+</li><li>型クラス・・・？
+</li><li>Haskellよりコンパイル遅い
+</li><li>デフォルト遅延評価ではない <span style="font-size: 50%;"> (これは、メリットもあるけど) </span>
+</li></ul></div>
+      </div><div class="content" id="slide-7">
+       <div class="container"><h2 id="Haskell%E3%81%A8%E6%AF%94%E3%81%B9%E3%81%A6Scala%E3%81%AE%E3%81%A0%E3%82%81%E3%81%AA%E3%81%A8%E3%81%93%E3%82%8D+2">Haskellと比べてScalaのだめなところ 2</h2><ul><li>代数的データ型をあらわすのがちょっと冗長
+</li><li>newtypeがサポートされてない <span style="font-size: 50%;"><a href="http://etorreborre.blogspot.jp/2011/11/practical-uses-for-unboxed-tagged-types.html">黒魔術的な(?)方法でエミュレートする方法が最近発見された]</a></span>
+</li><li>値が多相になれない <span style="font-size: 50%;"><a href="http://d.hatena.ne.jp/leque/20111226/p1">かなり冗長になるけどエミュレートする方法はある</a></span>
+</li><li>rank2typeもない・・・<span style="font-size: 50%;"><a href="https://gist.github.com/3300312">これも冗長になるけどエミュレートする方法ある</a></span>
+</li></ul></div>
+      </div><div class="content" id="slide-8">
+       <div class="container"><p>今日とりあえず一番言いたいこと</p>
+<p>↓</p>
+<span style="font-size: 200%;"> Scalaでの型クラスについて！ </span>
+</div>
+      </div><div class="content" id="slide-9">
+       <div class="container"><ul><li>Scalaには型クラス専用の構文はない(?)
+</li><li>けど、型クラスはそれなりに使われている
+</li></ul></div>
+      </div><div class="content" id="slide-10">
+       <div class="container"><pre style="font-size: 200%;">
+＿人人人人人人＿
+＞　implicit　＜
+￣^Y^Y^Y^Y^￣
+</pre>
+</div>
+      </div><div class="content" id="slide-11">
+       <div class="container"><ul><li><code>implicit</code> という謎の予約語がある
+</li><li>暗黙・・・？
+</li><li>なにそれこわい
+</li><li>Scalaが複雑とか言われてしまう原因の一つ・・・？
+</li></ul></div>
+      </div><div class="content" id="slide-12">
+       <div class="container"><span style="font-size: 200%">
+<span style="font-family: Consolas, Menlo, 'Liberation Mono', Courier, monospace;">implicit</span> は、型クラスのための構文です(ｷﾘｯ
+</span>
+</div>
+      </div><div class="content" id="slide-13">
+       <div class="container"><ul><li><code>implicit conversion</code> と <code>implicit parameter</code> という2種類がある
+</li><li><code>implicit conversion</code> は型クラスには、ほとんど関係ないので忘れてください
+</li></ul></div>
+      </div><div class="content" id="slide-14">
+       <div class="container"><h3 id="%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AE%E5%AE%9A%E7%BE%A9">型クラスの定義</h3><hr /><br />
+<pre><code class="prettyprint lang-scala">trait Functor[F[_]]{
+  def fmap[A, B](r: F[A], f: A =&gt; B): F[B]
+}
+
+</code></pre><br /><span style="font-size:50%;"><a href="https://github.com/scalaz/scalaz/blob/v6.0.4/core/src/main/scala/scalaz/Functor.scala#L14">https://github.com/scalaz/scalaz/blob/v6.0.4/core/src/main/scala/scalaz/Functor.scala#L14</a></span>
+<hr /><br />
+<pre><code class="prettyprint lang-haskell">class  Functor f  where
+    fmap        :: (a -&gt; b) -&gt; f a -&gt; f b
+</code></pre><br /><span style="font-size:50%;"><a href="https://github.com/ghc/packages-base/blob/ghc-7.4.2-release/GHC/Base.lhs#L179">https://github.com/ghc/packages-base/blob/ghc-7.4.2-release/GHC/Base.lhs#L179</a></span>
+</div>
+      </div><div class="content" id="slide-15">
+       <div class="container"><h3 id="%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AE%E5%AE%9A%E7%BE%A9">型クラスのインスタンスの定義</h3><hr /><br />
+<pre><code class="prettyprint lang-scala">implicit def OptionFunctor: Functor[Option] =
+  new Functor[Option] {
+    def fmap[A, B](r: Option[A], f: A =&gt; B) = r map f
+  }
+</code></pre><br /><span style="font-size:50%;"><a href="https://github.com/scalaz/scalaz/blob/v6.0.4/core/src/main/scala/scalaz/Functor.scala#L112">https://github.com/scalaz/scalaz/blob/v6.0.4/core/src/main/scala/scalaz/Functor.scala#L112</a></span>
+<hr /><br />
+<pre><code class="prettyprint lang-haskell">instance  Functor Maybe  where
+    fmap _ Nothing       = Nothing
+    fmap f (Just a)      = Just (f a)
+</code></pre><br /><span style="font-size:50%;"><a href="https://github.com/ghc/packages-base/blob/ghc-7.4.2-release/Data/Maybe.hs#L72">https://github.com/ghc/packages-base/blob/ghc-7.4.2-release/Data/Maybe.hs#L72</a></span>
+</div>
+      </div><div class="content" id="slide-16">
+       <div class="container"><p>とりあえず、Scalaで以下のものがでてきたらほとんどの場合型クラスのインスタンス定義だと思えばいい</p>
+<br />
+<ul><li><code>implicit val</code>
+</li><li><code>implicit object</code>
+</li><li>(実引数なしで、型引数のみの) <code>implicit def</code>
+</li></ul></div>
+      </div><div class="content" id="slide-17">
+       <div class="container"><h3 id="%E9%87%8D%E8%A6%81%E3%81%AA%E3%81%93%E3%81%A81">重要なこと1</h3><p>implicit parameterによる型クラスは
+「偶然エミュレートできた」のではなく、
+<span style="font-size: 200%;">最初から型クラスをエミュレートすることを意図して入れた！</span>
+という事実</p><br />
+<p>詳しく知りたい人は、Scalaの作者自らが書いた、この論文とか読んでください
+</p><p><a  href="http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf">Type Classes as Objects and Implicits</a>
+</p></div>
+      </div><div class="content" id="slide-18">
+       <div class="container"><h3 id="%E9%87%8D%E8%A6%81%E3%81%AA%E3%81%93%E3%81%A82">重要なこと2</h3><p>Scalaには、for式というものがありますが、ループのための構文ではなく <span style="font-size: 200%;"> Monadのための構文 </span> です!
+</p><ul><li>詳しいことは今日は解説しないけど、Haskellのdoと目的はだいたい同じ
+</li><li>for式の一部の機能だけ使うと、なんとなくループっぽいから初級者〜中級者向けの解説では、それを説明してない
+</li><li>さらに詳しいことを言えば、パターンマッチでfilterできたり、ifガードがあるので、MonadPlus相当(?)
+</li></ul></div>
+      </div><div class="content" id="slide-19">
+       <div class="container"><p>ところで、さっきのFunctorの定義は、Scala標準ライブラリにはありません
+</p></div>
+      </div><div class="content" id="slide-20">
+       <div class="container"><pre style="font-size: 200%;">
+＿人人人人人＿
+＞　Scalaz　＜
+￣^Y^Y^Y^Y￣
+</pre>
+</div>
+      </div><div class="content" id="slide-21">
+       <div class="container"><h2 id="Scalaz+%E3%81%A8%E3%81%AF%E3%83%BB%E3%83%BB%E3%83%BB%EF%BC%9F">Scalaz とは・・・？</h2><ul><li>Scala標準ライブラリにほとんど型クラスの定義がない
+</li><li>大量の型クラスの定義
+</li><li>Scalaで型クラスを使ったプログラミングをするなら必須
+</li><li>ほかにも似たようなライブラリあるけど、あまり使われてない <a  href="http://github.com/okomok/ken">okomok/ken</a>
+</li><li>なのでデファクトスタンダード
+</li></ul></div>
+      </div><div class="content" id="slide-22">
+       <div class="container"><p><img alt="ekmett1"  src="http://cdn-ak.f.st-hatena.com/images/fotolife/x/xuwei/20121013/20121013095151.jpg?1350089630" />
+</p><br /><span style="font-size:50%;"><a href="https://github.com/scalaz/scalaz/blob/v6.0.4/core/src/main/scala/scalaz/Monad.scala">https://github.com/scalaz/scalaz/blob/v6.0.4/core/src/main/scala/scalaz/Monad.scala</a></span>
+</div>
+      </div><div class="content" id="slide-23">
+       <div class="container"><p><img alt="ekmett1"  src="http://cdn-ak.f.st-hatena.com/images/fotolife/x/xuwei/20121013/20121013095908.jpg" />
+</p><br /><span style="font-size:50%;"><a href="https://github.com/scalaz/scalaz/graphs/contributors">https://github.com/scalaz/scalaz/graphs/contributors</a></span>
+</div>
+      </div><div class="content" id="slide-24">
+       <div class="container"><ul><li><a  href="https://github.com/ekmett">Edward A. Kmett</a> さんが、4番目に多くコミットしてる！？
+</li><li>Haskell界隈で有名な人
+</li><li><a  href="http://comonad.com">comonad.com</a> の人
+</li><li><a  href="https://github.com/ekmett/lens">Lens</a> とかHaskellの有名なライブラリいっぱい作ってる
+</li></ul></div>
+      </div><div class="content" id="slide-25">
+       <div class="container"><p>でも、Scalaをdisってたよ(>_<) </p>
+<blockquote class="twitter-tweet"><p>@<a href="https://twitter.com/zedshaw">zedshaw</a> <a href="http://t.co/TIbxuWa8" title="http://codepad.org/6z1uQg3C">codepad.org/6z1uQg3C</a> shows why I'd rather just write it in Haskell. The parameters are only there because scala has crap inference.</p>&mdash; Edward Kmett (@kmett) <a href="https://twitter.com/kmett/status/240494760261996544" data-datetime="2012-08-28T17:03:13+00:00">August 28, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+      </div><div class="content" id="slide-26">
+       <div class="container"><h3 id="Scala">Scala</h3><pre><code class="prettyprint lang-scala">implicit def KleisliCategory[M[_]: Monad]: Category[({type λ[α, β]=Kleisli[M, α, β]})#λ]
+  = new Category[({type λ[α, β]=Kleisli[M, α, β]})#λ] {
+    def id[A] = ☆(_ η)
+    def compose[X, Y, Z](f: Kleisli[M, Y, Z], g: Kleisli[M, X, Y]) = f &lt;=&lt; g
+  }
+</code></pre><hr /><br />
+<h3 id="Haskell">Haskell</h3><pre><code class="prettyprint lang-haskell">instance Monad m =&gt; Category (Kleisli m) where
+  id = Kleisli return
+  Kleisli f . Kleisli g = Kleisli (f &lt;=&lt; g)
+</code></pre></div>
+      </div><div class="content" id="slide-27">
+       <div class="container"><h3 id="Scalaz%E3%81%AB%E3%81%82%E3%82%8B%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AE%E4%BE%8B">Scalazにある型クラスの例</h3><p>Equal(HaskellのEq)、Show、Order(HaskellのOrd)、Functor、Applicative、Monad、MonadPlus、Monoid、Arrow、Zipper、State、Writer、Reader、Traverse、IO、Kleisli、Free、Comonad、Bifunctor、Category、Cojoin、CoKleisli、Each、Endo、Cofree、Group、Length、Lens、Partial Lens、Semigroup、Zip、Zipper、Zap
+</p></div>
+      </div><div class="content" id="slide-28">
+       <div class="container"><p>ちょっと話逸れます
+</p></div>
+      </div><div class="content" id="slide-29">
+       <div class="container"><p>一週間くらい前
+</p><blockquote class="twitter-tweet"><p>Freeモナドやばい、悟りを開いた気分だわ。</p>&mdash; ねこはる (@halcat0x15a) <a href="https://twitter.com/halcat0x15a/status/253984147297681408" data-datetime="2012-10-04T22:25:14+00:00">October 4, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p><a  href="http://days2012.scala-lang.org/sites/days2012/files/bjarnason_trampolines.pdf">Stackless Scala With Free Monads</a>
+</p><blockquote class="twitter-tweet"><p>Freeモナドくわしく</p>&mdash; Hideyuki Tanaka (@tanakh) <a href="https://twitter.com/tanakh/status/254089546617217024" data-datetime="2012-10-05T05:24:03+00:00">October 5, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>Free Monadが流行る
+</p><blockquote class="twitter-tweet"><p>Freeモナドで悟りを開きました</p>&mdash; Hideyuki Tanaka (@tanakh) <a href="https://twitter.com/tanakh/status/254509230390910976" data-datetime="2012-10-06T09:11:43+00:00">October 6, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+      </div><div class="content" id="slide-30">
+       <div class="container"><blockquote class="twitter-tweet"><p>RTされた数だけFreeモナドの解説記事書く</p>&mdash; Hideyuki Tanaka (@tanakh) <a href="https://twitter.com/tanakh/status/254512595313246208" data-datetime="2012-10-06T09:25:05+00:00">October 6, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+      </div><div class="content" id="slide-31">
+       <div class="container"><p>200RT以上！？
+</p><p><img alt="tanakh free"  src="http://cdn-ak.f.st-hatena.com/images/fotolife/x/xuwei/20121013/20121013102836.png?1350091738" />
+</p></div>
+      </div><div class="content" id="slide-32">
+       <div class="container"><ul><li>Haskellでも、まだあまり使われてないもの( Free Monad や Partial Lens など )まで、Scalaでできるらしい
+</li><li>でもとにかく型をいっぱい書かなければいけなくて大変！
+</li><li>Scalaで型クラスを使ったプログラミングをする利点とは・・・？
+</li></ul></div>
+      </div><div class="content" id="slide-33">
+       <div class="container"><p>1点だけ利点があるらしい
+</p></div>
+      </div><div class="content" id="slide-34">
+       <div class="container"><span style="font-size: 50%;">Haskellと違いScalaでは</span>
+<span style="font-size: 200%;">型クラスのインスタンスを複数持てる(スコープによって自分で制御できる)</span>
+</div>
+      </div><div class="content" id="slide-35">
+       <div class="container"><ul><li>それは嬉しいのか・・・？
+</li><li>型クラスのインスタンスを複数持ちたいことってあまりない・・・？
+</li><li>newtypeあるし
+</li><li>Haskellそれほど書いたことないから、そのあたりの感覚がよくわからない
+</li><li>将来的にGHCでも、そのあたりの制限を緩和するという話を聞いたことが(?) (もしくは既に最新版に入ってる？)
+</li><li>詳しくないのでだれか教えてください(&gt;_&lt;)
+</li></ul></div>
+      </div><div class="content" id="slide-36">
+       <div class="container"><ul><li>最終的に (Haskellerが) Scalaをやるメリットとは・・・？
+</li><li>Haskellと比べてScalaをやったほうがいい人とは？
+</li></ul></div>
+      </div><div class="content" id="slide-37">
+       <div class="container"><ul><li>たぶんHaskellが既にそれなりにできるなら、それほどScalaメリットない(?)
+</li><li>逆にScalaだけやってるひとがHaskellやるのはある程度メリットある気がする
+</li><li>仕事に関数型言語導入したくて、「Haskellの導入は難しそうだけど、Scalaなら導入できるのではないか？」という人はScalaやっておくといいかも・・・？
+</li></ul></div>
+      </div><div class="content" id="slide-38">
+       <div class="container"><ul><li>平凡な結論だが「Javaを知っていて、関数型プログラミングやりたい」という人にとっては、HaskellよりもScalaのほうが、「手続き型から徐々に関数型なプログラミングに移行しやすい」という点では入門しやすいかもしれない
+</li><li>けど、本格的に型クラスを大量に使うスタイルでプログラミングをやろうとすると、ほとんどの場合Haskellのほうが簡潔に書ける
+</li></ul></div>
+      </div><div class="content" id="slide-39">
+       <div class="container"><ul><li>ただ、(冗長だけれども) Haskellで現状あるほとんどの型クラスは、Scalaでもすでに存在していて型クラスを使ったプログラミングができる！という事実がそこまで知られていないので、もうちょっとその事実が広まってもいいと思う
+</li></ul></div>
+      </div><div class="content" id="slide-40">
+       <div class="container"><p>おわり。ありがとうございました
+</p></div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
