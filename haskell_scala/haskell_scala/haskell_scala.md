@@ -14,8 +14,8 @@ start haskell 2 第5回
 <img src="https://twimg0-a.akamaihd.net/profile_images/1931553270/xuwei.gif" width=200 height=200 />
 
 * twitter [@xuwei_k](https://twitter.com/xuwei_k)
-* github [xuwei_k](http://github.com/xuwei-k)
-* blog [@xuwei_k](http://d.hatena.ne.jp/xuwei)
+* github [xuwei-k](http://github.com/xuwei-k)
+* blog [http://d.hatena.ne.jp/xuwei](http://d.hatena.ne.jp/xuwei)
 * いま無職 ＼(^o^)／
 * [Scalaを使って仕事をやっていた](http://www.slideshare.net/hitoasa/mongodb-13561725) 時期があった
 
