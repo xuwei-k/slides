@@ -1,0 +1,343 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Scala基礎勉強会 Type Classes as Objects and Implicits</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0">
+       <div class="container"><h1 id=""><a  href="http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf">Type Classes as Objects and Implicits</a></h1><p><a  href="http://kokucheese.com/event/index/51993/">Scala基礎勉強会</a>
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+</p></div>
+      </div><div class="content" id="slide-1">
+       <div class="container"><h2 id="%E8%87%AA%E5%B7%B1%E7%B4%B9%E4%BB%8B">自己紹介</h2><img src="https://twimg0-a.akamaihd.net/profile_images/1931553270/xuwei.gif" width=200 height=200 />
+<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
+</li><li>github <a  href="http://github.com/xuwei-k">xuwei-k</a>
+</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei">http://d.hatena.ne.jp/xuwei</a>
+</li><li>無職 ヽ(‘ω’)ﾉ三ヽ(‘ω’)ﾉ
+</li><li><a  href="http://www.slideshare.net/hitoasa/mongodb-13561725">Scalaを使って仕事をやっていた</a> 時期があった
+</li></ul></div>
+      </div><div class="content" id="slide-2">
+       <div class="container"><script src="http://togetter.com/js/parts.js"></script><script>tgtr.ListWidget({id:'368588',url:'http://togetter.com/',width:'640px',height:'480px'});</script>
+</div>
+      </div><div class="content" id="slide-3">
+       <div class="container"><blockquote class="twitter-tweet"><p><a href="https://twitter.com/search/%23ScalaBase">#ScalaBase</a> <a href="https://twitter.com/search/%23ScalaBase合宿">#ScalaBase合宿</a> よっぱらう発表者! 寝る発表者! Scalaの勉強をする参加者! 仕事をするbleisさん!</p>&mdash; mzp (@mzp) <a href="https://twitter.com/mzp/status/259646231092019200" data-datetime="2012-10-20T13:24:20+00:00">October 20, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+      </div><div class="content" id="slide-4">
+       <div class="container"><p>一杯しか飲んでいないのに、酔っ払って寝不足で9〜12時くらいまで寝てましたすいません。
+</p><p>そして、起きて、このスライドを仕上げようとしたら・・・
+</p></div>
+      </div><div class="content" id="slide-5">
+       <div class="container"><blockquote class="twitter-tweet"><p>となりの部屋から、AV観てるのか、実際呼んでるのかわからないけど、喘ぎ声が聞こえてくる件 <a href="https://twitter.com/search/%23ScalaBase">#ScalaBase</a></p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/259699077455966209" data-datetime="2012-10-20T16:54:19+00:00">October 20, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+      </div><div class="content" id="slide-6">
+       <div class="container"><blockquote class="twitter-tweet"><p>レストランに並びながら、ほぼ全員PCを広げている謎の集団 <a href="https://twitter.com/search/%23ScalaBase">#ScalaBase</a> <a href="http://t.co/89d18kLl" title="http://twitter.com/xuwei_k/status/259844406356615169/photo/1">twitter.com/xuwei_k/status…</a></p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/259844406356615169" data-datetime="2012-10-21T02:31:50+00:00">October 21, 2012</a></blockquote>
+<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+      </div><div class="content" id="slide-7">
+       <div class="container"><pre style="font-size: 35%;">
+<span style="font-size: 150%;">1. Introduction</span>
+<br />
+<span style="font-size: 150%;">2. Type Classes in Haskell</span>
+  2.1 Single-parameter type classes
+  2.2 Common extensions
+<br />
+<span style="font-size: 150%;">3. Implicits</span>
+  3.1 Implicits in Scala
+  3.2 Implicits as the missing link
+<br />
+<span style="font-size: 150%;">4. The CONCEPT Pattern</span>
+  4.1 Concepts: type-class-style interfaces in OO
+</pre>
+</div>
+      </div><div class="content" id="slide-8">
+       <div class="container"><pre style="font-size: 35%;">
+<span style="font-size: 150%;m">5. Applications and Comparison with Type Classes</span>
+  5.1 Ordering concept
+  5.2 Abstract data types
+  5.3 Statically-typed printf
+  5.4 Type class programs are OO programs
+<br />
+<span style="font-size: 150%;">6. Advanced Uses of Type Classes</span>
+  6.1 Associated types in GHC Haskell
+  6.2 Implicits and type members
+  6.3 Session types
+  6.4 Arity-polymorphic ZipWith in Scala
+  6.5 ZipWith using prioritised overlapping implicits
+  6.6 Encoding generalized constraints
+  6.7 Type theories using implicits
+<br />
+<span style="font-size: 150%;">7. Discussion and Related Work</span>
+  7.1 Real-world applications
+  7.2 Type classes, JavaGI and concepts
+  7.3 Generic programming in the large
+<br />
+<span style="font-size: 150%;">8. Conclusion</span>
+</pre>
+</div>
+      </div><div class="content" id="slide-9">
+       <div class="container"><ul><li><p>2010年の論文
+</p><ul><li>2.8.0が出る前
+</li><li><a  href="https://github.com/scala/scala/tree/v2.8.0">2.8.0.final</a> がでたのは 2010/7/14
+</li></ul></li><li><p>書いた人
+</p><ul><li>Odersky先生
+</li><li>Adriaan Moors( EPFLの人で、昔からScala関わってる人 )
+</li><li>Bruno C. d. S. Oliveira (誰?)
+</li></ul></li></ul></div>
+      </div><div class="content" id="slide-10">
+       <div class="container"><pre style="font-size: 200%;">
+＿人人人人人人＿
+＞　型クラス　＜
+￣^Y^Y^Y^Y^￣
+</pre>
+</div>
+      </div><div class="content" id="slide-11">
+       <div class="container"><pre style="font-size: 200%;">
+＿人人人人人人＿
+＞　implicit　＜
+￣^Y^Y^Y^Y^￣
+</pre>
+</div>
+      </div><div class="content" id="slide-12">
+       <div class="container"><p>一週間くらい前に、今回の内容と一部被ること話してきたので、そちらもご覧ください
+</p><p><a  href="http://xuwei-k.github.com/slides/haskell_scala">Haskell と Scala</a>
+</p><p><a  href="http://d.hatena.ne.jp/xuwei/20121013/1350134161">Start Haskell に行って、Scalaの話をしてきた</a>
+</p></div>
+      </div><div class="content" id="slide-13">
+       <div class="container"><p>1 簡単な例(ord)を出して、Scalaでの型クラスを説明
+</p></div>
+      </div><div class="content" id="slide-14">
+       <div class="container"><p>論文の最初にでてくる例
+</p><p>型クラスの定義
+</p><pre><code class="prettyprint lang-scala">trait Ord [T] {
+  def compare (a :T,b :T):Boolean
+}
+</code></pre></div>
+      </div><div class="content" id="slide-15">
+       <div class="container"><p>型クラスのインスタンスの定義
+</p><pre><code class="prettyprint lang-scala">implicit object intOrd extends Ord [Int] {
+  def compare (a :Int,b :Int):Boolean = a &lt; b
+}
+</code></pre></div>
+      </div><div class="content" id="slide-16">
+       <div class="container"><p>使い方
+</p><pre><code class="prettyprint lang-scala">scala&gt; sort (List (3,2,1))
+List (1,2,3)
+</code></pre></div>
+      </div><div class="content" id="slide-17">
+       <div class="container"><ul><li>このくらいは既になんとなく知ってますよね？
+</li><li>まさに、上記のようなものが<a  href="https://github.com/scala/scala/blob/v2.9.2/src/library/scala/collection/SeqLike.scala#L615-639">標準ライブラリに入ってます</a>
+</li></ul></div>
+      </div><div class="content" id="slide-18">
+       <div class="container"><p>2 Scalaと対比させつつ、Haskellでの型クラスの説明
+</p></div>
+      </div><div class="content" id="slide-19">
+       <div class="container"><p>Multiple parameter type class
+</p><pre><code class="prettyprint lang-haskell">
+class Coerce a b where
+  coerce :: a -&gt; b
+
+instance Coerce Char Int where
+  coerce = ord
+
+instance Coerce Float Int where
+  coerce = floor
+</code></pre></div>
+      </div><div class="content" id="slide-20">
+       <div class="container"><p>Overlapping instance
+</p><pre><code class="prettyprint lang-haskell">
+instance Ord a -&gt; Ord [a] where ...
+
+instance Ord [Int] where ...
+
+</code></pre></div>
+      </div><div class="content" id="slide-21">
+       <div class="container"><p>3 Scalaにおけるimplicit(parameterとconversion両方)の詳細な説明
+</p><ul><li>初歩的なimplicit自体の文法の説明
+</li><li>単にデフォルト値的な使い方できるよね
+</li><li>implicit が、scopeを持てる、それによる優先度について
+</li><li>この章で <a  href="http://www.artima.com/weblogs/viewpost.jsp?thread=179766">Pimp my Library</a> について軽く説明あるのだけど、なぜここででてくるのかいまいち流れがわからない・・・
+</li></ul></div>
+      </div><div class="content" id="slide-22">
+       <div class="container"><p>4 Concept Pattern
+</p></div>
+      </div><div class="content" id="slide-23">
+       <div class="container"><p>Concept Patternの利点として以下の点があるらしい
+</p><ol><li>Retroactive modeling
+</li><li>Multiple method
+</li><li>Binary(or n-ary)methods
+</li><li>Factory methods
+</li></ol></div>
+      </div><div class="content" id="slide-24">
+       <div class="container"><p>JavaやC#のようなオブジェクト指向言語では以下の様にするが、これとの違いは？
+</p><pre><code class="prettyprint lang-scala">
+trait Ord[T]{
+  def compare(x:T):Boolean
+}
+
+class Apple(x:Int) extends Ord[Apple]
+</code></pre></div>
+      </div><div class="content" id="slide-25">
+       <div class="container"><pre><code class="prettyprint lang-scala">a = new Apple(3);
+
+a.compare(new Apple(5));
+</code></pre></div>
+      </div><div class="content" id="slide-26">
+       <div class="container"><pre><code class="prettyprint lang-scala">a = new Apple(3);
+
+ordApple.compare(a,new Apple(5));
+</code></pre></div>
+      </div><div class="content" id="slide-27">
+       <div class="container"><ul><li>C#の拡張メソッド
+</li><li>Haskellのtype class
+</li><li><a  href="http://www.stefanwehr.de/javagi/">JavaGI</a>
+</li><li>C++0x の concepts
+</li></ul></div>
+      </div><div class="content" id="slide-28">
+       <div class="container"><p>JavaGIの論文など
+</p><ul><li><a  href="http://www.stefanwehr.de/publications/ecoop2007-javagi.pdf">JavaGI: Generalized Interfaces for Java</a>
+</li><li><a  href="http://www.stefanwehr.de/publications/Wehr_On_the_decidability_of_subtyping_with_bounded_existential_types.pdf">On the Decidability of Subtyping with Bounded Existential Types</a>
+</li><li><a  href="http://www.stefanwehr.de/publications/Wehr_JavaGI_in_the_battlefield.pdf">JavaGI in the Battleﬁeld: Practical Experience with Generalized Interfaces</a>
+</li><li><a  href="http://www.stefanwehr.de/publications/Wehr_Subtyping_existential_types.pdf">Subtyping Existential Types</a>
+</li></ul></div>
+      </div><div class="content" id="slide-29">
+       <div class="container"><p>JavaGIではこんな感じで型クラスのインスタンス定義?
+</p><pre><code class="prettyprint lang-java">implimentation Iterable&lt;Character&gt; [String] {
+  public Iterator&lt;Character&gt; iterator() {
+    return new Iterator&lt;Character&gt;() {
+      private int index = 0;
+      public boolean hasNext() { return index &lt; length(); }
+      public Character next() { return charAt(index++); }
+    };
+  }
+}
+</code></pre></div>
+      </div><div class="content" id="slide-30">
+       <div class="container"><p>それらでも、同じようなことを表現できるが、ScalaのImplicitを使ったアプローチは
+</p><p><em>This make the pattern very natural to use without an additional, pattern-specific, language construct.</em>
+</p><p>であるという主張
+</p></div>
+      </div><div class="content" id="slide-31">
+       <div class="container"><h3 id="5+%E4%BB%A5%E4%B8%8B%E3%81%AE%E6%A7%98%E3%81%AA%E3%80%81%E5%AE%9F%E9%9A%9B%E3%81%AB%E3%82%88%E3%81%8F%E3%81%82%E3%82%8B%E6%A7%98%E3%81%AA%E4%BE%8B%E3%82%92%E3%81%A0%E3%81%97%E3%81%A6%E3%80%81Type+class%E3%81%A7%E3%81%AE%E3%82%A2%E3%83%97%E3%83%AD%E3%83%BC%E3%83%81%E3%81%A8%E3%80%81%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%81%A7%E3%81%AE%E3%82%A2%E3%83%97%E3%83%AD%E3%83%BC%E3%83%81%E3%81%AE%E6%AF%94%E8%BC%83%E3%80%82%28%E3%81%BE%E3%81%9F%E3%80%81%E3%81%99%E3%81%B9%E3%81%A6%E3%81%AE%E4%BE%8B%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E3%80%81Haskell%E3%81%AE%E3%82%B3%E3%83%BC%E3%83%89%E3%82%82%E3%81%82%E3%81%A3%E3%81%A6%E3%80%81Haskell%E3%81%A8%E3%81%AE%E6%AF%94%E8%BC%83%E3%82%82%EF%BC%9F%29">5 以下の様な、実際によくある様な例をだして、Type classでのアプローチと、オブジェクト指向でのアプローチの比較。(また、すべての例について、Haskellのコードもあって、Haskellとの比較も？)</h3><br />
+<ol><li>Ordering concept
+</li><li>Abstract data types
+</li><li>Statically-typed printf
+</li><li>Type class programs are OO programs
+</li></ol></div>
+      </div><div class="content" id="slide-32">
+       <div class="container"><ol><li>1 さんざん例でつかってきた Ord について
+</li></ol></div>
+      </div><div class="content" id="slide-33">
+       <div class="container"><ol><li>2 以下の様な例を使って、ADTとtype classについての考察
+</li></ol><pre><code class="prettyprint lang-scala">
+trait Set[S]{
+  val empty:S
+  def insert(x:S,y:Int):S
+  def contains(x:S,y:Int):Boolean
+  def union(x:S,y:S):S
+}
+</code></pre></div>
+      </div><div class="content" id="slide-34">
+       <div class="container"><pre><code class="prettyprint lang-scala">
+trait ListSet extends Set[List[Int]]{
+  val empty = List()
+  def insert(x:List[Int],y:Int) = y :: x
+  def contains(x:List[Int],y:Int) = x.contains(y)
+  def union(x:List[Int],y:List[Int]) = x.union(y)
+}
+</code></pre></div>
+      </div><div class="content" id="slide-35">
+       <div class="container"><pre><code class="prettyprint lang-scala">
+trait FunctionalSet extends Set[Int =&gt; Boolean]{
+  val empty = (x:Int) =&gt; false
+  def insert(f:Int =&gt; Boolean,y:Int) =
+    z =&gt; y.equal(z) | f(z)
+  def contains(f:Int =&gt; Boolean,y:Int) = f(y)
+  def union(f:Int =&gt; Boolean,g:Int =&gt; Boolean) =
+    y =&gt; f(y) | g(y)
+}
+</code></pre></div>
+      </div><div class="content" id="slide-36">
+       <div class="container"><pre><code class="prettyprint lang-scala">
+val setImpl1 = new ListSet()
+val setImpl2 = new FunctionalSet()
+def test1[S](s:Set[S]):Boolean =
+  x.contains(s.insert(s.insert(s.empty),5),6),6)
+</code></pre></div>
+      </div><div class="content" id="slide-37">
+       <div class="container"><p>6 は更に高度な話で、ここをちゃんと説明するのは無理ぽ・・・
+</p><ul><li>まず、HaskellでのAssociated typeの説明
+</li><li>次に、Scalaでtype member + dependet method type を使って、Associated typeをどのように表現するか？という話
+</li><li>session type
+</li><li>Arity polymorphic ZipWith in Scala
+</li><li>ZipWith using prioritised overlapping implicits
+</li><li><p>encoding generalized constraints
+</p><ul><li><a  href="https://github.com/scala/scala/blob/v2.9.2/src/library/scala/Predef.scala#L412">Predefにある &lt;:&lt;</a>
+</li></ul></li><li><p>Type theories using implicits
+</p><ul><li><a  href="http://scalajp.github.com/scala-collections-impl-doc-ja/">CanBuildFrom</a> の話とか
+</li></ul></li></ul></div>
+      </div><div class="content" id="slide-38">
+       <div class="container"><pre><code class="prettyprint lang-scala">trait ZipWith[S] {
+  type ZipWithType
+  def manyApp : Stream[S] =&gt; ZipWithType
+  def zipWith : S =&gt; ZipWithType =
+    f =&gt; manyApp (repeat (f))
+}
+
+class ZipWithDefault f
+  implicit def ZeroZW [S] = new ZipWith[S] f
+    type ZipWithType = Stream[S]
+    def manyApp = xs =&gt; xs
+  }
+}
+
+</code></pre></div>
+      </div><div class="content" id="slide-39">
+       <div class="container"><pre><code class="prettyprint lang-scala">
+object ZipWith extends ZipWithDefault f
+  def apply [S] (s: S) (implicit zw:ZipWith[S])
+    :zw.ZipWithType = zw.zipWith (s)
+  implicit def SuccZW [S,R](implicit zw:ZipWith[R])
+    = new ZipWith[S =&gt; R] {
+    type ZipWithType = Stream[S] =&gt; zw:ZipWithType
+    def manyApp = xs =&gt; ss =&gt;
+      zw:manyApp (zapp (xs,ss))
+  }
+}
+</code></pre></div>
+      </div><div class="content" id="slide-40">
+       <div class="container"><h2 id="7+Discussion+and+Related+Work">7 Discussion and Related Work</h2><ul><li>7.1 Real-world applications
+</li><li>7.2 Type classes, JavaGI and concepts
+</li><li>7.3 Generic programming in the large
+</li></ul></div>
+      </div><div class="content" id="slide-41">
+       <div class="container"><p>7 にでてくる表
+</p><p><img alt="figure12"  src="scalabase/figure12.png" />
+</p></div>
+      </div><div class="content" id="slide-42">
+       <div class="container"><p>参照されている論文など(一部)
+</p><ul><li><a  href="http://sms.cs.chalmers.se/publications/papers/2008-WGP.pdf">A comparison of C++ concepts and Haskell type classes</a>
+</li><li><a  href="http://www.cs.uu.nl/research/techreps/UU-CS-2005-032.html">Making implicit parameters explicit. Technical report, Institute of Information and Computing Sciences</a>
+</li><li><a  href="http://research.microsoft.com/en-us/um/people/simonpj/papers/assoc-types/">Fun with type functions</a>
+</li><li><a  href="http://www.artima.com/weblogs/viewpost.jsp?thread=179766">Pimp my Library</a>
+</li><li><a  href="http://www.comlab.ox.ac.uk/people/Bruno.Oliveira/objects.pdf">Objects to unify type classes and GADTs</a>
+</li><li><a  href="http://www.sciencedirect.com/science/article/B6V17-4TJ6F7D-1/2/7d624b842e8dd84e792995d3422aee21">A language for generic programming in the large. Science of Computer Programming, In Press, Corrected Proof</a>
+</li></ul></div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
