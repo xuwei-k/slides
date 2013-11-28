@@ -1,0 +1,359 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>怖いScala</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0">
+       <div class="container"><h1 id="%E6%80%96%E3%81%84Scala%EF%BC%81">怖いScala！</h1></div>
+      </div><div class="content" id="slide-1">
+       <div class="container"><img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
+</li><li>github <a  href="https://github.com/xuwei-k">@xuwei-k</a>
+</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
+</li></ul></div>
+      </div><div class="content" id="slide-2">
+       <div class="container"><ul><li>無職＼(^o^)／
+</li><li>もう少し無職楽しむつもりだけど、なんとなく関数型言語書いて金貰えるような仕事ないかな・・・
+</li></ul></div>
+      </div><div class="content" id="slide-3">
+       <div class="container"><ul><li>今年の前半は働いてたけど、去年の今頃も無職だった
+</li><li>暇だからScalazにひたすらpull req送る
+</li><li>気づいたらコミッターになっていた((((；ﾟДﾟ))))!?
+</li><li>2013年11月現在、コミット数3位<span style="font-size: 30%;">(コミットした行数では7位くらい。つまり細かいコミットが多い)</span>
+</li></ul></div>
+      </div><div class="content" id="slide-4">
+       <div class="container"><p><a  href="https://github.com/scalaz/scalaz/graphs/contributors">https://github.com/scalaz/scalaz/graphs/contributors</a>
+</p><p><img alt="scalaz-graph"  src="http://cdn-ak.f.st-hatena.com/images/fotolife/x/xuwei/20131128/20131128063417.png" />
+</p></div>
+      </div><div class="content" id="slide-5">
+       <div class="container"><h2 id="%E6%80%96%E3%81%84Scala%E3%81%A8%E3%81%AF%E3%83%BB%E3%83%BB%E3%83%BB">怖いScalaとは・・・</h2><ul><li>怖い人がいる？
+</li><li>implicit、なにそれ怖い？
+</li><li>Scalaz怖い？<span style="font-size: 30%;">(実はもっと怖いライブラリが・・・)</span>
+</li><li>モナド怖い？
+</li><li>関数型怖い？
+</li></ul></div>
+      </div><div class="content" id="slide-6">
+       <div class="container"><p>怖い(?)と思われてるものを真面目に話そう！
+</p></div>
+      </div><div class="content" id="slide-7">
+       <div class="container"><p>怖い人達(?)の話
+</p></div>
+      </div><div class="content" id="slide-8">
+       <div class="container"><h2 id="%E6%9C%80%E8%BF%91%E3%81%AE%E6%9C%89%E5%90%8D%E3%81%AA2%E3%81%A4%E3%81%AE%E4%BA%8B%E4%BB%B6">最近の有名な2つの事件</h2><ul><li><a  href="http://togetter.com/li/436709">twitter の bijection というライブラリの名前問題</a>
+</li><li><a  href="http://togetter.com/li/361897">scala.util.Try</a>
+</li></ul></div>
+      </div><div class="content" id="slide-9">
+       <div class="container"><h2 id="%E6%95%B0%E3%80%85%E3%81%AE%E5%90%8D%E8%A8%80%28%3F%29">数々の名言(?)</h2><ul><li><a  href="https://twitter.com/dibblego/status/327919449325842432">Jodatimeはゴミ</a>
+</li><li><a  href="https://twitter.com/dibblego/status/347282744692322304">GoFのデザインパターンにメリットなんてひとつもない</a>
+</li><li><a  href="https://twitter.com/dibblego/status/225000527073775616">ScalaにIOのdata typeがないから、sbt使うの難しい</a>
+</li><li><a  href="https://twitter.com/dibblego/status/405220083414204416">“I believe the reader monad can’t be … used … without … special language options … on” Odersky, wrong again. </a>
+</li></ul></div>
+      </div><div class="content" id="slide-10">
+       <div class="container"><ul><li><a  href="https://twitter.com/dibblego/status/336995275149287425">Erasure is one of the few things that Java got right. C# fell into the trap afterward.</a>
+</li><li><a  href="https://twitter.com/dibblego/status/380201589698355200">the #scala ZipAll made me puke.</a>
+</li><li><a  href="http://tmorris.net/posts/2012-05-11-sip-18-is-just-another-bad-idea-serving-nobody.html">SIP-18 is just another bad idea serving nobody</a>
+</li><li>その他、昔からodersky先生と犬猿の仲らしく、数えきれないほど色々あるらしい
+</li></ul></div>
+      </div><div class="content" id="slide-11">
+       <div class="container"><h2 id="%E3%81%84%E3%81%84%E4%BA%BA%EF%BC%9F">いい人？</h2><blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/adelbertchang">@adelbertchang</a> <a href="https://twitter.com/larsr_h">@larsr_h</a> <a href="https://twitter.com/xuwei_k">@xuwei_k</a> Kenji is rock and rolling like a champ.</p>&mdash; Tony Morris (@dibblego) <a href="https://twitter.com/dibblego/statuses/381753674864668672">September 22, 2013</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>((((；ﾟДﾟ))))ｶﾞｸｶﾞｸﾌﾞﾙﾌﾞﾙ
+</p></div>
+      </div><div class="content" id="slide-12">
+       <div class="container"><p>Scalazやモナドの話
+</p></div>
+      </div><div class="content" id="slide-13">
+       <div class="container"><ul><li>7.0.0が2013年4月22日リリース
+</li><li>2013年11月28日現在、stableな最新版は 7.0.5
+</li><li>7.0.0から7.0.5までは(基本的に)バイナリ互換がある
+</li><li>細かいバグ修正、互換性を壊さない機能追加のリリースが5回
+</li></ul></div>
+      </div><div class="content" id="slide-14">
+       <div class="container"><ul><li>現在7.1.0を同時に開発中
+</li><li>7.1.xは7.1.0-M4が最新版
+</li><li>7.1.xは現在マイルストーン版なので、バイナリ互換はない
+</li><li>Scala2.11.0.finalがでる頃(2014年初め)に、7.1.0のfinalリリース予定
+</li><li>7.1.0のfinalがでたら、その後の7.1.1や7.1.2はバイナリ互換保つ予定
+</li></ul></div>
+      </div><div class="content" id="slide-15">
+       <div class="container"><ul><li>7.0.xは、Scala2.9.2以上
+</li><li>7.1.xは、Scala2.9.3
+</li><li>7.2.xは、Scala2.9を切り捨てる予定？
+</li><li>7.2.xはまだ開発始まってないので、詳細は未定
+</li><li>その他versionについての詳細はwikiを参照
+</li><li><a  href="https://github.com/scalaz/scalaz/wiki">https://github.com/scalaz/scalaz/wiki</a>
+</li></ul></div>
+      </div><div class="content" id="slide-16">
+       <div class="container"><p><a  href="http://leifwarner.net/scalaz.svg">http://leifwarner.net/scalaz.svg</a>
+<span style="font-size: 50%;">この図は7.0.x系なので、7.1.xと少し違う</span>
+</p><iframe src="http://leifwarner.net/scalaz.svg">
+</iframe>
+</div>
+      </div><div class="content" id="slide-17">
+       <div class="container"><p>モナド!</p>
+<p style="font-size: 150%;">モナド!</p>
+<p style="font-size: 200%;">モナド!</p>
+</div>
+      </div><div class="content" id="slide-18">
+       <div class="container"><p>モナドを避けているから、必要以上に怖く感じるのでは？
+モナドを理解してしまおう！
+</p></div>
+      </div><div class="content" id="slide-19">
+       <div class="container"><ul><li>世間には「モナドはコンテナ」とかそういう説明があったりします
+</li><li>が、個人的にはそういう「変な比喩」を使った説明好きではない
+</li><li>比喩は理解を助けるかもしれない、が単に余計な混乱を招く可能性
+</li></ul></div>
+      </div><div class="content" id="slide-20">
+       <div class="container"><p>では、モナドとはなにか？
+</p></div>
+      </div><div class="content" id="slide-21">
+       <div class="container"><p>単なる型クラスの1つ
+</p></div>
+      </div><div class="content" id="slide-22">
+       <div class="container"><p>では、型クラスとは？
+</p></div>
+      </div><div class="content" id="slide-23">
+       <div class="container"><p><a  href="http://chopl.in/blog/2012/11/06/introduction-to-typeclass-with-scala.html">Scalaで型クラス入門</a>
+</p></div>
+      </div><div class="content" id="slide-24">
+       <div class="container"><ul><li>Scala標準ライブラリでも使われてる
+</li><li>Scalaz以外の多くのライブラリでも使われている
+</li></ul></div>
+      </div><div class="content" id="slide-25">
+       <div class="container"><p>型クラスの定義
+<a  href="https://github.com/scala/scala/blob/v2.10.3/src/library/scala/math/Ordering.scala">https://github.com/scala/scala/blob/v2.10.3/src/library/scala/math/Ordering.scala</a>
+</p><pre><code class="prettyprint lang-scala">trait Ordering[T]{
+  def compare(x: T, y: T): Int
+}
+</code></pre><span style="font-size: 30%;">上記のコードは色々省略してあります</span>
+</div>
+      </div><div class="content" id="slide-26">
+       <div class="container"><p>型クラスのインスタンスの定義
+</p><p><a  href="https://github.com/scala/scala/blob/v2.10.3/src/library/scala/math/Ordering.scala#L250-L256">https://github.com/scala/scala/blob/v2.10.3/src/library/scala/math/Ordering.scala#L250-L256</a>
+</p><pre><code class="prettyprint lang-scala">trait IntOrdering extends Ordering[Int] {
+  def compare(x: Int, y: Int) =
+    if (x &lt; y) -1
+    else if (x == y) 0
+    else 1
+}
+implicit object Int extends IntOrdering
+</code></pre></div>
+      </div><div class="content" id="slide-27">
+       <div class="container"><p>型クラスを使う側
+<a  href="https://github.com/scala/scala/blob/v2.10.3/src/library/scala/collection/TraversableOnce.scala#L214">https://github.com/scala/scala/blob/v2.10.3/src/library/scala/collection/TraversableOnce.scala#L214</a>
+</p><pre><code class="prettyprint lang-scala">def max[B &gt;: A](implicit cmp: Ordering[B]): A
+</code></pre></div>
+      </div><div class="content" id="slide-28">
+       <div class="container"><ul><li>implicitは型クラスのためのもの！
+</li><li>implicitは型クラス以外にも使えてしまう
+</li><li>型クラスは素晴らしいので、どんどん使いましょう
+</li><li>型クラス以外のimplicitの使いすぎに注意
+</li><li>そのimplicitは、型クラスとしての使い方なのか、そうでないのか意識しよう
+</li></ul></div>
+      </div><div class="content" id="slide-29">
+       <div class="container"><p>ほとんどの型クラスには「満たすべき法則がある」
+</p></div>
+      </div><div class="content" id="slide-30">
+       <div class="container"><p>法則とは？
+</p><ul><li>例えるなら、Javaで<code>equals</code>と<code>hashCode</code>が特定の法則を満たさないといけないようなもの
+</li><li>先ほどの<code>Ordering</code>ならば、<code>a &gt; b</code> かつ <code>b &gt; c</code> ならば <code>a &gt; c</code> など(推移律)
+</li></ul></div>
+      </div><div class="content" id="slide-31">
+       <div class="container"><p>モナドの型クラスの定義
+</p><pre><code class="prettyprint lang-scala">trait Monad[F[_]]{
+  def bind[A, B](fa: F[A])(f: A =&gt; F[B]): F[B]
+  def point[A](a: =&gt; A): F[A]
+}
+</code></pre></div>
+      </div><div class="content" id="slide-32">
+       <div class="container"><p>モナド則とは
+</p></div>
+      </div><div class="content" id="slide-33">
+       <div class="container"><pre><code class="">return a &gt;&gt;= k  ==  k a
+ m &gt;&gt;= return  ==  m
+ m &gt;&gt;= (\x -&gt; k x &gt;&gt;= h)  ==  (m &gt;&gt;= k) &gt;&gt;= h
+</code></pre></div>
+      </div><div class="content" id="slide-34">
+       <div class="container"><p>Haskellではあれなので、Scalazにおける例
+</p></div>
+      </div><div class="content" id="slide-35">
+       <div class="container"><p>モナド則その1
+</p><p><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Monad.scala#L71">https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Monad.scala#L71</a>
+</p><pre><code class="prettyprint lang-scala">def leftIdentity[A, B](a: A, f: A =&gt; F[B])(implicit FB: Equal[F[B]]): Boolean =
+  FB.equal(bind(point(a))(f), f(a))
+</code></pre></div>
+      </div><div class="content" id="slide-36">
+       <div class="container"><p>モナド則その2
+</p><p><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Monad.scala#L73">https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Monad.scala#L73</a>
+</p><pre><code class="prettyprint lang-scala">def rightIdentity[A](a: F[A])(implicit FA: Equal[F[A]]): Boolean =
+  FA.equal(bind(a)(point(_: A)), a)
+</code></pre></div>
+      </div><div class="content" id="slide-37">
+       <div class="container"><p>モナド則その3
+</p><p><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Bind.scala#L40-L41">https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Bind.scala#L40-L41</a>
+</p><pre><code class="prettyprint lang-scala">def associativeBind[A, B, C](fa: F[A], f: A =&gt; F[B], g: B =&gt; F[C])(implicit FC: Equal[F[C]]): Boolean =
+  FC.equal(bind(bind(fa)(f))(g), bind(fa)((a: A) =&gt; bind(f(a))(g)))
+</code></pre></div>
+      </div><div class="content" id="slide-38">
+       <div class="container"><p>もうみなさん、モナドを理解しましたね！
+</p></div>
+      </div><div class="content" id="slide-39">
+       <div class="container"><p>提案:
+</p><ul><li>「モナドはなにか？」
+</li></ul><p>ということと
+</p><ul><li>「モナドはどのように役に立つのか？」
+</li><li>「具体的にどのようなモナドがあるのか？」
+</li></ul><p>を分けて考えよう！
+</p></div>
+      </div><div class="content" id="slide-40">
+       <div class="container"><ul><li>「モナドはなにか？」と言われたら、いま説明したもの以外のなにものでもない。
+</li><li>「具体的にモナドになるもの」は大量にあるので、それはゆっくり覚えていけばよい。
+</li></ul></div>
+      </div><div class="content" id="slide-41">
+       <div class="container"><ul><li>「自分で新しいモナドを定義する」場合以外は、モナド則をそこまで気にする必要ない
+</li><li>Scalazには<a href="https://github.com/scalaz/scalaz/blob/v7.1.0-M4/scalacheck-binding/src/main/scala/scalaz/scalacheck/ScalazProperties.scala#L191-L207">「モナド則が満たされているかどうかテストする仕組み」</a>があるので、それを使おう
+</li></ul></div>
+      </div><div class="content" id="slide-42">
+       <div class="container"><p>型クラスの継承関係
+</p><ul><li>型クラスにも“継承“という概念が存在する
+</li><li>ここからモナドと他の型クラスの継承関係について
+</li></ul></div>
+      </div><div class="content" id="slide-43">
+       <div class="container"><p>Monadの親の型クラス
+</p><ul><li><code>InvariantFunctor</code> <span style="font-size: 30%;">(これはめったに使わないので忘れてもいいです)</span>
+</li><li><code>Functor</code>
+</li><li><code>Apply</code>
+</li><li><code>Bind</code>
+</li><li><code>Applicative</code>
+</li></ul></div>
+      </div><div class="content" id="slide-44">
+       <div class="container"><p>ScalazとHaskellと違い
+</p><ul><li>Haskellの標準ライブラリには <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> の3つのみ
+</li><li>Haskellの場合それら3つは継承関係ではない
+</li><li>Haskellの標準ライブラリには存在しない <code>Apply</code>, <code>Bind</code> がScalazにはある
+</li><li>Haskellの標準ライブラリには<code>Semigroup</code>はない
+</li><li>その他いろいろ
+</li></ul></div>
+      </div><div class="content" id="slide-45">
+       <div class="container"><ul><li><code>Apply</code> ならば、必ず <code>Functor</code> になる
+</li><li><code>Applicative</code> ならば、必ず <code>Apply</code> になる
+</li><li><code>Bind</code> ならば、必ず <code>Apply</code> になる
+</li><li><code>Monad</code> ならば、必ず <code>Applicative</code> になる
+</li><li><code>Monad</code> ならば、必ず <code>Bind</code> になる
+</li></ul></div>
+      </div><div class="content" id="slide-46">
+       <div class="container"><ul><li><code>Bind</code> にはなるが <code>Monad</code> にはならない例が存在する(Mapなど)
+</li><li><code>Applicaive</code> にはなるが <code>Monad</code> にはならない例( <code>scalaz.Validation</code> など)
+</li></ul></div>
+      </div><div class="content" id="slide-47">
+       <div class="container"><p>よくある誤解
+</p><ul><li>Monadではない、むしろMonadと呼ぶには間違っている(単なるApplicativeの例に対して)Monadという言葉を使う
+</li><li>Monadではなく、MonadPlusが関係することに関してMonadという言葉を使う。
+</li><li>参考 <a  href="http://d.hatena.ne.jp/xuwei/20130517/1368814058">HaskellのdoとScalaのfor式とEitherとMonadPlus</a>
+</li></ul><p>マサカリが飛んでくるかもしれません?
+</p></div>
+      </div><div class="content" id="slide-48">
+       <div class="container"><ul><li>先ほど説明したように、一般的にMonadが満たすべき性質は3つ
+</li><li>しかし、ScalazのMonadは多くの他の型クラスを継承している
+</li><li>よって、親の型クラスの性質も満たさなければならない
+</li><li>すべて合わせると<strong>13個</strong>になる！！！
+</li><li>しかし、デフォルト実装を使っていれば必ず満たすので、普通は気にする必要ない
+</li></ul></div>
+      </div><div class="content" id="slide-49">
+       <div class="container"><ul><li>モナドという概念自体は、これまで説明したようなものでそれほど複雑ではない
+</li><li>しかし<code>scalaz.Monad</code>を含めた様々な型クラスを使ったり、新たに定義する場合には色々な知識が必要
+</li></ul></div>
+      </div><div class="content" id="slide-50">
+       <div class="container"><p>また、<code>Monad</code> と同時に、それらと関連する型クラスである <code>Functor</code> なども同時に理解するようにしたほうがいい
+</p></div>
+      </div><div class="content" id="slide-51">
+       <div class="container"><p>Scalazを使いたくてもどこから使っていいかわからない人向けの話
+</p></div>
+      </div><div class="content" id="slide-52">
+       <div class="container"><ul><li><code>scalaz.Validation</code>
+</li><li><code>Applicative#sequence</code>
+</li></ul></div>
+      </div><div class="content" id="slide-53">
+       <div class="container"><p>なぜ <code>Validation</code> がScalaz初心者にオススメなのか？
+</p></div>
+      </div><div class="content" id="slide-54">
+       <div class="container"><ul><li>Monadにならないが、Applicativeになる例
+</li><li>実用的！
+</li><li>ついでに、<code>Semigroup</code> も関連する
+</li><li>Scalaz独自のデータ型である <code>NonEmptyList</code> の利点が生かせる
+</li></ul></div>
+      </div><div class="content" id="slide-55">
+       <div class="container"><p><code>scalaz.Validation</code> と同じような実装
+</p><ul><li>playframework2の<code>JsResult</code>
+<a  href="https://github.com/playframework/playframework/blob/2.2.1/framework/src/play-json/src/main/scala/play/api/libs/json/JsResult.scala">https://github.com/playframework/playframework/blob/2.2.1/framework/src/play-json/src/main/scala/play/api/libs/json/JsResult.scala</a>
+</li><li>scalautilsの<code>Or</code><span style="font-size: 30%;">(scalatestの人が作ったもの)</span>
+<a  href="https://github.com/scalatest/scalatest/blob/release-2.0-for-scala-2.10/src/main/scala/org/scalautils/Or.scala#L581">https://github.com/scalatest/scalatest/blob/release-2.0-for-scala-2.10/src/main/scala/org/scalautils/Or.scala#L581</a>
+</li></ul></div>
+      </div><div class="content" id="slide-56">
+       <div class="container"><ul><li>似たようなものを再実装するくらいなら、最初から既存のもの使おう！
+</li><li>再実装するとしても、コード読むことで参考になるはず
+</li></ul></div>
+      </div><div class="content" id="slide-57">
+       <div class="container"><p><code>Applicative#sequence</code>
+</p><p><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Applicative.scala#L39-L40">https://github.com/scalaz/scalaz/blob/v7.1.0-M4/core/src/main/scala/scalaz/Applicative.scala#L39-L40</a>
+</p></div>
+      </div><div class="content" id="slide-58">
+       <div class="container"><p>Scala2.10から入った<code>Future</code>を使う場合
+</p><ul><li><code>Option[Future[A]]</code> を <code>Future[Option[A]]</code> にしたい
+</li></ul><p>とかよくあるはず
+</p></div>
+      </div><div class="content" id="slide-59">
+       <div class="container"><p>Scalaz7.0.xの場合は、<code>scala.concurrent.Future</code>の型クラスのインスタンスは入ってないので以下の設定が必要
+</p><pre><code class="prettyprint lang-scala">libraryDependencies ++= Seq(
+  &quot;org.typelevel&quot; %% &quot;scalaz-contrib-210&quot; % &quot;0.1.5&quot;,
+  &quot;org.scalaz&quot; %% &quot;scalaz-core&quot; % &quot;7.0.5&quot;
+)
+
+scalaVersion := &quot;2.10.3&quot;
+</code></pre></div>
+      </div><div class="content" id="slide-60">
+       <div class="container"><pre><code class="prettyprint lang-scala">import scala.concurrent.Future
+import scalaz._
+import Scalaz._
+import scalaz.contrib.std.scalaFuture._ // 7.0.xの場合
+import scalaz.std.scalaFuture._ // 7.1.0-M4の場合
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
+</code></pre></div>
+      </div><div class="content" id="slide-61">
+       <div class="container"><pre><code class="prettyprint lang-scala">Option(Future(1)).sequence // Future(Option(1))
+</code></pre></div>
+      </div><div class="content" id="slide-62">
+       <div class="container"><p><code>A[B[C]]</code>
+</p><p>という型のオブジェクトがあったとき、以下のどちらかであれば
+</p><ul><li>AがTraverse、BがApplicative
+</li><li>AがTraverse1、BがApply
+</li></ul><p><code>A[B[C]]</code> から <code>B[A[C]]</code> に変換できる
+</p></div>
+      </div><div class="content" id="slide-63">
+       <div class="container"><ul><li>質問？
+</li><li><code>Validation</code> や <code>Applicative</code>の<code>sequence</code>関数の説明のライブコーディング？
+</li><li><a  href="https://gist.github.com/xuwei-k/7689965">https://gist.github.com/xuwei-k/7689965</a>
+</li></ul></div>
+      </div><div class="content" id="slide-64">
+       <div class="container"><p>おわり。ありがとうございました
+</p></div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
