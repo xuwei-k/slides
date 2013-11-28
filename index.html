@@ -1,10 +1,25 @@
 <html>
   <head>
     <title>xuwei-k slides</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   </head>
   <body>
-    <ul>
-      <li><a href="./picture-show-introduction">Picture Show Introduction</a></li>
+    <ul id="slide-list">
     </ul>
   </body>
+
+<script>
+(function(){
+  var callback = function(data){
+    for(var i = 0; i < data.tree.length; i++){
+      var tree = data.tree[i]
+      if(tree.type === "tree"){
+        var path = tree.path
+        $("#slide-list").append("<li><a target='_blank' href='" + path + "'>" + path + "</a></li>")
+      }
+    }
+  }
+  $.get("https://api.github.com/repos/xuwei-k/slides/git/trees/gh-pages", {}, callback)
+})()
+</script>
 </html>
