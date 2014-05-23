@@ -1,0 +1,550 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Play2 の Json と型クラス</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0"><div class="container">
+                  <h1 id="Play2+%E3%81%AE+Json+%E3%81%A8%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9">Play2 の Json と型クラス</h1><br />
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+
+                </div>
+      </div><div class="content" id="slide-1"><div class="container">
+                  <img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
+</li><li>github <a  href="https://github.com/xuwei-k">@xuwei-k</a>
+</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
+</li><li>2014年3月からドワンゴで働いてる(まだ3ヶ月)
+</li><li>2013年、Scalazに一番多くコミットした人
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-2"><div class="container">
+                  <p>日本人で一番play2にコミットしてるはず？
+</p><br />
+<ul><li><a  href="https://github.com/playframework/playframework/graphs/contributors">https://github.com/playframework/playframework/graphs/contributors</a>
+</li><li><a  href="http://d.hatena.ne.jp/xuwei/20131207/1386424627">去年の年末に今までにしたpull reqを列挙したblog</a>
+</li></ul><img src="http://xuwei-k.github.io/slides/play2typeclasses/contributors-graph.png" width="500" height="400" />
+
+                </div>
+      </div><div class="content" id="slide-3"><div class="container">
+                  <h2 id="Iteratee%E3%81%AF%E3%82%AA%E3%83%AF%E3%82%B3%E3%83%B3%E3%81%AB%E3%81%AA%E3%82%8B%E3%81%8B%E3%82%82">Iterateeはオワコンになるかも</h2><p>(すでにHaskell界隈やScalaz界隈ではオワコン)
+</p><p><a  href="https://twitter.com/jroper/status/456759337470291968">https://twitter.com/jroper/status/456759337470291968</a>
+</p><img src="http://xuwei-k.github.io/slides/play2typeclasses/iteratee-akka-stream.png" />
+
+                </div>
+      </div><div class="content" id="slide-4"><div class="container">
+                  <ul><li><a  href="http://www.infoq.com/jp/news/2014/04/reactive-streams-akka-streams">http://www.infoq.com/jp/news/2014/04/reactive-streams-akka-streams</a>
+</li><li><a  href="http://www.reactive-streams.org/">http://www.reactive-streams.org/</a>
+</li><li><a  href="http://typesafe.com/blog/typesafe-announces-akka-streams">http://typesafe.com/blog/typesafe-announces-akka-streams</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-5"><div class="container">
+                  <p><a  href="http://mandubian.com/2013/08/21/playztream/">Scalaz StreamとPlayを組み合わせる話</a>
+</p>
+                </div>
+      </div><div class="content" id="slide-6"><div class="container">
+                  <p>Haskell界隈の事情(Iterateeはオワコンらしいが、それ以外で乱立)
+</p><p><a  href="https://twitter.com/ma0e/status/463982747338297344">https://twitter.com/ma0e/status/463982747338297344</a>
+</p>
+                </div>
+      </div><div class="content" id="slide-7"><div class="container">
+                  <p>playのpull reqがrejectされたイラつきをわざわざ自分でまとめたtogetter
+</p><br />
+<p><a  href="http://togetter.com/li/434702">Play2 の pull request への態度について</a>
+</p>
+                </div>
+      </div><div class="content" id="slide-8"><div class="container">
+                  <p>バッドノウハウ例
+</p><br />
+<ul><li><a  href="http://togetter.com/li/465805">play2.1のDB.withTransactionのバグ? </a>
+</li><li><a  href="http://togetter.com/li/520346">playのテストが失敗するのがScalaのDelayedInitのバグだった件</a>
+</li><li><a  href="http://d.hatena.ne.jp/xuwei/20130207/1360203782">Play 2.1 のテスト中に、OutOfMemoryError などが出てテストが途中で止まる場合の対策</a>
+</li><li><a  href="http://d.hatena.ne.jp/xuwei/20130423/1366726521">Play2.1.0や2.1.1で、Tests.SetupやTests.Cleanupを設定しても有効にならない件</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-9"><div class="container">
+                  <ul><li><a  href="https://github.com/unfiltered/unfiltered">Unfiltered</a> も趣味で使ってる、貢献してる
+</li><li><a  href="http://www.slideshare.net/hitoasa/mongodb-13561725">Scalatra を前々職で仕事で使ってた</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-10"><div class="container">
+                  <h2 id="%E7%A4%BE%E5%86%85Scala%E4%BA%8B%E6%83%85">社内Scala事情</h2><br />
+<ul><li>社内のScalaのプロジェクトはほぼPlay2
+</li><li>Scalaのプロジェクト6〜7個以上ある？(自分も把握できてない)
+</li><li>Scalaを書いてるプログラマは30人以上?( <a  href="https://twitter.com/meso/status/430965252444786688">出典@mesoさん</a> )
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-11"><div class="container">
+                  <p>以下の様なことを話したいが、詰め込み過ぎたので、全部丁寧に話せるか謎
+</p><br />
+<ul><li>型クラスとは？
+</li><li>play2に存在する型クラス
+</li><li>Scalaにおける型クラスとは？
+</li><li><code>Applicative</code> と <code>Monad</code>
+</li><li>Play の <code>Reads</code> や <code>Writes</code> などが、なぜあのような書き方をするのか？
+</li><li>Play と Scalaz の比較
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-12"><div class="container">
+                  <p>これから話すことは、どのversionでもそれほど大きく変わってませんが、特に言及がない場合は、<a  href="https://github.com/playframework/playframework/tree/2.2.3">play2.2.3</a>とします
+</p>
+                </div>
+      </div><div class="content" id="slide-13"><div class="container">
+                  <h3 id="%E6%9C%80%E7%B5%82%E7%9A%84%E3%81%AA%E7%9B%AE%E6%A8%99">最終的な目標</h3><br />
+<pre><code class="prettyprint lang-scala">case class Location(lat: Double, long: Double)
+case class Resident(name: String, age: Int, role: Option[String])
+case class Place(name: String, location: Location, residents: Seq[Resident])
+</code></pre><br />
+<p>(playの公式ドキュメントより引用)
+</p><br />
+<ul><li><a  href="http://www.playframework.com/documentation/2.2.3/ScalaJsonCombinators">http://www.playframework.com/documentation/2.2.3/ScalaJsonCombinators</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-14"><div class="container">
+                  <p>これを理解できるように
+</p><hr />
+<br />
+<pre><code class="prettyprint lang-scala">implicit val locationReads: Reads[Location] = (
+  (__ \ &quot;lat&quot;).read[Double](min(-90.0) keepAnd max(90.0)) and
+  (__ \ &quot;long&quot;).read[Double](min(-180.0) keepAnd max(180.0))
+)(Location.apply _)
+
+implicit val residentReads: Reads[Resident] = (
+  (__ \ &quot;name&quot;).read[String](minLength[String](2)) and
+  (__ \ &quot;age&quot;).read[Int](min(0) keepAnd max(150)) and
+  (__ \ &quot;role&quot;).readNullable[String]
+)(Resident.apply _)
+
+implicit val placeReads: Reads[Place] = (
+  (__ \ &quot;name&quot;).read[String](minLength[String](2)) and
+  (__ \ &quot;location&quot;).read[Location] and
+  (__ \ &quot;residents&quot;).read[Seq[Resident]]
+)(Place.apply _)
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-15"><div class="container">
+                  <p>この2つの違い
+</p><br />
+<pre><code class="prettyprint lang-scala">implicit val placeReads: Reads[Place] = (
+  (__ \ &quot;name&quot;).read[String](minLength[String](2)) and
+  (__ \ &quot;location&quot;).read[Location] and
+  (__ \ &quot;residents&quot;).read[Seq[Resident]]
+)(Place.apply _)
+</code></pre><br /><hr />
+<pre><code class="prettyprint lang-scala">implicit val placeReads: Reads[Place] = for{
+  name      &lt;- (__ \ &quot;name&quot;).read[String](minLength[String](2))
+  location  &lt;- (__ \ &quot;location&quot;).read[Location]
+  residents &lt;- (__ \ &quot;residents&quot;).read[Seq[Resident]]
+} yield Place(name, location, residents)
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-16"><div class="container">
+                  <p>for式 = モナド = カッコイイ！
+</p><br />
+<p>と思ってる人はまだScala初心者(?)
+</p><p>あんな気持ち悪い(?)書き方をしているのは理由がある
+</p>
+                </div>
+      </div><div class="content" id="slide-17"><div class="container">
+                  <h3 id="play2%E3%81%AB%E3%81%82%E3%82%8B%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9">play2にある型クラス</h3><br />
+<p><a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Monoid.scala#L3">Monoid</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Monoid.scala#L19">Reducer</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Functors.scala#L7">Functor</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Functors.scala#L13">InvariantFunctor</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Functors.scala#L19">ContravariantFunctor</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Applicative.scala#L5">Applicative</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Alternative.scala#L5">Alternative</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Reads.scala#L17">Reads</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Writes.scala#L14">Writes</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Writes.scala#L36">OWrites</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Format.scala#L10">Format</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Format.scala#L11">OFormat</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/http/Writeable.scala#L20">Writeable</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/http/ContentTypeOf.scala#L21">ContentTypeOf</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/data/format/Format.scala#L13">Formetter</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/mvc/Binders.scala#L65">QueryStringBindable</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/mvc/Binders.scala#L150">PathBindable</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/mvc/Binders.scala#L190">JavascriptLitteral</a>
+</p><br />
+<p>Play内部には、意外と型クラスがいっぱいある
+</p>
+                </div>
+      </div><div class="content" id="slide-18"><div class="container">
+                  <p>勝手に3種類くらいに分類
+</p><br />
+<ol><li>HaskellやScalazにもある型クラス
+</li><li>Json関連の型クラス
+</li><li>その他の型クラス
+</li></ol>
+                </div>
+      </div><div class="content" id="slide-19"><div class="container">
+                  <h3 id="Haskell%E3%82%84Scalaz%E3%81%AB%E3%82%82%E3%81%82%E3%82%8B%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9">HaskellやScalazにもある型クラス</h3><br />
+<p><a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Monoid.scala#L3">Monoid</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Monoid.scala#L19">Reducer</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Functors.scala#L7">Functor</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Functors.scala#L13">InvariantFunctor</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Functors.scala#L19">ContravariantFunctor</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Applicative.scala#L5">Applicative</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-functional/src/main/scala/play/api/libs/functional/Alternative.scala#L5">Alternative</a>
+</p><br />
+<ul><li>実際それほど汎用的に使われてるわけではない？
+</li><li>Jsonのために導入された感じ
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-20"><div class="container">
+                  <p>Json関連の型クラス
+</p><br />
+<p><a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Reads.scala#L17">Reads</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Writes.scala#L14">Writes</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Writes.scala#L36">OWrites</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Format.scala#L10">Format</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Format.scala#L11">OFormat</a>
+</p><br />
+<ul><li>これらが重要なので、詳しく話したいが
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-21"><div class="container">
+                  <p>その他
+</p><br />
+<p><a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/http/Writeable.scala#L20">Writeable</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/http/ContentTypeOf.scala#L21">ContentTypeOf</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/data/format/Format.scala#L13">Formetter</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/mvc/Binders.scala#L65">QueryStringBindable</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/mvc/Binders.scala#L150">PathBindable</a>,
+<a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play/src/main/scala/play/api/mvc/Binders.scala#L190">JavascriptLitteral</a>
+</p><br />
+<ul><li><code>Writeable</code>や<code>ContentTypeOf</code>は、普通にやるぶんには、そこまで意識する必要ない
+</li><li>独自のオブジェクトを、レスポンスとして返却する場合に使う(たとえば <a  href="https://github.com/tototoshi/play-json4s">play-json4s</a> )
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-22"><div class="container">
+                  <img src="http://xuwei-k.github.io/slides/play2typeclasses/play2typeclasses.svg">
+
+                </div>
+      </div><div class="content" id="slide-23"><div class="container">
+                  <p>Haskellで表現(1)
+</p><pre><code class="prettyprint lang-haskell">
+-- ちょっと省略してるので不正確
+data JsResult a = JsSuccess a | JsError
+
+class Writes a where
+  writes :: a -&gt; JsValue
+
+class Writes a =&gt; OWrites a where
+  writes :: a -&gt; JsObject -- Haskellでは本当はオーバーライドは不可能
+
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-24"><div class="container">
+                  <p>Haskellで表現(2)
+</p><pre><code class="prettyprint lang-haskell">
+class Reads a where
+  reads :: JsValue -&gt; JsResult a
+
+class (Writes a, Reads a) =&gt; Format a where
+
+class (OWrites a, Reads a) =&gt; OFormat a where
+
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-25"><div class="container">
+                  <p>Haskellで表現(3)
+</p><pre><code class="prettyprint lang-haskell">
+-- https://github.com/ekmett/contravariant/blob/v0.5.2/Data/Functor/Contravariant.hs#L76
+class ContravariantFunctor a where
+  contramap :: (a -&gt; b) -&gt; f b -&gt; f a
+
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-26"><div class="container">
+                  <p>Haskellで表現(4)
+</p><pre><code class="prettyprint lang-haskell">
+instance Alternative JsResult where
+  -- 実装は略
+
+instance Alternative Reads where
+  -- a -&gt; f b において、fがAlternativeなら
+  -- 自動的にa -&gt; f bもAlternative
+
+instance ContravariantFunctor Writes where
+  -- Writesは実質単なる a -&gt; JsValue という関数と同型なので
+  -- ContravariantFunctorになるのは当たり前
+
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-27"><div class="container">
+                  <h3 id="%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%82%92%E4%B8%80%E3%81%8B%E3%82%89%E4%B8%81%E5%AF%A7%E3%81%AB%E8%AA%AC%E6%98%8E%E3%81%97%E3%81%A6%E3%81%84%E3%81%9F%E3%82%89%E3%80%81play2%E3%81%AE%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AE%E8%AA%AC%E6%98%8E%E3%81%8C%E3%81%A7%E3%81%8D%E3%81%AA%E3%81%84%E3%81%AE%E3%81%A7%E3%80%81%E4%BB%96%E3%81%AE%E8%B3%87%E6%96%99%E3%81%AB%E9%A0%BC%E3%82%8B">型クラスを一から丁寧に説明していたら、play2の型クラスの説明ができないので、他の資料に頼る</h3><br />
+<ul><li><a  href="http://www.slideshare.net/kmizushima/ss-28707326">怖くない型クラス (@kmizu さん)</a>
+</li><li><a  href="http://chopl.in/blog/2012/11/06/introduction-to-typeclass-with-scala.html">Scalaで型クラス入門</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-28"><div class="container">
+                  <h3 id="%E5%8B%98%E9%81%95%E3%81%84%E3%81%95%E3%82%8C%E3%81%8C%E3%81%A1%E3%81%AA%E3%81%93%E3%81%A8">勘違いされがちなこと</h3><br />
+<ul><li>モナドは型クラスの1つにすぎない。そういう意味では何も特別ではない
+</li><li>Scalaのimplicitは、ある意味型クラスのために導入されたという経緯(?)
+</li><li><a  href="http://ropas.snu.ac.kr/~bruno/papers/TypeClasses.pdf">おだすきせんせーの論文</a>
+</li><li>implicitは型クラス以外のものにも使えてしまう
+</li><li>型クラスとしてのimplicitは便利なのでどんどん使おう(?)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-29"><div class="container">
+                  <p>Scalaでの型クラス
+</p><br />
+<ul><li>型クラスは<code>trait</code>や<code>class</code>で定義
+</li><li><p>型クラスのインスタンス定義方法は、以下のどれか
+</p><ul><li><code>implicit val</code> (<code>lazy</code>付く場合も)
+</li><li><code>implicit def</code> (引数ある場合とない場合と両方あり得る)
+</li><li><code>implicit object</code>
+</li></ul></li><li>使う側は、<code>implicit parameter</code>で受け取る
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-30"><div class="container">
+                  <p>playでの具体例
+</p>
+                </div>
+      </div><div class="content" id="slide-31"><div class="container">
+                  <p>型クラス定義
+</p><br />
+<pre><code class="prettyprint lang-scala">
+trait Reads[A] {
+  def reads(json: JsValue): JsResult[A]
+
+  // その他のメソッド
+}
+
+</code></pre><br />
+<span style="font-size: 60%;">
+<a target="_blank" href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Reads.scala#L17-L23">Readsのソースコード</a>
+</span>
+
+                </div>
+      </div><div class="content" id="slide-32"><div class="container">
+                  <p>型クラスのインスタンス定義
+</p><br />
+<pre><code class="prettyprint lang-scala">implicit object StringReads extends Reads[String] {
+  def reads(json: JsValue) = json match {
+    case JsString(s) =&gt; JsSuccess(s)
+    case _ =&gt; JsError(Seq(JsPath() -&gt; Seq(ValidationError(&quot;error.expected.jsstring&quot;))))
+  }
+}
+</code></pre><br />
+<span style="font-size: 60%;">
+<a target="_blank" href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Reads.scala#L354-L359">Readsのソースコード</a>
+</span>
+
+                </div>
+      </div><div class="content" id="slide-33"><div class="container">
+                  <p>なぜ型クラスを受け渡すのに<code>implicit</code>を使うのか？
+</p>
+                </div>
+      </div><div class="content" id="slide-34"><div class="container">
+                  <h2 id="%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AF%E3%80%81%E5%9E%8B%E3%81%AB%E3%82%88%E3%81%A3%E3%81%A6%E5%80%A4%E3%81%8C%E4%B8%80%E3%81%A4%E3%81%AB%E6%B1%BA%E3%81%BE%E3%82%8B%E3%81%8B%E3%82%89">型クラスは、型によって値が一つに決まるから</h2><p>(むしろ、そうでなければ型クラスと呼ばない?)
+</p>
+                </div>
+      </div><div class="content" id="slide-35"><div class="container">
+                  <p>“型によって、値が一つに決まる”
+</p><p>ということは、
+</p><br />
+<ul><li>型さえ指定すれば、インスタンスが手に入る(<code>implicitly</code> や Context Bound)
+</li><li>変数名を意識する必要ない、するべきでない
+</li><li>名前は重要ではない。型が重要
+</li><li>名前を指定して使うことがないなら、衝突しない限り機械的な名前でいいのでは？
+</li><li>名前を考える、名前を覚えるというコストがかかる行為せずに済む
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-36"><div class="container">
+                  <p>“型によって、値が一つに決まる”
+</p><p>ということは、型パラメータをとらない<code>implicit</code>なものは型クラスではない
+</p><br />
+<ul><li><p>Play2内部の以下のclass
+</p><ul><li><code>Application</code>
+</li><li><code>Request</code>
+</li><li><code>Lang</code>
+</li></ul></li><li><code>scala.concurrent.ExecutionContext</code>
+</li><li><code>scala.io.Codec</code>
+</li><li>Databaseのライブラリでsessionを引き回すとか
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-37"><div class="container">
+                  <p>一つに決まらない場合どうするのか？
+</p><br />
+<ul><li>Haskellならnewtype
+</li><li>ScalaだとHaskellに比べて新しい型を作るのが面倒(かつ、実行時コストかかる)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-38"><div class="container">
+                  <p>Scalaでの解決策
+</p><br />
+<ul><li>implicitな部分に明示的に引数を渡す
+</li><li><p>スコープで制御できるならスコープで制御
+</p><ul><li>Scalaにはimplicitの解決に優先順位やスコープがあるので
+</li><li><p>親クラスの<code>implicit</code>のほうが優先度低い
+</p><ul><li>例 <a  href="https://github.com/scala/scala/blob/v2.11.1/src/library/scala/Predef.scala#L70">Predef と LowPriorityImplicits</a>
+</li></ul></li><li>優先順位は複雑(Scalaのversionによって微妙に異なる？)
+</li><li>コンパニオンオブジェクトにimplicitなインスタンスあると、それを使いたい場合は便利だけど、使いたくない場合不便
+</li></ul></li><li>Tagged Type ？(それほど実用されてない。デメリットもあり)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-39"><div class="container">
+                  <p>実際仕事でjodatimeのDateTime型のReadsのインスタンスがReadsのコンパニオンに存在していて、しかしそれを使いたくない自体が発生して
+面倒な状況に！
+</p><p><a  href="https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Reads.scala#L267-L295">https://github.com/playframework/playframework/blob/2.2.3/framework/src/play-json/src/main/scala/play/api/libs/json/Reads.scala#L267-L295</a>
+</p>
+                </div>
+      </div><div class="content" id="slide-40"><div class="container">
+                  <h1 id="Monad+%E3%81%A8+Applicative">Monad と Applicative</h1>
+                </div>
+      </div><div class="content" id="slide-41"><div class="container">
+                  <ul><li><code>Monad</code> も <code>Applicative</code> も単なる型クラスの1つ
+</li><li>play内部には <code>Applicative</code> はあるが <code>Monad</code> は現状では存在しない
+</li><li><code>Monad</code> は必ず <code>Applicative</code> (Haskellでも次期versionで修正されるらしい)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-42"><div class="container">
+                  <h3 id="Scalaz%E3%81%AE%E3%82%AF%E3%83%A9%E3%82%B9%E5%9B%B3">Scalazのクラス図</h3><img src="http://xuwei-k.github.io/scalaz-typeclasses.svg">
+
+                </div>
+      </div><div class="content" id="slide-43"><div class="container">
+                  <ul><li><a  href="http://xuwei-k.github.io/scalaz-typeclasses.svg">http://xuwei-k.github.io/scalaz-typeclasses.svg</a>
+</li><li><a  href="http://d.hatena.ne.jp/xuwei/20131213/1386923702">http://d.hatena.ne.jp/xuwei/20131213/1386923702</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-44"><div class="container">
+                  <p><a  href="http://leifwarner.net/scalaz.svg">別の図</a>
+</p><img src="http://leifwarner.net/scalaz.svg">
+
+                </div>
+      </div><div class="content" id="slide-45"><div class="container">
+                  <p>なぜ <code>Applicative</code> が重要か？
+</p><br />
+<ul><li><code>Monad</code> にも <code>Applicative</code> にもなるが、<code>Applicative</code> にする方法が2種類ある場合
+</li><li><p>(言い換えると) <code>Monad</code> にすることもできるが、それと整合性がない <code>Applicative</code> が存在する
+</p><ul><li>ZipList
+</li><li>Play2 の <code>JsResult</code>, <code>Reads</code>
+</li><li>Scalaz の <code>Validation</code>
+</li></ul></li></ul>
+                </div>
+      </div><div class="content" id="slide-46"><div class="container">
+                  <p>なぜ <code>Applicative</code> が重要か？
+</p><br />
+<ul><li><p><code>Monad</code> にはならないが <code>Applicative</code> になるものが存在する
+</p><ul><li>そういう場合には、for式が使えない
+</li><li>なので、最初に出した、気持ち悪い(?)記法
+</li><li>もしくは、Scalazの <a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-M7/core/src/main/scala/scalaz/syntax/ApplicativeBuilder.scala#L17"><code>|@|</code></a> という謎な記号
+</li></ul></li></ul>
+                </div>
+      </div><div class="content" id="slide-47"><div class="container">
+                  <p>やっとplayの話
+</p><br />
+<ul><li>playの <code>Reads</code> は <code>Applicative</code>
+</li><li>Scalaz知ってる人にとっては、以下の様なものだと思えばいい
+</li></ul><br />
+<pre><code class="prettyprint lang-scala">type JsResult[+A] = Validation[Seq[Error], A] // ちょっと正確じゃない
+</code></pre><pre><code class="prettyprint lang-scala">trait Reads[A] {
+  def reads(json: JsValue): JsResult[A]
+}
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-48"><div class="container">
+                  <ul><li><code>Reads</code> は <code>JsValue =&gt; JsResult[A]</code> と同型
+</li><li><code>JsResult</code> は <code>Applicative</code>
+</li><li><code>A =&gt; F[B]</code> において、<code>F[_]</code> が <code>Applicative</code> ならば <code>A =&gt; F[B]</code> 自体も <code>Applicative</code>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-49"><div class="container">
+                  <ul><li><a  href="http://www.playframework.com/documentation/2.2.x/ScalaJson">play2公式ドキュメント(英語)</a>
+</li><li><a  href="http://www.playframework-ja.org/documentation/2.1.5/ScalaJson">play2公式ドキュメントの日本語訳(少し古い)</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-50"><div class="container">
+                  <h2 id="%E7%84%A1%E7%90%86%E7%9F%A2%E7%90%86%E3%81%BE%E3%81%A8%E3%82%81%28%3F%29">無理矢理まとめ(?)</h2><br />
+<ul><li>重要なのは、playの<code>Reads</code>は、Applicativeの仕組みによりエラーを蓄積する機能があるということ
+</li><li><code>JsResult</code> 自体にエラーを含んでいるので、<code>Reads</code> 自体は例外を投げるべきではない
+</li><li>できるだけ宣言的に書く
+</li><li>Readsは合成可能
+</li><li>エラーメッセージの国際化の機能まで組み込まれてる(?)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-51"><div class="container">
+                  <h2 id="%E7%BD%A0%E3%82%82%E3%81%82%E3%82%8B">罠もある</h2><br />
+<ul><li>法則満たさないケースが存在 <a  href="http://d.hatena.ne.jp/xuwei/20131217/1387284363">http://d.hatena.ne.jp/xuwei/20131217/1387284363</a>
+</li><li><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-M7/core/src/main/scala/scalaz/NonEmptyList.scala"><code>scalaz.NonEmptyList</code></a> や <a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-M7/core/src/main/scala/scalaz/Semigroup.scala"><code>Semigroup</code></a> がないので、 <code>JsResult</code> の失敗の場合がただの <code>Seq</code>
+</li><li><p><code>JsResult</code> はもっと抽象化できる
+</p><ul><li><a  href="https://github.com/playframework/playframework/pull/1904">https://github.com/playframework/playframework/pull/1904</a>
+</li><li><a  href="https://github.com/jto/validation">https://github.com/jto/validation</a>
+</li><li>個人的にはこのライブラリもちょっと微妙な気がしている
+</li><li>そもそもScalaz使えば(ry
+</li></ul></li></ul>
+                </div>
+      </div><div class="content" id="slide-52"><div class="container">
+                  <ul><li>インスタンスが1つだけなら、基本的にコンパニオンオブジェクトに定義すると、勝手にスコープに入るので便利
+</li><li><code>Reads</code> も <code>Writes</code> も定義するなら、別々に定義するのではなく、<code>Format</code> で一緒に定義したほうが整合性がとれて良い
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-53"><div class="container">
+                  <ul><li>マクロで定義する機能もあるが、<code>apply</code> が複数あると使えなかったり、case classのフィールド名変えるだけでJsonのkey変わってしまうので微妙
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-54"><div class="container">
+                  <ul><li><p>ライブラリ作りました
+</p><ul><li><a  href="http://d.hatena.ne.jp/xuwei/20140402/1396408213">http://d.hatena.ne.jp/xuwei/20140402/1396408213</a>
+</li><li><a  href="https://github.com/xuwei-k/play-json-extra">https://github.com/xuwei-k/play-json-extra</a>
+</li><li>Nullable(key自体が存在しない場合)に対応できない・・・
+</li><li><code>Reads</code>のコンパニオンに<code>Option</code>の<code>Reads</code>があるので)
+</li><li>key自体がない場合と、keyは存在してvalueがnullの場合と区別がある
+</li><li><code>readNullable[Int]</code> と <code>read[Option[Int]]</code>
+</li><li>2の22乗通りのメソッドを作れば・・・
+</li></ul></li></ul>
+                </div>
+      </div><div class="content" id="slide-55"><div class="container">
+                  <ul><li><p>ついでにもう一つライブラリ作ってます
+</p><ul><li><a  href="https://github.com/xuwei-k/play2scalaz">https://github.com/xuwei-k/play2scalaz</a>
+</li></ul></li></ul>
+                </div>
+      </div><div class="content" id="slide-56"><div class="container">
+                  <p>ひたすら型クラスや難しい話をしたけど、型クラス以前にScalaにおける関数型プログラミングで大事なこと
+</p><br />
+<ul><li>例外をあまりつかわない(scala.util.Tryも)
+</li><li>副作用のあるものとないものを分離
+</li><li>リフレクションできるだけ使わない
+</li><li>できるだけimmutable
+</li><li>sealedを使って代数的データ型
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-57"><div class="container">
+                  <ul><li>varianceの話もしたかったが、無理ですよね
+</li><li>共変とか反変とか
+</li><li><p>これ素晴らしかったので、読むといいよ
+</p><ul><li>scodecという、シリアライズ、デシリアライズのライブラリ作ってる人
+</li><li>scalaz-streamで使われてる
+</li><li>Scalaのvarianceに関する詳しい説明
+</li><li>Bivarianceとかhiger kindな場合のvarianceとか
+</li><li><a  href="https://github.com/mpilquist/variance-explorations">https://github.com/mpilquist/variance-explorations</a>
+</li><li><a  href="https://github.com/mpilquist/variance-explorations/raw/master/scodec-variance.pdf">https://github.com/mpilquist/variance-explorations/raw/master/scodec-variance.pdf</a>
+</li></ul></li></ul>
+                </div>
+      </div><div class="content" id="slide-58"><div class="container">
+                  <h2 id="Scala%E7%A5%AD%EF%BC%81">Scala祭！</h2><ul><li>2014年9月6日、7日
+</li><li><a  href="http://scalamatsuri.org">http://scalamatsuri.org</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-59"><div class="container">
+                  <p>おわり</p>
+                </div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>

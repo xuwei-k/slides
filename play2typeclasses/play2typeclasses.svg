@@ -1,0 +1,47 @@
+<svg width="700" height="500" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <title>play2typeclasses</title>
+ <g>
+  <title>Layer 1</title>
+  <polyline se:connector="svg_35 svg_36" fill="none" stroke-width="3" stroke="#000000" points="506.765625,271.625 506.765625,322.9140625 506.765625,374.203125" id="svg_41"/>
+  <polyline se:connector="svg_27 svg_32" fill="none" stroke-width="3" stroke="#000000" points="506.77081298828125,164.12498474121094 506.77081298828125,194.79165649414062 506.77081298828125,225.4583282470703" id="svg_40"/>
+  <polyline se:connector="svg_17 svg_10" fill="none" stroke-width="3" stroke="#000000" points="137.51356506347656,158.91668701171875 194.68429565429688,205.63021850585938 251.8550262451172,252.34375" id="svg_30"/>
+  <polyline se:connector="svg_14 svg_2" fill="none" stroke-width="3" stroke="#000000" points="97.52325439453125,320.109375 136.4949951171875,373.78387451171875 175.4667510986328,427.4583435058594" id="svg_29"/>
+  <polyline se:connector="svg_12 svg_6" fill="none" stroke-width="3" stroke="#000000" points="269.73016357421875,63.28125 269.3182373046875,148.53646850585938 268.90631103515625,233.79168701171875" id="svg_24"/>
+  <polyline se:connector="svg_10 svg_3" fill="none" stroke-width="3" stroke="#000000" points="263.77532958984375,279.953125 233.85687255859375,362.9765625 203.9384307861328,446" id="svg_25"/>
+  <g id="Reads">
+   <rect stroke="#000000" id="svg_15" height="62.70833" width="129.62501" y="18.12501" x="204.97917" stroke-width="2" fill="#80befc"/>
+   <text stroke="#000000" xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_12" y="57.28907" x="269.79688" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" fill="#000000">Reads</text>
+  </g>
+  <polyline se:connector="svg_17 svg_14" fill="none" stroke-width="3" stroke="#000000" points="96.04163360595703,158.91668701171875 92.17082977294922,225.70834350585938 88.3000259399414,292.5" id="svg_22"/>
+  <g id="OFormat">
+   <rect stroke="#000000" id="svg_2" height="62.70833" width="129.62501" y="428.45833" x="134.14583" stroke-width="2" fill="#80befc"/>
+   <text xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_3" y="467.6224" x="198.96354" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" stroke="#000000" fill="#000000">OFormat</text>
+  </g>
+  <g id="OWrites">
+   <rect stroke="#000000" id="svg_16" height="62.70833" width="129.62501" y="274.94663" x="22.6875" stroke-width="2" fill="#80befc"/>
+   <text stroke="#000000" xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_14" y="314.11589" x="87.4974" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" fill="#000000">OWrites</text>
+  </g>
+  <g id="Writes">
+   <rect stroke="#000000" id="svg_17" height="62.70833" width="129.62501" y="95.20835" x="33.10416" stroke-width="2" fill="#80befc"/>
+   <text stroke="#000000" xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_13" y="134.37239" x="97.91406" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" fill="#000000">Writes</text>
+  </g>
+  <g id="Format">
+   <rect stroke="#000000" id="svg_6" height="62.70833" width="129.62501" y="234.79168" x="203.93749" stroke-width="2" fill="#80befc"/>
+   <text stroke="#000000" xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_10" y="273.96096" x="268.75519" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" fill="#000000">Format</text>
+  </g>
+  <g id="svg_37">
+   <rect id="svg_27" stroke="#000000" height="62.70833" width="129.62501" y="100.41666" x="441.95833" stroke-width="2" fill="#ffaa56"/>
+   <text xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_34" y="139.58332" x="506.76821" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" stroke="#000000" fill="#000000">Functor</text>
+  </g>
+  <g id="svg_38">
+   <rect id="svg_31" stroke="#000000" height="62.70833" width="129.62501" y="226.45833" x="441.95829" stroke-width="2" fill="#ffaa56"/>
+   <rect id="svg_32" stroke="#000000" height="62.70833" width="129.62501" y="226.45833" x="441.95829" stroke-width="2" fill="#ffaa56"/>
+   <text xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_35" y="265.625" x="506.76558" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" stroke="#000000" fill="#000000">Applicative</text>
+  </g>
+  <g id="svg_39">
+   <rect id="svg_33" stroke="#000000" height="62.70833" width="129.62501" y="356.66667" x="441.95832" stroke-width="2" fill="#ffaa56"/>
+   <text xml:space="preserve" text-anchor="middle" font-family="serif" font-size="24" id="svg_36" y="395.83073" x="506.76822" stroke-linecap="null" stroke-linejoin="null" stroke-dasharray="null" stroke-width="0" stroke="#000000" fill="#000000">Alternative</text>
+  </g>
+ </g>
+</svg>
