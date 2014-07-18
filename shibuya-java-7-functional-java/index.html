@@ -1,0 +1,261 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Functional Javaの紹介</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0"><div class="container">
+                  <h1 id="Functional+Java%E3%81%AE%E7%B4%B9%E4%BB%8B">Functional Javaの紹介</h1><p><a  href="https://github.com/functionaljava/functionaljava">https://github.com/functionaljava/functionaljava</a>
+</p><br /><br />
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+
+                </div>
+      </div><div class="content" id="slide-1"><div class="container">
+                  <img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
+</li><li>github <a  href="https://github.com/xuwei-k">@xuwei-k</a>
+</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-2"><div class="container">
+                  <ul><li>2014年3月からドワンゴでScala書いてる
+</li><li><a  href="https://github.com/scalaz/scalaz">Scalaz</a> という、Scalaで関数型プログラミングするための怖いライブラリのコミッター
+</li><li><a  href="http://d.hatena.ne.jp/xuwei/20140714/1405302866">先日勉強会をやった</a>
+</li><li>Scalaに必要なJavaの知識はあるけど、普段Javaほとんど書かないのでよくわかりません(&gt;_&lt;)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-3"><div class="container">
+                  <h2 id="Scala%E7%A5%AD%E3%82%8A">Scala祭り</h2><br />
+<ul><li>9月6,7日
+</li><li>Scala作者のOdersky先生が来ます
+</li><li><a  href="http://scalamatsuri.org/">http://scalamatsuri.org/</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-4"><div class="container">
+                  <p><a  href="https://github.com/functionaljava/functionaljava/graphs/contributors">https://github.com/functionaljava/functionaljava/graphs/contributors</a>
+</p><img src="http://xuwei-k.github.io/slides/shibuya-java-7-functional-java/contributors1.png" />
+
+                </div>
+      </div><div class="content" id="slide-5"><div class="container">
+                  <img src="http://xuwei-k.github.io/slides/shibuya-java-7-functional-java/contributors2.jpg" />
+
+                </div>
+      </div><div class="content" id="slide-6"><div class="container">
+                  <h1 id="%28%28%28%28%EF%BC%9B%EF%BE%9F%D0%94%EF%BE%9F%29%29%29%29++%21%3F">((((；ﾟДﾟ))))  !?</h1>
+                </div>
+      </div><div class="content" id="slide-7"><div class="container">
+                  <p>2014年7月19日現在
+</p><br />
+<ul><li>最新versionは4.1
+</li><li>Java8に対応
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-8"><div class="container">
+                  <p>githubの履歴を追った限り
+</p><br />
+<ul><li>2010年くらいからgithub、それ以前はgoogle code
+</li><li>google codeからの履歴引き継いでない
+</li><li>なので、最初の開発開始はよくわからないが、少なくとも2009以前
+</li><li>github移行後、2014年7月19日までで255コミットしかない
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-9"><div class="container">
+                  <h2 id="%E3%83%93%E3%83%AB%E3%83%89%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E6%AD%B4%E5%8F%B2%E3%81%AA%E3%81%A9">ビルドファイルの歴史など</h2>
+                </div>
+      </div><div class="content" id="slide-10"><div class="container">
+                  <p><a  href="https://github.com/functionaljava/functionaljava/tree/7d83bfbeffad523ea96">github上での最初のtreeのREADME</a>
+</p><img src="http://xuwei-k.github.io/slides/shibuya-java-7-functional-java/old-readme.png" />
+
+                </div>
+      </div><div class="content" id="slide-11"><div class="container">
+                  <p><a  href="https://github.com/functionaljava/functionaljava/blob/7d83bfbeffad523ea963fd104d4c3c29bc37d38e/Build.hs">Build.hs</a>
+</p><img src="http://xuwei-k.github.io/slides/shibuya-java-7-functional-java/old-build-file.png" />
+
+                </div>
+      </div><div class="content" id="slide-12"><div class="container">
+                  <h1 id="%28+%EF%BE%9F%D0%94%EF%BE%9F%29%E3%83%BB%E3%83%BB%E3%83%BB%EF%BC%81%EF%BC%9F">( ﾟДﾟ)・・・！？</h1>
+                </div>
+      </div><div class="content" id="slide-13"><div class="container">
+                  <ul><li>その後sbt(Scala製ビルドツール)が数年使われる
+</li><li>Java8がでる
+</li><li>Java8対応して欲しい! =&gt; 原作者達はあまりやる気ない
+</li><li>新しい人が主導権握って、めでたく(?) Gradle に
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-14"><div class="container">
+                  <ul><li>しかし、今でもテストコードはScala
+</li><li>しかもScalacheckという、より関数型なテストライブラリ
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-15"><div class="container">
+                  <h2 id="%E3%82%84%E3%81%A3%E3%81%A8%E6%9C%AC%E9%A1%8C%E3%80%82%E4%B8%AD%E8%BA%AB%E3%81%AE%E7%B4%B9%E4%BB%8B">やっと本題。中身の紹介</h2>
+                </div>
+      </div><div class="content" id="slide-16"><div class="container">
+                  <h2 id="%E9%96%A2%E6%95%B0%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88">関数オブジェクト</h2><ul><li>F1からF8まで
+</li><li>Java8が出る以前から存在するのと、Java7との互換性を保つため、Java8のjava.util.function のものは使われていない
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-17"><div class="container">
+                  <h2 id="%E4%B8%8D%E5%A4%89%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0">不変データ構造</h2><p><br />
+一部、不変でないデータ構造もあるが、これから上げるものはすべて不変
+</p>
+                </div>
+      </div><div class="content" id="slide-18"><div class="container">
+                  <h2 id="%E4%B8%8D%E5%A4%89%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0">不変データ構造</h2><br />
+<ul><li>List
+</li><li>Stream (ScalaのStreamと同じで、不変かつ遅延評価)
+</li><li>Option
+</li><li>Eihter
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-19"><div class="container">
+                  <h2 id="%E4%B8%8D%E5%A4%89%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0">不変データ構造</h2><br />
+<ul><li>NonEmptyList (必ず要素が1つ以上あることが保証)
+</li><li>Validation (Scalazの中にあるあれ)
+</li><li>Tree (rose tree)
+</li><li>TreeMap (赤黒木)
+</li><li>Set (赤黒木)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-20"><div class="container">
+                  <h2 id="%E4%B8%8D%E5%A4%89%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0">不変データ構造</h2><br />
+<ul><li>FingerTree
+</li><li>HList
+</li><li>Zipper
+</li><li>TreeZipper
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-21"><div class="container">
+                  <h2><span style="font-size: 30%;">Javaで無理なく表現できる範囲の一部の</span><br />型クラス</h2>
+<br />
+<ul><li>Equal
+</li><li>Ord
+</li><li>Semigroup
+</li><li>Monoid
+</li><li>Hash
+</li><li>Show
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-22"><div class="container">
+                  <h2 id="%E8%87%B4%E5%91%BD%E7%9A%84%E6%AC%A0%E7%82%B9%3F">致命的欠点?</h2><br />
+<br />
+<p>Equal, Hash, Show があるので、大半のclassで、java.lang.Objectの、equals, hashcode, toString がoverrideされてない！！！
+</p>
+                </div>
+      </div><div class="content" id="slide-23"><div class="container">
+                  <h2 id="%E4%B8%A6%E5%88%97%E4%B8%A6%E8%A1%8C%E5%87%A6%E7%90%86">並列並行処理</h2><br />
+<ul><li>Actor (Scalazと同じで型つき)
+</li><li>Promise
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-24"><div class="container">
+                  <h2 id="%E3%81%9D%E3%81%AE%E4%BB%96">その他</h2><br />
+<ul><li>HaskellのQuickcheckの移植
+</li><li>Parser
+</li><li>Iteratee
+</li><li>Trampoline(再帰関数でスタックを溢れさせないようにするためのもの)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-25"><div class="container">
+                  <p>ところで・・・
+<br /><br />
+</p><ul><li>Javaで関数型プログラミングといえばJava8のStream!
+</li><li>皆さんJava8のStream使ってますか？
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-26"><div class="container">
+                  <h2 id="Java8%E3%81%AEStream%E3%81%A8%E3%81%AE%E6%AF%94%E8%BC%83">Java8のStreamとの比較</h2><br />
+<br />
+<span style="font-size: 70%;">(もしくは、Java8のStreamをdisりに来ました?)</span>
+
+                </div>
+      </div><div class="content" id="slide-27"><div class="container">
+                  <ul><li>Java8のStreamは不変なコレクションではない
+</li><li>同じものを2度使えない、参照透明でないメソッドがあるので、ScalaだとIteratorに近い
+</li><li>良くも悪くも、並列実行のための処理が組み込まれている
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-28"><div class="container">
+                  <ul><li>遅延評価
+</li><li>もちろん関数型の考えは取り入れられているが・・・
+</li><li>それでいて、入力や出力を柔軟に制御するための仕組みはなく、すごく複雑な処理が可能なわけでもない
+</li></ul><p><br />
+つまりどういうことか？
+</p>
+                </div>
+      </div><div class="content" id="slide-29"><div class="container">
+                  <p>これだけは今日覚えて帰ってもらいたい
+</p>
+                </div>
+      </div><div class="content" id="slide-30"><div class="container">
+                  <p>(良し悪しは別にして)Java8のStreamは<br /><br />
+<span style="font-size: 150%;">関数型言語の一般的なコレクションとは別で色々独特過ぎる！</span>
+</p>
+                </div>
+      </div><div class="content" id="slide-31"><div class="container">
+                  <p>Java8のStreamのデメリット、もしくは単に好きでない特徴
+</p><p><br /><br />
+(もちろん、それぞれの特徴は設計上のトレードオフなので、完全にだめなわけではない)
+</p>
+                </div>
+      </div><div class="content" id="slide-32"><div class="container">
+                  <p>不変なコレクションでない、副作用のあるメソッドがある
+<br /><br />
+</p><p>↓
+</p><p><br /><br />
+どのメソッドが副作用あるのか把握しないといけない
+</p>
+                </div>
+      </div><div class="content" id="slide-33"><div class="container">
+                  <p>遅延評価
+</p><br />
+<ul><li>副作用全く使わない習慣があるHaskellなどなら問題起きにくい。
+</li><li>しかし慣れるまで辛い。
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-34"><div class="container">
+                  <p>遅延評価
+</p><br />
+<ul><li>副作用なしで書くか、副作用使うなら発生するタイミングを把握する必要
+</li><li>そのために、Functional JavaやScalaでは、遅延評価なコレクションとそうでないものを明確に分けて用意
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-35"><div class="container">
+                  <p>なぜJava8のStreamは遅延評価か？
+</p><br />
+<ul><li>効率のため？
+</li><li>たしかに、中間オブジェクト生成されないほうが効率よい
+</li><li>いつでも効率が最重要なのか？
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-36"><div class="container">
+                  <ul><li>(効率はそれほど重要ではなく)手軽にmapやfilterなどができる便利な不変コレクションが欲しいときも多いのでは？
+</li><li>つまり他のモダンな言語と同じように、もっと手軽にJavaを使う用途
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-37"><div class="container">
+                  <ul><li>効率必要ないなら、遅延評価はデバッグがつらいというデメリットのほうが大きいと思う
+</li><li>遅延評価があると、無限な長さのStreamを作って、格好よく扱うというテクニックが可能だったりするが・・・
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-38"><div class="container">
+                  <h2 id="%E3%81%BE%E3%81%A8%E3%82%81">まとめ</h2><ul><li>もしJava8のStreamに満足できなくて、更に関数型なプログラミングをJavaでやりたくなったら、怖い人達が作ってるFunctional Java使ってみよう
+</li><li>個人的意見として、Java8のStreamは他の関数型言語の似たようなものと比べて独特過ぎるので、あれが普通だと思わないように</li></ul>
+                </div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
