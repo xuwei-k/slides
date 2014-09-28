@@ -1,0 +1,117 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>akka stream and playframework</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0"><div class="container">
+                  <h1 id="Akka+Stream+and+Playframework">Akka Stream and Playframework</h1><br /><br />
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+
+                </div>
+      </div><div class="content" id="slide-1"><div class="container">
+                  <img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
+</li><li>github <a  href="https://github.com/xuwei-k">@xuwei-k</a>
+</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
+</li><li>Scalaz commiter
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-2"><div class="container">
+                  <ul><li>3月からDwangoでScala書いてる(7ヶ月くらい)
+</li><li>最近はakkaとakka-remoteを少し仕事で使ってる
+</li><li>そのうち発表したい・・・
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-3"><div class="container">
+                  <h3 id="%E5%89%8D%E6%8F%90%E7%9F%A5%E8%AD%98">前提知識</h3><br />
+<ul><li>現時点(2014/9/28)で
+</li><li>のplayframeworkの最新安定版は2.3.4
+</li><li>2.4.0-M1がでている
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-4"><div class="container">
+                  <h3 id="%E7%8F%BE%E7%8A%B6%E3%81%AEPlay2.3">現状のPlay2.3</h3><br />
+<ul><li>Nettyに依存
+</li><li>無理やりservlet上で動かすものもある <a  href="https://github.com/play2war/play2-war-plugin">https://github.com/play2war/play2-war-plugin</a> が、あくまでも無理やり
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-5"><div class="container">
+                  <h2 id="%E2%80%9CSplit+Netty+server+code+into+separate+subproject%E2%80%9C">“Split Netty server code into separate subproject“</h2><br />
+<ul><li><a  href="https://github.com/playframework/playframework/commit/674aff609a04cb701857a6367f">https://github.com/playframework/playframework/commit/674aff609a04cb701857a6367f</a>
+</li></ul><br />
+<p>akka-stream, netty以外の実装も書きやすくなるかもしれない？
+(例えばservlet)
+</p>
+                </div>
+      </div><div class="content" id="slide-6"><div class="container">
+                  <h2 id="%E2%80%9CExperimental+Akka+HTTP+server+backend+and+Reactive+Streams+integration%E2%80%9C">“Experimental Akka HTTP server backend and Reactive Streams integration“</h2><br />
+<ul><li><a  href="https://github.com/playframework/playframework/pull/3332">https://github.com/playframework/playframework/pull/3332</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-7"><div class="container">
+                  <ul><li>play2.4では、akka-streamが使えるようになる
+</li><li>今までのNettyがあくまでもデフォルト
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-8"><div class="container">
+                  <h3 id="%E7%8F%BE%E6%99%82%E7%82%B9%E3%81%AEplay2.4%E3%81%AESNAPSHOT%E3%81%A7akka-stream%E3%82%92%E4%BD%BF%E3%81%86%E6%96%B9%E6%B3%95">現時点のplay2.4のSNAPSHOTでakka-streamを使う方法</h3><br />
+<p>まずplayをpublishLocal
+</p><br />
+<pre><code class="">sbt \
+  -Dplay.version=2.4-20140928 \
+  -Dscala.version=2.11.2 publishLocal
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-9"><div class="container">
+                  <p><a  href="https://github.com/playframework/playframework/blob/0d4c9b73396d57/documentation/manual/experimental/AkkaHttpServer.md">https://github.com/playframework/playframework/blob/0d4c9b73396d57/documentation/manual/experimental/AkkaHttpServer.md</a>
+</p><br />
+<pre><code class="prettyprint lang-scala">libraryDependencies +=
+  &quot;com.typesafe.play&quot; %% &quot;play-akka-http-server-experimental&quot; % &quot;%PLAY_VERSION%&quot;
+</code></pre>
+                </div>
+      </div><div class="content" id="slide-10"><div class="container">
+                  <pre><code class="">run -Dserver.provider=play.core.server.akkahttp.AkkaHttpServerProvider
+</code></pre><br />
+<p>(今後変更の可能性あり)
+</p>
+                </div>
+      </div><div class="content" id="slide-11"><div class="container">
+                  <ul><li>play2.4の次は、2.5ではなくplay3？
+</li><li>と、以前は言っていた気がしたけど、Roadmap見たら2.5も出すらしい？
+</li><li><a  href="https://docs.google.com/document/d/11sVi1-REAIDFVHvwBrfRt1uXkBzROHQYgmcZNGJtDnA/pub">https://docs.google.com/document/d/11sVi1-REAIDFVHvwBrfRt1uXkBzROHQYgmcZNGJtDnA/pub</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-12"><div class="container">
+                  <h3 id="%E3%83%99%E3%83%B3%E3%83%81%E3%83%9E%E3%83%BC%E3%82%AF%E3%81%97%E3%81%A6%E3%81%BF%E3%81%9F">ベンチマークしてみた</h3><br />
+<ul><li><a  href="https://github.com/xuwei-k/akka-stream-vs-netty">https://github.com/xuwei-k/akka-stream-vs-netty</a>
+</li><li>最新のplay2.4をビルドしてpublishLocal(2.4.0-M1にはまだakka-streamのコミット入ってないので)
+</li><li>数MBのデータを送信 =&gt; そのまま返す
+</li><li>それを100回くらい繰り返し
+</li><li>並列にリクエストするのと、1回ずつリクエストするのをやった
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-13"><div class="container">
+                  <h3 id="%E7%B5%90%E6%9E%9C">結果</h3><br />
+<ul><li>別にあまり差がでなかった・・・
+</li><li>ベンチマークの方法が悪い？もっと色々な方法試す必要あり？
+</li><li>とりあえず、明らかに速くなったり遅くなったりすることはなさそう
+</li><li>お客様の中に誰かベンチマーク得意な方いらっしゃいませんか・・</li></ul>
+                </div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
