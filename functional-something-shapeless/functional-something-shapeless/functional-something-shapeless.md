@@ -1,0 +1,764 @@
+!SLIDE
+
+# Shapelessの紹介
+
+<br /><br />
+
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+!SLIDE
+
+<img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog <http://d.hatena.ne.jp/xuwei/>
+
+
+!SLIDE
+
+<https://github.com/scalaz/scalaz/graphs/contributors?from=2013-01-01&to=2013-12-31&type=c>
+
+![2013](./scalaz2013.png)
+
+!SLIDE
+
+<https://github.com/scalaz/scalaz/graphs/contributors?from=2014-01-01&to=2014-10-25&type=c>
+
+![2014](./scalaz2014.png)
+
+
+!SLIDE
+
+## オープンソース活動
+
+<br />
+
+- (2014-10-25日現在)2年連続Scalazのコミット数1位
+
+!SLIDE
+
+## 現実(仕事)
+
+<br />
+
+<blockquote class="twitter-tweet" lang="en"><p>毎日テストに Thread.sleep 書いてる気がする・・・</p>&mdash; Kenji Yoshida <a href="https://twitter.com/xuwei_k/status/499418167697866754">August 13, 2014</a></blockquote>
+
+
+!SLIDE
+
+## 現実(仕事)
+
+<br />
+
+<blockquote class="twitter-tweet" lang="en"><p>Scala祭明けの、最初の仕事のコミットです&#10;&#10;git commit -a -m &quot;テストがJenkins上だと稀に失敗するので、Thread.sleepを追加&quot;</p>&mdash; Kenji Yoshida <a href="https://twitter.com/xuwei_k/status/509182633587130368">September 9, 2014</a></blockquote>
+
+
+!SLIDE
+
+- ニコニコの色んなサービスの裏側をScalaやAkkaで作ってます
+- 今のところ [Scalacheck(QuickcheckのScala版)](https://github.com/rickynils/scalacheck) と、それに伴いScalazを少しテストコードに混ぜ込むくらいしかやってない
+
+!SLIDE
+
+- Scalaにおける函数型プログラミングといえば、Scalazがあまりにも有名
+- [勉強会もやりました](http://connpass.com/event/7261/)
+- しかし今日は、Scalazの話も少しするけど、主にそれ以外の話をします
+
+!SLIDE
+
+<pre style="font-size: 200%;">
+＿人人人人人人人人＿
+＞　shapeless　＜
+￣Y^Y^Y^Y^Y^Y^Y￣
+</pre>
+
+!SLIDE
+
+<https://github.com/milessabin/shapeless>
+
+!SLIDE
+
+Scalazが扱わない函数型な領域を扱う、Scalaにおけるラスボス的な何か(勝手なイメージ)
+
+!SLIDE
+
+- ただし一部Scalazと重複してるものもある
+- 重複していたけど、shapelessのほうが優れているものは、Scalazから消された
+
+!SLIDE
+
+### 個人的に
+
+<br />
+
+- shapeless本体には、今のところ1コミットもしたことない
+- Scalazコミッターの自分ですら、かなり難しいと感じる
+
+!SLIDE
+
+### なぜScalazに慣れていても難しいと感じるのか考えてみた
+
+
+!SLIDE
+
+### 難しさ？の原因
+<br />
+
+- dependent method type<span style="font-size: 60%;">(とimplicitの組み合わせ)</span>
+- macro
+
+!SLIDE
+
+<https://github.com/milessabin/shapeless/blob/b34d0f/core/src/main/scala/shapeless/alacarte.scala#L162-L172>
+
+![implicit8](./implicit8.png)
+
+!SLIDE
+
+- Scalazは現時点(7.1.0)ではmacro全く使ってない
+- dependent method typeもあまり使ってない?
+    - Scalazで使ってる例 [Unapply](http://eed3si9n.com/learning-scalaz/ja/Unapply.html)
+
+!SLIDE
+
+### READMEの記述
+
+<br />
+
+implementing
+<span style="font-size: 140%;">scrap your boilerplate</span> and
+<span style="font-size: 140%;">higher rank polymorphism</span> in Scala
+
+
+!SLIDE
+
+### [scrap your boilerplate](http://research.microsoft.com/en-us/um/people/simonpj/papers/hmap/)
+  - Haskellの有名なアレ
+  - 一部移植した例 <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/sybclass.scala>
+
+!SLIDE
+
+### higher rank polymorphism
+
+<br />
+
+- 論文のリンクっぽいけどリンク切れ・・・
+- RankNとかそういうの？
+
+!SLIDE
+
+代表的な機能一覧はwikiにまとまってる
+
+<https://github.com/milessabin/shapeless/wiki/Feature-overview:-shapeless-2.0.0>
+
+!SLIDE
+
+もしくはサンプルコードがある程度豊富
+
+<https://github.com/milessabin/shapeless/tree/shapeless-2.0.0/examples/src/main/scala/shapeless/examples>
+
+!SLIDE
+
+- 最新安定版 2.0.0
+- 2.0.0がでてから結構経過していて、masterとはわりと異なるので注意
+
+!SLIDE
+
+ここから、大雑把にwikiに載っていたものを中心に解説
+
+!SLIDE
+
+### Polymorphic function values
+
+!SLIDE
+
+<code><span style="font-size: 800%;">
+~>
+</span></code>
+
+!SLIDE
+
+- Scalazやsbtにもある(記号もみんな同じ)
+- Scalazのものより、この函数を使えるものが豊富だったりするかも
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/poly.scala#L142>
+
+!SLIDE
+
+例えば `List[A]` (任意のA) から `Option[A]` への函数
+
+<br />
+
+```scala
+val headOption: List ~> Option =
+  new (List ~> Option){
+    def apply[A](a: List[A]) =
+      a.headOption
+  }
+```
+
+!SLIDE
+
+### Heterogenous lists
+
+<br />
+
+- みんな大好き?HList
+- Scala界隈では、Tuple22制限などの影響で、いくつかのライブラリでHListの再発明が
+- 色んなメソッドがあったり機能豊富という意味では一番優れてる(と思う)
+
+!SLIDE
+
+### Heterogenous lists
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hlists.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/hlists.scala>
+
+!SLIDE
+
+### HListの機能の豊富さ
+
+<br />
+
+- HListに型レベル自然数を渡すことにより、型安全にN番目の要素が取れるとか当たり前
+
+!SLIDE
+
+### その他HListのメソッド達(一部)
+
+<br />
+
+head, tail, cons, ++, reverse, last, init, filter, replace, updateWith, take, drop, split, reverse, map, flatMap, foldMap, foldLeft, foldMap, zip
+    
+!SLIDE
+
+- これらのメソッドが全部 dependent method type と implicit で作られているので、型シグネチャがやばい
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/hlists.scala>
+
+
+!SLIDE
+
+### HList-style operations on standard Scala tuples
+
+<br />
+
+- Tupleを自動でHListっぽく扱える機能
+
+!SLIDE
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/std/tuples.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/tuples.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/tuples.scala>
+
+!SLIDE
+
+### Heterogenous maps
+
+!SLIDE
+
+<code><span style="font-size: 800%;">
+~?>
+</span></code>
+
+!SLIDE
+
+- KeyとValueの型の組み合わせ規則を定義すると、どんな型のKeyとValueも型安全に詰め込めるMap
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hmap.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/hmap.scala>
+
+!SLIDE
+
+### Singleton-typed literals, Singleton-typed Symbols, Extensible records
+
+<br />
+
+- Scalaの謎仕様を最大限悪用(?)したヤバイやつ
+- 一言で言うと、無名case classが簡単に作れる
+- <http://d.hatena.ne.jp/xuwei/20140718/1405581087>
+
+!SLIDE
+
+```scala
+$ scala
+Welcome to Scala version 2.11.1 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_11).
+Type in expressions to have them evaluated.
+Type :help for more information.
+ 
+scala> val a = "a"
+a: String = a
+ 
+scala> final val b = "b"
+b: String("b") = b
+ 
+scala> def foo(c: b.type) = c
+foo: (c: String("b"))String
+ 
+scala> foo("bar")
+<console>:10: error: type mismatch;
+ found   : String("bar")
+ required: String("b")
+              foo("bar")
+                  ^
+ 
+scala> foo("b")
+res1: java.lang.String = b
+```
+
+!SLIDE
+
+関連して、将来的に
+
+<br />
+
+<pre><code class="prettyprint lang-scala" style="font-size: 250%;">val a: 42.type = 42
+</code></pre>
+
+<br />
+
+と書けるようになるかもしれないという話がある
+
+<br />
+
+[SIP-23 - Literal-based singleton types](http://docs.scala-lang.org/sips/pending/42.type.html)
+
+!SLIDE
+
+### Extensible records
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/records.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala> 
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/records.scala>
+
+!SLIDE
+
+### Coproducts and discriminated unions
+
+<br />
+
+- Union型と言えばいいのだろうか・・・
+- 任意の数の型の組み合わせを自分で定義して、それを一つの型として扱える
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/coproduct.scala>
+
+!SLIDE
+### Coproducts and discriminated unions
+
+<br />
+
+- 例えば「`Int`か`String`か`Boolean`のどれか」という感じ
+- これ単体でも使えるが、shapeless内の他のclassと密接に関連している
+
+!SLIDE
+
+- [CoproductとInjectを使ったFree Monadの合成とExtensible Effects](http://d.hatena.ne.jp/xuwei/20140618/1403054751)
+- [ScalazのCoproductの代わりに、shapelessのものを使うと便利かも？](https://github.com/mandubian/injective/blob/bc57d09d/src/test/scala/InjectiveSpec.scala#L63)
+
+!SLIDE
+
+
+### Generic representation of (sealed families of) case classes
+
+<br />
+
+- GHC7.2以降に入っている Generics と似てる、と書いてある
+- <http://www.haskell.org/haskellwiki/GHC.Generics>
+
+!SLIDE
+
+- 自動で、case classとHListの相互変換のためのオブジェクトが手に入る
+- 実装はマクロ
+- sealed classやtraitなら?その子供のclassも含めて考慮
+
+!SLIDE
+
+- LabelledGeneric という、case classのフィード名もマクロで取得してきて汎用的に利用できる機能とか
+- 後で話すが、型クラスのインスタンスの自動生成に利用
+
+!SLIDE
+
+### Boilerplate-free lenses for arbitrary case classes
+
+<br />
+
+- ScalaにはLensのライブラリいっぱい・・・
+- shapelessのものは、マクロ使っていて、定義が短く書けて便利
+
+!SLIDE
+
+### First class lazy values tie implicit recursive knots
+
+<br />
+
+- 自己のインスタンス定義に、自分のインスタンスが必要という再帰的構造の場合に、Scalaではうまくいかない
+- 例えば、FreeやCofreeのEqの定義
+
+!SLIDE
+
+- そういった問題を解決
+- マクロで実装されてる
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/lazy.scala>
+
+!SLIDE
+
+- <http://d.hatena.ne.jp/xuwei/20131223/1387798959> 問題点を別の方法で解決を試みた
+- <https://github.com/xuwei-k/scalaz/commit/8f4a0fb7ee44732c> Scalazに直接入れてみた例
+- <https://github.com/typelevel/shapeless-contrib/pull/9/files> shapeless-contribというのに入れた
+
+!SLIDE
+
+### Collections with statically known sizes
+
+<br />
+
+- サイズが型レベルで決まっているList
+- HListとは違い、要素の型は全部同じ
+
+!SLIDE
+
+### Type safe cast
+
+<br />
+
+- HaskellにおけるTypeableっぽいことがある程度可能らしい？
+
+!SLIDE
+
+### Testing for non-compilation
+
+<br />
+
+- マクロによって「コンパイルが通らない」ことがテストできる
+- 最近はScalatestとかにもある
+
+!SLIDE
+
+### Zipper
+
+<br />
+
+普通のZipperではなく、HListに関連するもの
+
+
+!SLIDE
+
+その他にもまだ紹介できてない機能あるかも
+
+!SLIDE
+
+## 型クラスのインスタンスの自動生成の話
+
+
+!SLIDE
+
+これ読めばよい
+
+- <http://typelevel.org/blog/2013/06/24/deriving-instances-1.html>
+
+!SLIDE
+
+### 自動生成できる型クラスの種類
+
+<br />
+
+- Scalazだと例えば以下のようなやつ
+    - `Semigroup`
+    - `Monoid`
+    - `Equal`
+    - `Order`
+    - `Show`
+
+!SLIDE
+
+- つまり、Haskellの標準の範囲と同じ?で、Kindが`Eq`と同じやつ
+- `Functor` とかはできない
+- あれどういうアルゴリズムでやってるんですか、教えてください・・・ 
+    
+!SLIDE
+
+ちなみに、newtypeの場合は<span style="font-size: 50%;">(ある程度Haskellより面倒だが)</span><br /> `deriving Functor` 相当の仕組みはScalaz自体に存在する
+
+!SLIDE
+
+- 実際のライブラリはこちら
+- <https://github.com/typelevel/shapeless-contrib/tree/v0.3/scalaz/main/scala>
+- Scalaz以外にも対応可能
+    - spire
+    - scalacheck
+    - その他自分で定義すれば(kindが`Eq`と同じならば)
+
+!SLIDE
+
+### 内部の構造とか作り方の説明
+
+<br />
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/typeclass.scala>
+- `なんとかTypeClass` という、型クラスをderivingするための型クラス、というメタ的な何か
+
+!SLIDE
+
+- 例えば
+    - `TypeClass[Equal]`
+    - `ProductTypeClass[Monoid]`
+- Haskellではコンパイラ(GHC)が勝手にやってくれるので、対応する型クラスは存在しない
+
+!SLIDE
+
+### 
+
+- 4種類
+    - ProductTypeClass
+    - TypeClass
+    - LabelledProductTypeClass
+    - LabelledTypeClass
+
+!SLIDE
+
+<svg width="423pt" height="120pt"
+ viewBox="0.00 0.00 423.00 120.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 116)">
+<title>diagram</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-116 419,-116 419,4 -4,4"/>
+<!-- shapeless.LabelledProductTypeClass -->
+<g id="node1" class="node"><title>shapeless.LabelledProductTypeClass</title>
+<polygon fill="#799f5a" stroke="black" points="-0.513184,-1 -0.513184,-37 222.513,-37 222.513,-1 -0.513184,-1"/>
+<text text-anchor="middle" x="111" y="-14.8" font-family="Times,serif" font-size="14.00">shapeless.LabelledProductTypeClass</text>
+</g>
+<!-- shapeless.LabelledTypeClass -->
+<g id="node2" class="node"><title>shapeless.LabelledTypeClass</title>
+<polygon fill="#799f5a" stroke="black" points="21.2627,-75 21.2627,-111 200.737,-111 200.737,-75 21.2627,-75"/>
+<text text-anchor="middle" x="111" y="-88.8" font-family="Times,serif" font-size="14.00">shapeless.LabelledTypeClass</text>
+</g>
+<!-- shapeless.LabelledTypeClass&#45;&gt;shapeless.LabelledProductTypeClass -->
+<g id="edge2" class="edge"><title>shapeless.LabelledTypeClass&#45;&gt;shapeless.LabelledProductTypeClass</title>
+<path fill="none" stroke="black" d="M111,-74.937C111,-66.8072 111,-56.8761 111,-47.7047"/>
+<polygon fill="black" stroke="black" points="114.5,-47.4406 111,-37.4407 107.5,-47.4407 114.5,-47.4406"/>
+</g>
+<!-- shapeless.ProductTypeClass -->
+<g id="node3" class="node"><title>shapeless.ProductTypeClass</title>
+<polygon fill="#799f5a" stroke="black" points="240.973,-1 240.973,-37 415.027,-37 415.027,-1 240.973,-1"/>
+<text text-anchor="middle" x="328" y="-14.8" font-family="Times,serif" font-size="14.00">shapeless.ProductTypeClass</text>
+</g>
+<!-- shapeless.TypeClass -->
+<g id="node4" class="node"><title>shapeless.TypeClass</title>
+<polygon fill="#799f5a" stroke="black" points="262.749,-75 262.749,-111 393.251,-111 393.251,-75 262.749,-75"/>
+<text text-anchor="middle" x="328" y="-88.8" font-family="Times,serif" font-size="14.00">shapeless.TypeClass</text>
+</g>
+<!-- shapeless.TypeClass&#45;&gt;shapeless.ProductTypeClass -->
+<g id="edge1" class="edge"><title>shapeless.TypeClass&#45;&gt;shapeless.ProductTypeClass</title>
+<path fill="none" stroke="black" d="M328,-74.937C328,-66.8072 328,-56.8761 328,-47.7047"/>
+<polygon fill="black" stroke="black" points="331.5,-47.4406 328,-37.4407 324.5,-47.4407 331.5,-47.4406"/>
+</g>
+</g>
+</svg>
+
+!SLIDE
+
+- Labelledとは、case classのfield名を使うか否か
+- 例えば、case classに対して、JsonのEncode、Decodeのための型クラスのインスタンスを自動生成したい
+
+!SLIDE
+
+- その場合に、field名をそのままJsonのKeyにしたい
+- <https://github.com/argonaut-io/argonaut/pull/128/files> 
+
+!SLIDE
+
+### Productが付いているかいないかの違い
+
+<br />
+
+- 継承関係から分かるように、Productがついていないほうが強い(できることが多い)
+
+!SLIDE
+
+ProductTypeClassのみでEqualのインスタンスの自動生成が可能
+
+<br />
+
+```scala
+final case class Person(id: Int, name: String)
+```
+
+!SLIDE
+
+- `ProductTypeClass` のみでderiving不可能
+- `TypeClass[Equal]` が必要
+
+<br />
+
+```scala
+sealed trait Tree[T]
+case class Leaf[T](t: T) extends Tree[T]
+case class Node[T](l: Tree[T], r: Tree[T]) extends Tree[T]
+```
+
+<br />
+
+<span style="font-size: 50%;">
+(もちろん、型パラメータの <code>T</code> の <code>Equal</code> のインスタンスが存在する場合)
+</span>
+
+!SLIDE
+
+### その他便利な応用例
+
+!SLIDE
+
+<code>F[_]</code> が `Applicative` <br />
+
+なら<br />
+
+<code>F[A] :: F[B] :: F[C] :: HNil</code><br />
+
+を<br />
+
+<code>F[A :: B :: C :: HNil]</code><br />
+
+に変換可能(逆も可能)
+
+!SLIDE
+例1
+
+<br />
+
+```scala
+Option[Int] :: Option[String] :: HNil
+
+Option[Int :: String :: HNil]
+```
+
+!SLIDE
+例2
+<br />
+
+```scala
+Either[Int, String] :: Either[Boolean, String] :: HNil
+
+Either[Int :: Boolean :: HNil, String]
+```
+
+!SLIDE
+
+つまり、Haskellにおける`Traversable`の`sequenceA`などが`HList`に対して可能
+
+<http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-Traversable.html#v:sequenceA>
+
+!SLIDE
+
+[252要素のcase classまでのplayframeworkのJsonのReadsやWritesやFormatを生成できるライブラリ作った](http://d.hatena.ne.jp/xuwei/20140727/1406445058)
+
+!SLIDE
+
+<blockquote class="twitter-tweet" lang="en"><p>こういう感じのコード生成してコンパイル始めたら、Scalaコンパイラさんが数十分ずっとコンパイルしてて終わらない・・・ <a href="http://t.co/TNp92zYvO5">pic.twitter.com/TNp92zYvO5</a></p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/492998634011521024">July 26, 2014</a></blockquote>
+
+<span style="font-size: 50%;">vimがシンタックスハイライトを途中で諦めてる(´･_･`)</span>
+
+!SLIDE
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/xuwei_k">@xuwei_k</a> 結果、1時間くらいコンパイル時間がかかるようになってしまって全く実用的ではないので、(どうせimplicitの探索が遅いのだろうから)implicitをすべて明示的に呼び出してコンパイル時間の短縮を試みるというScalaコンパイラへの思いやりあふれる作業している</p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/493045911627390976">July 26, 2014</a></blockquote>
+
+
+!SLIDE
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/xuwei_k">@xuwei_k</a> what are you doing!?!</p>&mdash; Miles Sabin (@milessabin) <a href="https://twitter.com/milessabin/status/493094054696341504">July 26, 2014</a></blockquote>
+
+
+!SLIDE
+
+- なにも考えないで実装すると、1時間経ってもコンパイル終わらないコードが出来上がる
+- 頑張っても10分以上かかる
+- ソースコードが13MB, バイナリ11MB
+
+!SLIDE
+
+- shapeless作者から "what are you doing!?!" というmentionくる 
+- C++メタプログラミングのように、コンパイル時のアルゴリズムのオーダーとか考える必要
+
+!SLIDE
+
+## その他雑多な話, exampleの紹介など
+
+!SLIDE
+
+### typelevel fibonacci
+
+<https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/fibonacci.scala>
+
+!SLIDE
+
+### typelevel FizzBuzz
+
+<https://gist.github.com/travisbrown/4108026>
+
+!SLIDE
+
+[Boxy Types: Inference for Higher-Rank Types and Impredicativity](http://research.microsoft.com/en-us/um/people/simonpj/papers/boxy/boxy-icfp.pdf)
+という、Simon Peyton Jonesセンセの論文<br />
+
+の一部をshapelessでやってみたもの?
+
+<https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/impredicative.scala>
+
+!SLIDE
+
+## shepelessを使ってるライブラリ
+
+!SLIDE
+
+### scodec
+
+- <https://github.com/scodec/scodec>
+- バイナリデータなどをEncode, Decodeするライブラリ
+- shapeless結構使ってる
+
+!SLIDE
+
+### scodec
+
+![scodec](./scodec.png)
+
+!SLIDE
+
+### spray
+
+- routingまわりで使われているらしい
+- <https://github.com/spray/spray/blob/v1.3.2/spray-routing/src/main/scala/spray/routing/HListDeserializer.scala>
+
+!SLIDE
+
+### akka-http
+
+- よってsprayから移植されたakka-httpにもある
+- <https://github.com/akka/akka/tree/akka-stream-and-http-experimental-0.9/akka-parsing/src/main/scala/akka/shapeless>
+
+!SLIDE
+
+### parboiled2
+
+- マクロを大量に使ってる、PEG Parser
+- <https://github.com/sirthias/parboiled2>
+- 個人的にあまり詳しくないのでわからない・・・(´･_･`)
+
+!SLIDE
+
+### http4s
+
+- Scalatraの人達が、次期Scalatraの内部で使うために、色々とかなり低レベルなところからscalaz-stream使い作成中のなにか
+- parboiled2経由で少し使ってる？
+- <https://github.com/http4s/http4s>
+- もみあげさん [@pocketberserker](https://twitter.com/pocketberserker) が、少し詳しい？
+
+
+!SLIDE
+
+### まとめ?
+
+<br />
+
+- ただでさえ遅いコンパイル時間が更に長く！
+- 型がとにかくヤバイ、けどその分とにかくスゴイ
+- ソース読むとマクロ関連のバグのURLいくつかあったりして怖い
+    - <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/generic.scala#L219>
+    - <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala#L40>
