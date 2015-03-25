@@ -1,0 +1,201 @@
+<html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>scalazcheck</title>
+        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
+        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/show.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
+        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
+      <script type="text/javascript"><!--
+        window.onload=function() { prettyPrint(); };
+      --></script>
+      </head>
+      <body>
+        <div id="slides">
+          <div id="reel">
+            <div class="content" id="slide-0"><div class="container">
+                  <h1 id="Scala%E3%81%A7%E3%83%86%E3%82%B9%E3%83%88%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%82%92%E4%BD%9C%E3%81%A3%E3%81%A6%E3%82%8B%E8%A9%B1">Scalaでテストライブラリを作ってる話</h1><br /><br />
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+
+                </div>
+      </div><div class="content" id="slide-1"><div class="container">
+                  <img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
+</li><li>github <a  href="https://github.com/xuwei-k">@xuwei-k</a>
+</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-2"><div class="container">
+                  <h1 id="%E3%81%A9%E3%81%86%E3%81%84%E3%81%86%E3%83%86%E3%82%B9%E3%83%88%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%EF%BC%9F">どういうテストライブラリ？</h1><p><br />
+↓
+<br />
+<br />
+</p><h2 id="Scalacheck%E3%81%AE%E3%82%88%E3%81%86%E3%81%AA%E3%82%84%E3%81%A4">Scalacheckのようなやつ</h2>
+                </div>
+      </div><div class="content" id="slide-3"><div class="container">
+                  <ul><li><a  href="https://github.com/rickynils/scalacheck">https://github.com/rickynils/scalacheck</a>
+</li><li><a  href="http://scalacheck.org">http://scalacheck.org</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-4"><div class="container">
+                  <h1 id="Scalacheck%E3%81%A3%E3%81%A6%E3%81%AA%E3%81%AB%EF%BC%9F">Scalacheckってなに？</h1><p><br />
+↓
+<br />
+<br />
+</p><h2 id="Haskell%E3%81%AEQuickcheck%E3%81%A8%E3%81%84%E3%81%86%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E3%81%AE%E7%A7%BB%E6%A4%8D">HaskellのQuickcheckというライブラリの移植</h2><h2 id="%E8%87%AA%E5%8B%95%E3%81%A7%E3%83%86%E3%82%B9%E3%83%88%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E5%80%A4%E3%82%92%E3%83%A9%E3%83%B3%E3%83%80%E3%83%A0%E3%81%AB%E7%94%9F%E6%88%90">自動でテストのための値をランダムに生成</h2>
+                </div>
+      </div><div class="content" id="slide-5"><div class="container">
+                  <h1 id="Scalacheck%E3%81%98%E3%82%83%E3%83%80%E3%83%A1%E3%81%AA%E3%81%AE%EF%BC%9F">Scalacheckじゃダメなの？</h1><p><br />
+↓
+<br />
+<br />
+</p><h2 id="%E3%81%8B%E3%81%AA%E3%82%8A%E4%BD%BF%E3%81%A3%E3%81%A6%E3%82%8B%E3%81%AE%E3%81%A7%E3%80%81%E8%89%B2%E3%80%85%E7%B4%B0%E3%81%8B%E3%81%84%E4%B8%8D%E6%BA%80%E3%81%8C%E3%81%A7%E3%81%A6%E3%81%8D%E3%81%9F">かなり使ってるので、色々細かい不満がでてきた</h2>
+                </div>
+      </div><div class="content" id="slide-6"><div class="container">
+                  <h1 id="%E6%96%B0%E3%81%97%E3%81%8F%E4%BD%9C%E3%82%8B%E3%81%AE%E3%81%A7%E3%81%AF%E3%81%AA%E3%81%8F%E3%81%A6%E3%80%81Scalacheck%E3%81%ABpull+req%E3%81%99%E3%82%8C%E3%81%B0%E3%81%84%E3%81%84%E3%82%93%E3%81%98%E3%82%83%E3%81%AA%E3%81%84%E3%81%AE%EF%BC%9F">新しく作るのではなくて、Scalacheckにpull reqすればいいんじゃないの？</h1>
+                </div>
+      </div><div class="content" id="slide-7"><div class="container">
+                  <ul><li>あとでするかもしれないけど、とりあえず勉強のためにも一から作りたかった
+</li><li>Scalacheckの内部のコードはそこまで綺麗ではないので、機能追加難しい(と少なくとも今は感じた)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-8"><div class="container">
+                  <h1 id="Scalacheck%E3%81%AE%E4%B8%8D%E6%BA%80%E7%82%B9">Scalacheckの不満点</h1>
+                </div>
+      </div><div class="content" id="slide-9"><div class="container">
+                  <p>(だいたい上から重要な順)
+</p><br />
+<ul><li>CoArbirary
+</li><li>巨大な値を生成してテストが終わらないときの対策
+</li><li>タイムアウト
+</li><li>パラメータの細かい指定が不可能
+</li><li>seedを指定して、ランダムだけど予測可能(?)なテスト方法の提供
+</li><li>GenとArbitraryがあまり意味なく2つあって面倒
+</li><li>ScalazのTypeclassの階層と重複テストの問題
+</li><li>Gen Monad Transformer
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-10"><div class="container">
+                  <h1 id="Coarbitrary">Coarbitrary</h1><ul><li>これが一番大きな理由
+</li><li>「関数の値をランダムに生成するためのもの」
+</li><li>そんなことできるの？
+</li><li>できるらしいですよ
+</li><li>(うまく説明できる気がしないので、原理は省略)
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-11"><div class="container">
+                  <h2 id="%E5%B7%A8%E5%A4%A7%E3%81%AA%E5%80%A4%E3%82%92%E7%94%9F%E6%88%90%E3%81%97%E3%81%A6%E3%83%86%E3%82%B9%E3%83%88%E3%81%8C%E7%B5%82%E3%82%8F%E3%82%89%E3%81%AA%E3%81%84%E3%81%A8%E3%81%8D%E3%81%AE%E5%AF%BE%E7%AD%96">巨大な値を生成してテストが終わらないときの対策</h2><br />
+<p>よくある例
+</p><br />
+<pre><code class="prettyprint lang-scala">case class A(value: List[B])
+case class B(value: List[Int])
+</code></pre><br />
+
+                </div>
+      </div><div class="content" id="slide-12"><div class="container">
+                  <h2 id="%E5%B7%A8%E5%A4%A7%E3%81%AA%E5%80%A4%E3%82%92%E7%94%9F%E6%88%90%E3%81%97%E3%81%A6%E3%83%86%E3%82%B9%E3%83%88%E3%81%8C%E7%B5%82%E3%82%8F%E3%82%89%E3%81%AA%E3%81%84%E3%81%A8%E3%81%8D%E3%81%AE%E5%AF%BE%E7%AD%96">巨大な値を生成してテストが終わらないときの対策</h2><br />
+<ul><li>デフォルトではListは100要素まで
+</li><li>100 × 100 で 10000 要素
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-13"><div class="container">
+                  <ul><li>間違って巨大な値生成してテストが終わらなくなったらタイムアウトやうまくキャンセルさせたい
+</li><li>maxSizeなどを細かく設定したい
+</li></ul><p>↓
+</p><p>Scalacheckでは不可能？
+</p>
+                </div>
+      </div><div class="content" id="slide-14"><div class="container">
+                  <p>残念な妥協
+</p><p><a  href="https://github.com/scalaz/scalaz/blob/v7.1.1/project/build.scala#L87">https://github.com/scalaz/scalaz/blob/v7.1.1/project/build.scala#L87</a>
+</p>
+                </div>
+      </div><div class="content" id="slide-15"><div class="container">
+                  <h2 id="seed%E3%82%92%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%A6%E3%80%81%E3%83%A9%E3%83%B3%E3%83%80%E3%83%A0%E3%81%A0%E3%81%91%E3%81%A9%E4%BA%88%E6%B8%AC%E5%8F%AF%E8%83%BD%28%3F%29%E3%81%AA%E3%83%86%E3%82%B9%E3%83%88%E6%96%B9%E6%B3%95%E3%81%AE%E6%8F%90%E4%BE%9B">seedを指定して、ランダムだけど予測可能(?)なテスト方法の提供</h2><br />
+<p>本当にランダムだと、再現性が難しいので<br />
+(まぁ引数を保持しておくでもいいけど)
+</p>
+                </div>
+      </div><div class="content" id="slide-16"><div class="container">
+                  <h1 id="Gen%E3%81%A8Arbitrary%E3%81%8C%E3%81%82%E3%81%BE%E3%82%8A%E6%84%8F%E5%91%B3%E3%81%AA%E3%81%8F2%E3%81%A4%E3%81%82%E3%81%A3%E3%81%A6%E9%9D%A2%E5%80%92">GenとArbitraryがあまり意味なく2つあって面倒</h1><p><a  href="https://twitter.com/xuwei_k/status/541898455698776065">https://twitter.com/xuwei_k/status/541898455698776065</a>
+</p><blockquote class="twitter-tweet" lang="en"><p>ScalaCheckでArbitraryはGenを保持してるだけでそれ以外何もしてない？でQuickCheckだとGenとShrinkを保持するものになってる？で、まぁそれは設計判断としていいんだけど、ならArbitraryかGenのどちらかは不要だと思うけどなぜこうなってるのか</p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/541898455698776065">December 8, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+                </div>
+      </div><div class="content" id="slide-17"><div class="container">
+                  <h2 id="Scalaz%E3%81%AETypeclass%E3%81%AE%E9%9A%8E%E5%B1%A4%E3%81%A8%E9%87%8D%E8%A4%87%E3%83%86%E3%82%B9%E3%83%88%E3%81%AE%E5%95%8F%E9%A1%8C">ScalazのTypeclassの階層と重複テストの問題</h2><br />
+<ul><li><a  href="http://xuwei-k.github.io/scalaz7.1.1.svg">http://xuwei-k.github.io/scalaz7.1.1.svg</a>
+</li><li><a  href="https://github.com/scalaz/scalaz/blob/v7.1.1/scalacheck-binding/src/main/scala/scalaz/scalacheck/ScalazProperties.scala">https://github.com/scalaz/scalaz/blob/v7.1.1/scalacheck-binding/src/main/scala/scalaz/scalacheck/ScalazProperties.scala</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-18"><div class="container">
+                  <h2 id="%E5%85%88%E9%A7%86%E8%80%85">先駆者</h2><br />
+<ul><li><a  href="https://github.com/typelevel/discipline">https://github.com/typelevel/discipline</a>
+</li><li><a  href="http://typelevel.org/blog/2013/11/17/discipline.html">http://typelevel.org/blog/2013/11/17/discipline.html</a>
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-19"><div class="container">
+                  <h2 id="discipline%E3%81%AE%E4%B8%8D%E6%BA%80%E7%82%B9">disciplineの不満点</h2><br />
+<ul><li>Scalacheck前提
+</li><li>識別子がString固定？
+</li><li>メンテ不安？
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-20"><div class="container">
+                  <h1 id="%E5%AE%9F%E8%A3%85%E6%96%B9%E9%87%9D">実装方針</h1>
+                </div>
+      </div><div class="content" id="slide-21"><div class="container">
+                  <h1 id="Functional+Java%E3%82%92%E3%83%91%E3%82%AF%E3%82%8B">Functional Javaをパクる</h1><p><a  href="https://github.com/functionaljava/functionaljava/tree/v4.3/core/src/main/java/fj/test">https://github.com/functionaljava/functionaljava/tree/v4.3/core/src/main/java/fj/test</a>
+</p>
+                </div>
+      </div><div class="content" id="slide-22"><div class="container">
+                  <h1 id="Scalacheck%E3%82%88%E3%82%8AFunctional+Java%E3%81%AE%E3%81%BB%E3%81%86%E3%81%8C%E3%81%A8%E3%81%A6%E3%82%82%E3%82%B3%E3%83%BC%E3%83%89%E7%B6%BA%E9%BA%97%E3%81%A7%E3%82%8F%E3%81%8B%E3%82%8A%E3%82%84%E3%81%99%E3%81%84%21%3F">ScalacheckよりFunctional Javaのほうがとてもコード綺麗でわかりやすい!?</h1>
+                </div>
+      </div><div class="content" id="slide-23"><div class="container">
+                  <h2 id="CoArbitrary%E3%81%AF%E3%81%9D%E3%81%AE%E3%81%BE%E3%81%BE%E7%A7%BB%E6%A4%8D%E3%81%99%E3%82%8C%E3%81%B0%E8%A7%A3%E6%B1%BA">CoArbitraryはそのまま移植すれば解決</h2>
+                </div>
+      </div><div class="content" id="slide-24"><div class="container">
+                  <h2 id="%E3%82%BF%E3%82%A4%E3%83%A0%E3%82%A2%E3%82%A6%E3%83%88%E3%81%AF%E5%B0%91%E3%81%97%E6%94%B9%E9%80%A0%E3%81%99%E3%82%8C%E3%81%B0%E3%81%A7%E3%81%8D%E3%81%9F">タイムアウトは少し改造すればできた</h2>
+                </div>
+      </div><div class="content" id="slide-25"><div class="container">
+                  <h2 id="%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF%E3%81%AE%E7%B4%B0%E3%81%8B%E3%81%84%E6%8C%87%E5%AE%9A">パラメータの細かい指定</h2><br />
+<p>基本的にかなり純粋関数型で作られてるので、あまりいじる必要ない
+</p>
+                </div>
+      </div><div class="content" id="slide-26"><div class="container">
+                  <h2 id="seed%E3%82%92%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%A6%E3%80%81%E3%83%A9%E3%83%B3%E3%83%80%E3%83%A0%E3%81%A0%E3%81%91%E3%81%A9%E4%BA%88%E6%B8%AC%E5%8F%AF%E8%83%BD%E3%81%AA%E3%83%86%E3%82%B9%E3%83%88%E6%96%B9%E6%B3%95%E3%81%AE%E6%8F%90%E4%BE%9B">seedを指定して、ランダムだけど予測可能なテスト方法の提供</h2><br />
+<p>少し頑張ればできた
+</p>
+                </div>
+      </div><div class="content" id="slide-27"><div class="container">
+                  <h2 id="Scalaz%E3%81%AETypeclass%E3%81%AE%E9%9A%8E%E5%B1%A4%E3%81%A8%E9%87%8D%E8%A4%87%E3%83%86%E3%82%B9%E3%83%88%E3%81%AE%E5%95%8F%E9%A1%8C">ScalazのTypeclassの階層と重複テストの問題</h2><br />
+<ul><li>完全に独自に作った
+</li><li>試行錯誤した途中のなにか <a  href="https://gist.github.com/xuwei-k/be463dc93355e3f9c1c2">https://gist.github.com/xuwei-k/be463dc93355e3f9c1c2</a>
+</li><li>有向非巡回グラフとして考えて、重複ノードを削除する
+</li></ul>
+                </div>
+      </div><div class="content" id="slide-28"><div class="container">
+                  <h2 id="Gen+Monad+Transformer">Gen Monad Transformer</h2><br />
+<br />
+<p>気が向いたら、これから作る
+</p>
+                </div>
+      </div><div class="content" id="slide-29"><div class="container">
+                  <h2 id="%E3%82%B3%E3%83%BC%E3%83%89%E3%81%BE%E3%81%A0%E6%9C%AA%E5%85%AC%E9%96%8B">コードまだ未公開</h2><br />
+<p>最初のリリースと同時に公開？
+</p>
+                </div>
+      </div><div class="content" id="slide-30"><div class="container">
+                  <h2 id="%E3%81%84%E3%81%84%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E5%90%8D%E5%8B%9F%E9%9B%86">いいライブラリ名募集</h2><br />
+<ul><li>特になければ ScalazCheck という当て付けのような名前に・・・
+</li><li>もしくは最初からScalaz組み込み？
+</li></ul>
+                </div>
+      </div>
+          </div>
+        </div>
+        
+      </body>
+    </html>
