@@ -1,0 +1,1355 @@
+<DOCTYPE html>
+<html>
+  <head>
+    <title>Property Based Testing - scalapropsとscalacheckとその他色々</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Property Based Testing
+
+scalapropsとscalacheckとその他色々
+
+[![クリエイティブ・コモンズ・ライセンス](http://i.creativecommons.org/l/by/2.1/jp/88x31.png)](http://creativecommons.org/licenses/by/2.1/jp/)
+
+---
+class: middle
+
+<img src="image/xuwei.gif" alt="アイコン" width="100" height="100" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog [http://d.hatena.ne.jp/xuwei](http://d.hatena.ne.jp/xuwei)
+
+---
+class: middle
+
+本題と全く関係ない近況報告
+
+数日前・・・
+
+---
+class: middle
+
+![](image/json4s-1.png)
+[![](image/json4s-2.png)](https://gitter.im/json4s/json4s?at=55b04fa94fdc50987c739308)
+
+---
+class: middle
+
+今後も日本語の普及のために、グローバルレベルで<br />有用なScala情報を日本語で発信していきたい(ぇ
+
+---
+class: middle
+
+## 今日の内容
+
+- property based testingとscalacheckの簡単な説明
+- scalacheckの不満点とscalaprops作成に至る経緯
+- scalapropsの紹介
+- 主にHaskellの、その他様々なproperty based testingの手法紹介
+
+---
+class: center, middle
+
+## <span style="font-size: 125%;">[https://github.com/scalaprops](https://github.com/scalaprops)</span>
+
+
+---
+class: center, middle
+
+## Property Based Testing とは？
+
+---
+class: middle
+
+- Property = 特質、特性、性質
+- テストデータを __ (半)自動生成 __ する
+- (個人的な感覚としては)証明と普通のテストの中間のような?
+
+---
+class: middle, center
+
+
+<span style="font-size: 150%">半</span> 自動生成？
+
+or
+
+<span style="font-size: 150%">全</span> 自動生成？
+
+
+ここ重要なところ(後半で話す予定)
+
+
+---
+class: center, middle
+
+## [https://hackage.haskell.org/package/QuickCheck](https://hackage.haskell.org/package/QuickCheck)
+
+
+---
+class: center, middle
+
+## [http://scalacheck.org/](http://scalacheck.org/)
+## [https://github.com/rickynils/scalacheck](https://github.com/rickynils/scalacheck)
+
+---
+class: middle, center
+
+![](image/scalacheck-book.gif)
+
+[http://www.artima.com/shop/scalacheck](http://www.artima.com/shop/scalacheck)
+
+
+
+---
+class: middle, center
+
+![](image/scalacheck-author.jpeg)
+
+
+[https://github.com/rickynils](https://github.com/rickynils)
+
+
+---
+class: middle, center
+
+<pre style="font-size: 250%;">
+＿人人人人人人人人＿
+＞　ひげがすごい　＜
+￣Y^Y^Y^^Y^Y^Y^￣
+</pre>
+
+---
+class: middle
+
+## Scalacheck とは
+
+- かなり古くからあるライブラリ(2007年?)
+- 単体でも使用可能だし、specs2やscalatestと組み合わせても可能
+- Scala本体のテストにも使われている(コレクションなど)
+- 実質Scala界隈で唯一のProperty Based Testのライブラリだったが、最近は新しいものを作る動きがいくつか
+
+
+---
+class: middle
+
+## [アンケート結果](https://gist.github.com/pocketberserker/5fcd3d542a78956c9dc8)
+
+scalacheckを使用していますか？
+
+- 仕事でも趣味でも使ってる 7
+- 仕事で使っている 4
+- 趣味で使っている 17
+- 使っていない 94
+
+
+---
+class: middle
+
+- 最近社内でもscalacheck使ってます
+- 自分のチームでは、jsonやmsgpackへのシリアライズ、デシリアライズあたり
+
+---
+class: middle
+
+scalacheckのテストの書き方の例
+
+```scala
+forAll { l: List[String] =>
+  l.reverse.reverse == l
+}
+```
+
+---
+class: middle
+
+- `List[String]` は半自動で生成される
+- 事前に関数を定義しておけば、任意の型の値が生成可能
+- デフォルトだと100回テスト
+- ちなみに自作のscalapropsも基本は同じほぼ書き方可能
+
+---
+class: middle, center
+
+Scalacheckが既にある。
+
+しかし再発明したくなった。
+
+なぜか？
+
+---
+
+[![2013 scalaz](image/scalaz2013.png)](https://github.com/scalaz/scalaz/graphs/contributors?from=2013-01-01&amp;to=2013-12-31&amp;type=c)
+
+---
+
+[![2014 scalaz](image/scalaz2014.png)](https://github.com/scalaz/scalaz/graphs/contributors?from=2014-01-01&amp;to=2014-12-31&amp;type=c)
+
+---
+
+[![2015 scalaz](image/scalaz2015.png)](https://github.com/scalaz/scalaz/graphs/contributors?from=2015-01-01&amp;to=2015-12-25&amp;type=c)
+
+---
+class: middle
+
+- 2013, 2014 Scalazコミット数1位
+- このままだと2015年も1位
+- ScalazのテストはScalacheckのみで書かれている
+
+---
+class: center, middle
+
+## <img style="display: inline;" src="image/xuwei.gif" width="60" height="60" /> さんは<br />誰よりもScalacheckでテストを<br />書いている?
+
+---
+class: center, middle
+
+バグ見つけるおじさんダヨー
+
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/scalaz?src=hash">#scalaz</a> special forces officer <a href="https://twitter.com/xuwei_k">@xuwei_k</a> once again demonstrates prowess tracking down insidious lawbreakers <a href="http://t.co/guPzDNFQp0">http://t.co/guPzDNFQp0</a></p>&mdash; Stephen Compall (@S11001001) <a href="https://twitter.com/S11001001/status/401933747123404800">November 17, 2013</a></blockquote>
+
+---
+class: center, middle
+
+<blockquote class="twitter-tweet" lang="en"><p lang="ja" dir="ltr">「<a href="https://twitter.com/xuwei_k">@xuwei_k</a> は普通に読んでても気付かないような細かいバグに気付いてる。どうやっているんだ?」みたいなことを Scalaz の他のコミッタが nescala 後の懇親会で言ってた。あと「彼は nescala に来るべきだった」</p>&mdash; eugene yokota (@eed3si9n_ja) <a href="https://twitter.com/eed3si9n_ja/status/443248298926043136">March 11, 2014</a></blockquote>
+
+
+---
+class: center, middle
+
+## Scalacheckに対する不満
+
+---
+class: middle
+
+- [CoArbitrary](https://github.com/nick8325/quickcheck/blob/2.8.1/Test/QuickCheck/Arbitrary.hs#L634) がない
+ - [つい最近実装されはじめた](https://github.com/rickynils/scalacheck/pull/171)
+ - [自分が煽ったおかげ？](http://d.hatena.ne.jp/xuwei/20150611/1434047724)
+- 巨大な値を生成してテストが終わらないときの対策
+ - タイムアウト
+ - パラメータの細かい指定が不可能
+
+---
+class: middle
+
+- seedを指定して、ランダムだけど予測可能なテスト
+- [Gen](https://github.com/rickynils/scalacheck/blob/1.12.4/src/main/scala/org/scalacheck/Gen.scala)と[Arbitrary](https://github.com/rickynils/scalacheck/blob/1.12.4/src/main/scala/org/scalacheck/Arbitrary.scala)があまり意味なく2つあって面倒
+- ScalazのTypeclassの階層と重複テストの問題
+ - [先例 discipline](http://typelevel.org/blog/2013/11/17/discipline.html)
+- Gen Monad Transformer
+
+---
+class: center, middle
+
+<iframe src="http://xuwei-k.github.io/scalaz7.1.1.svg" width="100%" height="100%" />
+
+---
+class: center, middle
+
+[http://xuwei-k.github.io/scalaz7.1.1.svg](http://xuwei-k.github.io/scalaz7.1.1.svg)
+
+[scalazのTraverseとStateモナドを使ってTreeの重複を削除(もしくはdirected acyclic graphをtreeに変換)する話](http://d.hatena.ne.jp/xuwei/20150609/1433826317)
+
+---
+class: center, middle
+
+## <span style="font-size: 200%;">CoArbitrary</span><br />って何？
+
+---
+class: center, middle
+
+<span style="font-size: 200%;"><span style="color: red;">Co</span>Arbitrary</span>
+
+---
+class: center, middle
+
+<span style="font-size: 200%;">Monad</span>
+
+<span style="font-size: 200%;">↕</span>
+
+<span style="font-size: 200%;">Comonad</span>
+
+---
+class: center, middle
+
+<span style="font-size: 200%;">Arbitrary</span>
+
+<span style="font-size: 200%;">↕</span>
+
+<span style="font-size: 200%;">CoArbitrary</span>
+
+---
+class: center, middle
+
+## CoArbitraryはArbitraryの双対？
+
+---
+class: center, middle
+
+## Arbitraryって何？
+
+---
+class: middle
+
+## <span style="font-size: 200%;">Arbitrary</span>
+
+- 日本語に訳すと "任意の" という意味
+- ランダムな値を生成するための型クラス
+- (Scalaの場合)Arbitrary自体がMonad
+
+---
+class: center, middle
+
+## <span style="font-size: 200%;">CoArbitrary</span>
+
+関数自体の値をランダムに自動生成<br />するために使うもの
+
+---
+class: middle
+
+<pre style="font-family:'MS PGothic'; font-size: 120%;">
+　　　　　　 ＿＿＿_
+ 　 　 　 　 ／　　　　　＼          関数をランダムに自動生成？
+ 　　　 ／　 　⌒　　⌒       ＼　　 何言ってんだこいつ
+　　／　 　 （●） 　（●）       ＼
+ 　 |　 　､"　)（__人__）"　  　）　
+　　＼　 　 　 ｡｀ ⌒´　, ／
+＿／　　　　　　　　　　  ＼　
+</pre>
+
+---
+
+class: middle
+
+<pre>
+<code class="haskell hljs remark-code" style="font-size: 140%;">class CoArbitrary a where
+  coarbitrary :: a -> Gen b -> Gen b
+</code>
+</pre>
+
+---
+class: middle
+
+## <span style="font-size: 160%"> [scalaprops.Cogen](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Cogen.scala) </span>
+
+```scala
+abstract class Cogen[A] {
+  def cogen[B](a: A, g: CogenState[B]): CogenState[B]
+}
+```
+
+```scala
+case class CogenState[A](rand: Rand, gen: Gen[A])
+```
+
+---
+class: middle
+
+## <span style="font-size: 160%"> [scalaprops.Cogen](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Cogen.scala) </span>
+
+- Genとの対称性的にCoArbitraryではなくCogenという名前に
+  - 名前違うだけで同じもの
+- Rand(不変な乱数生成器)も状態として引き回す
+  - そうしないと関数の生成がうまくいかなかったのでこうなった
+
+---
+class: center, middle
+
+## 当初の課題は大体解決(実装)<br />できた
+
+---
+class: middle
+
+## scalapropsの大雑把な歴史
+
+- 2014年以前
+ - scalacheckに対する不満がたまり続ける
+- 2015年
+ - 2月 scalacheckにCoArbitrary入れようと試し挫折
+ - 3月 [functional java](https://github.com/functionaljava/functionaljava)をscalaへ移植し始める
+ - 4月 移植自体は大体できたが、実験や改良や新機能追加
+ - 5月 0.1.0公開
+ - 6月 やること色々残ってたので週一ぐらいでリリース
+ - 7月25日現在0.1.11が最新
+
+
+---
+class: middle
+
+言ってなかったけど<br />
+<span style="font-size: 130%;">Functional JavaにはCoArbitary<br /></span>
+があります
+
+- [ソースコードはこのあたり](https://github.com/functionaljava/functionaljava/blob/v4.4/quickcheck/src/main/java/fj/test/Coarbitrary.java)
+- Functional JavaのコードはScalacheckより綺麗というか素直で読みやすい
+
+---
+class: middle
+
+## Scalapropsの機能
+
+- CoArbitrary(Cogen)実装完了
+- タイムアウトとパラメータの細かい指定機能つけた
+- seed指定可能機能ついた
+  - immutableな[メルセンヌツイスタ](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/mt.html)
+- (scalazの)型クラスの重複テスト回避機能
+  - [最初からTreeとしてテストを階層構造化](https://github.com/scalaprops/scalaprops/blob/v0.1.11/core/src/main/scala/scalaprops/Properties.scala)
+- GenとArbitraryは、Genだけにした
+
+---
+class: middle
+
+## Scalapropsのサンプルコード
+
+- <https://github.com/scalaprops/scalaprops-examples>
+
+---
+class: middle
+
+## 作ってる途中に<br />思いついたものなど
+
+- テスト結果もTreeとして表示
+- 進捗をできるだけ細かく表示
+ - 間違って大きすぎる値を生成した場合、無限ループしていた場合の、検知のしやすさのため
+- Scalazのlawチェック用モジュールも作った
+- [sbt plugin](https://github.com/scalaprops/sbt-scalaprops)
+
+---
+class: center, middle
+
+![](image/scalaprops.gif)
+
+
+---
+class: middle
+
+## scalazのlawのcheckモジュール
+
+- [scalazのscalacheck-binding](https://github.com/scalaz/scalaz/tree/v7.1.3/scalacheck-binding/src/main/scala/scalaz/scalacheck) に相当
+- [ソースコードだとこのあたり](https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalazlaws/src/main/scala/scalaprops/scalazlaws)
+- scalaz本体側にないものもテストしてる
+ - [Arrow](https://github.com/scalaprops/scalaprops/blob/v0.1.11/scalazlaws/src/main/scala/scalaprops/scalazlaws/ArrowLaws.scala), [MonadTrans](https://github.com/scalaprops/scalaprops/blob/v0.1.11/scalazlaws/src/main/scala/scalaprops/scalazlaws/monadTrans.scala) など
+
+
+---
+class: middle
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 75%;">libraryDependencies +=
+  "com.github.scalaprops" %% "scalaprops-scalazlaws" % "0.1.11" % "test"
+</code>
+</pre>
+
+---
+class: middle
+
+- scalaprops作成の動機として、scalaz自体のテストをすることも目的
+- なのでscalazのテストを半分以上書き直してる
+- <span style="font-size: 50%;"> <https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalaprops/src/test/scala/scalaprops> </span>
+
+---
+class: middle
+
+[![](image/scalaprops-test1.png)](https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalaprops/src/test/scala/scalaprops)
+
+---
+class: middle
+
+```scala
+package scalaprops
+
+import scalaz.IList
+import scalaz.std.anyVal._
+
+object IListTest extends Scalaprops {
+
+  val testLaws = Properties.list(
+    scalazlaws.order.all[IList[Byte]],
+    scalazlaws.monadPlusStrong.all[IList],
+    scalazlaws.traverse.all[IList],
+    scalazlaws.cobind.all[IList],
+    scalazlaws.isEmpty.all[IList],
+    scalazlaws.align.all[IList],
+    scalazlaws.zip.all[IList]
+  )
+
+}
+```
+
+- <span style="font-size: 50%;"> <https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalaprops/src/test/scala/scalaprops/IListTest.scala> </span>
+
+---
+class: middle
+
+- 出来る限りすべてのscalazのデフォルトのGenやCogenのインスタンスも組み込み
+- そのせいでGen.scalaのファイルが巨大に・・・(現在881行)
+
+---
+class: middle
+
+[![scalaz Gen](image/scalaz-gen.png)](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Gen.scala)
+
+
+---
+class: middle
+
+## sbt plugin 作った
+
+- [https://github.com/scalaprops/sbt-scalaprops](https://github.com/scalaprops/sbt-scalaprops)
+- 「クラス内の特定のテストのみ」の実行が可能
+- しかもそれがsbtのコンソールでtab補完効く
+
+
+---
+class: middle
+
+## sbt plugin
+
+`project/plugin.sbt`
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 80%;">addSbtPlugin("com.github.scalaprops" % "sbt-scalaprops" % "0.1.0")
+</code>
+</pre>
+
+`build.sbt`
+
+```scala
+scalapropsSettings
+
+scalapropsVersion := "0.1.11"
+```
+
+---
+class: center, middle
+
+## ここからが本題
+
+(Scalaに直接関係ない話をしていく)
+
+---
+class: center, middle
+
+## 実装したことにより<br />新たな課題(?)も見えてきた
+
+---
+class: center, middle
+
+## Property Based Testingとは何か？
+
+を一から考え直す
+
+---
+class: middle
+
+1. できるだけ色々なケースをテストしてバグを見つける役割
+2. 見つけたバグが、人にとってわかりやすくなっているべき(わかりづらかったらわかりやすい形に変換)
+3. 関数の扱い
+
+---
+class: middle, center
+
+2の「わかりづらかったらわかりやすい形に変換」を
+
+<span style="font-size: 300%;">Shrinking</span>
+
+ということにする
+
+
+---
+class: middle, center
+
+## 現状のQuickcheckやScalacheck, Scalapropsにおけるやり方
+
+---
+class: middle
+
+- 一定の範囲でランダムに生成
+  - ランダムに生成するためのGenも心を込めて1つ1つ定義
+- バグ見つかった場合、手動で作ったShrinkが定義されてれば、それを使ってバグの最小ケース抽出を試みる
+
+---
+class: middle
+
+## バグを見つける、とは
+
+- 色々なケースをランダムに生成すればよい？
+- 単純なものならそれでうまくいくが、うまくいかない場合がある
+
+---
+class: middle
+
+## うまくいかないケース
+
+- Listがネストしてるようなやつ 
+- 構文木のような再帰的データ型
+ - Listもある意味再帰的データ型だが
+
+---
+class: middle
+
+## [Treeのscalaprops.Genの定義つらい](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Gen.scala#L826-L868)
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 50%;">
+implicit def treeGen[A](implicit A: Gen[A]): Gen[Tree[A]] = {
+  def loop(size: Int): Gen[Tree[A]] = size match {
+    case n if n <= 1 =>
+      A.map(a => Tree.leaf(a))
+    case 2 =>
+      Gen[(A, A)].map{case (a1, a2) =>
+        Tree.node(a1, Stream(Tree.leaf(a2)))
+      }
+    case 3 =>
+      Gen[(A, A, A)].flatMap{case (a1, a2, a3) =>
+        Gen.elements(
+          Tree.node(a1, Stream(Tree.leaf(a2), Tree.leaf(a3))),
+          Tree.node(a1, Stream(Tree.node(a2, Stream(Tree.leaf(a3)))))
+        )
+      }
+    case _ =>
+      val max = size - 1
+      import scalaz.std.stream._
+      Applicative[Gen].sequence(
+        Stream.fill(max)(Gen.choose(1, max - 1))
+      ).flatMap{s =>
+        val ns = Traverse[Stream].traverseS(s){ n =>
+          for{
+            sum <- State.get[Int]
+            r <- if(sum >= max){
+              State.state[Int, Option[Int]](None)
+            }else if((sum + n) > max){
+              State((s: Int) => (s + n) -> Option(max - sum))
+            }else{
+              State((s: Int) => (s + n) -> Option(n))
+            }
+          } yield r
+        }.eval(0).flatten
+
+        Applicative[Gen].sequence(ns.map(loop)).flatMap(as =>
+          A.map(a => Tree.node(a, as))
+        )
+      }
+  }
+  Gen.sized(n =>
+    Gen.choose(0, n).flatMap(loop)
+  )
+}
+</code>
+</pre>
+
+---
+class: middle
+
+scalaz.Treeは2分木ではなくRose Tree
+
+![scalaz.Tree sample](image/tree.png)
+
+---
+class: middle
+
+TreeのGenの生成の方法の例(つらい)
+
+
+① 100個以下の要素のTree生成したい<br />
+② 0 から 100 の間のランダム値N(たとえば80)を生成<br />
+③ Mをランダムに生成(80に対してなんとなく小さめの数字。たとえば5)<br />
+④ NをM個にランダムに分割(たとえば、80を12, 30, 3, 9, 26)<br />
+⑤ node1は12個、node2は30個・・・自身と子供を含めて生成していいよ、みたいにする<br />
+⑥ ゼロになるまでそれぞれのnodeで手順3から繰り返し<br />
+
+---
+class: middle
+
+Tree生成してそれをSVGで表示するコード
+
+<https://gist.github.com/xuwei-k/6135bcca86a52bb346e5>
+
+---
+class: middle
+
+- 一定数以上のleafがあるnodeの場合だけバグる、みたいなのを見つけられるか？
+- 一定数以上の深さの場合だけバグる、みたいなのを見つけられるか？
+- それらを考えると、なんなく小さいって具体的にどのくらいだよ。たまには大きくもないといけないだろ、その割合どうするんだ
+
+という不安や気持ち悪さとの戦い
+
+---
+class: middle
+
+## [scalaz本体だともっと雑](https://github.com/scalaz/scalaz/blob/v7.2.0-M2/scalacheck-binding/src/main/scala/scalaz/scalacheck/ScalazArbitrary.scala#L99-L109)
+
+```scala
+implicit def TreeArbitrary[A: Arbitrary]: Arbitrary[Tree[A]] = Arbitrary {
+import scalaz.Tree._
+  def tree(n: Int): Gen[Tree[A]] = n match {
+    case 0 => arbitrary[A] map (leaf(_))
+    case _ => {
+      val nextSize = n.abs / 2
+      Apply[Gen].apply2(arbitrary[A], resize(nextSize, containerOf[Stream, Tree[A]](Arbitrary(tree(nextSize)).arbitrary)))(node(_, _))
+    }
+  }
+  Gen.sized(tree _)
+}
+```
+
+---
+class: middle
+
+## うまくいかないと<br />具体的にどうなる？
+
+- 生成にとても時間がかかる
+- 生成できずにプログラムが固まったようにみえる
+- メモリ足りずに死ぬ
+
+---
+class: middle
+
+- なんとなく一定の大きさ以上のものを生成しないように頑張る
+- Genを調節しておく
+- 再帰的になってたら、Parameter調整して頑張る
+
+---
+class: middle
+
+- 人力で頑張るのつらい、ださい
+- もっといい方法無いのか？
+
+---
+class: center, middle
+
+## 発想の転換？
+
+---
+class: center, middle
+
+## 小さいものから<br />順番にテストする<br />という方法
+
+---
+class: center, middle
+
+## 小さい・・・とは・・・？
+
+---
+class: center, middle
+
+## [https://hackage.haskell.org/package/smallcheck](https://hackage.haskell.org/package/smallcheck)
+
+---
+class: center, middle
+
+## [Smallcheckの論文](https://www.cs.york.ac.uk/fp/smallcheck/smallcheck.pdf)
+
+(2008年)
+
+---
+class: middle
+
+- とにかく頑張って、すべてのデータ型に大きさ(深さ)という概念を持たせるらしい
+- 小さい順にテストしていけば、自然に最小限のものになるので、Shrinking自体が必要ない
+
+---
+class: middle
+
+smallcheckが依存してるLogicTというライブラリにバグがある気がするんですが誰か助けて
+
+- <http://hub.darcs.net/dolio/logict/issue/1>
+- <https://github.com/pocketberserker/scala-logic/issues/5>
+
+---
+class: middle
+
+## Smallcheckの問題点<br />もしくは別の手法
+
+---
+class: middle
+
+- 結局小さいものしかテストできなくて柔軟性がない？
+- 大きい場合だけバグ発生するパターンだったらどうするの？
+
+---
+class: middle
+
+## [https://hackage.haskell.org/package/testing-feat](https://hackage.haskell.org/package/testing-feat)
+## [https://github.com/JonasDuregard/testing-feat](https://github.com/JonasDuregard/testing-feat)
+
+---
+class: middle, center
+
+## [Functional Enumeration of Algebraic Types](http://www.cse.chalmers.se/~almstroj/lic.pdf)
+
+(2012年の論文)
+
+---
+class: middle, center
+
+
+![feat1](image/feat1.png)
+
+---
+class: middle, center
+
+![feat2](image/feat2.png)
+
+---
+class: middle
+
+- QuickcheckとSmallcheckのいいとこ取り
+- というか上位互換？
+- 大きさという概念を定義する、というSmallcheckの方式はある意味受け継ぐ
+
+---
+class: middle
+
+ここから、わざと数学な用語を使って説明してみる
+
+(論文の導入がそんな感じの書き方されてたので)
+
+---
+class: middle, center
+
+所詮、プログラム中で作れるデータ型の集合なんて
+
+## アレフゼロ
+
+な濃度でしかないはずですよね？
+
+---
+class: middle, center
+
+[https://ja.wikipedia.org/wiki/アレフ数](https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%AC%E3%83%95%E6%95%B0)
+
+---
+class: middle, center
+
+## アレフゼロ
+
+↓
+
+自然数と一対一の対応付け可能
+
+つまり全単射
+
+---
+class: middle
+
+## featの考え方
+
+- まず、生成したいデータ型の順序付けをする(何らかの基準により小さい順)
+- Smallcheckは、小さい順にテストしたが、featはそうではなく・・・
+
+---
+class: middle
+
+- 「自然数 → それに対応したデータ」<br />という関数を作る
+- かつ、その関数は、引数の自然数が大きくても<br /> __一定の現実的な時間__ で<br /> 戻り値が返ってくるようにする
+
+---
+class: middle
+
+- 小さい順にテストすれば、smallcheckと同じことができる
+- かつ、大きいものもテスト可能なので、適当に大きいものもいくつかテストする
+
+---
+class: middle
+name: 関数の扱い
+
+## 関数の扱い
+
+---
+class: middle, center
+
+CoArbitraryを実装すれば、関数も自動生成できる
+
+↓
+
+バグが見つかる
+
+---
+class: middle, center
+
+ん？関数をprintすること自体が基本不可能？
+
+↓
+
+バグが見つかっても、根本的な原因がよくわからない・・・
+
+---
+class: middle, center
+
+関数のドメインと、コドメインが無限でなければ、Mapとして表示すればいいじゃない
+
+---
+class: middle, center
+
+```scala
+scala.Function1[引数の型, 戻り値の型]
+```
+
+```scala
+scala.Map[引数の型, 戻り値の型]
+```
+
+---
+class: middle, center
+
+関数自体の集合の数
+
+
+"戻り値の型の集合の数" の "引数の型の集合の数" 乗
+
+---
+class: middle, center
+
+## 例
+
+```scala
+Boolean => Boolean
+```
+
+2の2乗 = 4通り
+
+```scala
+Map(true -> true , false -> false)
+Map(true -> true , false -> true)
+Map(true -> false, false -> true)
+Map(true -> false, false -> false)
+```
+
+---
+class: middle, center
+
+```scala
+Option[Boolean] => Boolean
+```
+
+2の3乗 = 8通り
+
+---
+class: middle, center
+
+
+```scala
+Map(Some(true) -> true , Some(false) -> true , None -> true)
+Map(Some(true) -> true , Some(false) -> true , None -> false)
+Map(Some(true) -> true , Some(false) -> false, None -> true)
+Map(Some(true) -> true , Some(false) -> false, None -> false)
+Map(Some(true) -> false, Some(false) -> true , None -> true)
+Map(Some(true) -> false, Some(false) -> true , None -> false)
+Map(Some(true) -> false, Some(false) -> false, None -> true)
+Map(Some(true) -> false, Some(false) -> false, None -> false)
+```
+
+
+---
+class: middle, center
+
+```scala
+Int => Int
+```
+
+2147483647 の 2147483647 乗
+
+---
+class: middle, center
+background-image: url(image/kumiawase.png)
+
+<pre style="font-size: 200%;">
+＿人人人人人人人人＿
+＞　組み合わせ爆発　＜
+￣Y^Y^Y^Y^^Y^Y^Y^￣
+</pre>
+
+---
+class: middle, center
+
+<iframe width="600" height="400" src="https://www.youtube.com/embed/Q4gTV4r0zRs?t=5m30s" frameborder="0" allowfullscreen></iframe>
+
+---
+class: middle, center
+
+愚直にMapにしてたら<br />いくらメモリがあっても足りない
+
+---
+class: middle, center
+
+## 関数をShrinkすればいいじゃない？
+
+---
+class: middle
+
+<pre style="font-family:'MS PGothic'; font-size: 120%;">
+　　　　　　 ＿＿＿_
+ 　 　 　 　 ／　　　　　＼          関数をShrink？
+ 　　　 ／　 　⌒　　⌒       ＼　　 何言ってんだこいつ
+　　／　 　 （●） 　（●）       ＼
+ 　 |　 　､"　)（__人__）"　  　）　
+　　＼　 　 　 ｡｀ ⌒´　, ／
+＿／　　　　　　　　　　  ＼　
+</pre>
+
+---
+class: middle, center
+
+関数をShrinkできるんです。そう、Quickcheckならね
+
+## [Test.QuickCheck.Function](https://github.com/nick8325/quickcheck/blob/2.8.1/Test/QuickCheck/Function.hs)
+
+---
+class: middle, center
+
+"shrinking and showing functions"
+
+という論文があるらしいが無料で公開されてなさそうだったので読んでない
+
+
+---
+class: middle, center
+
+動画ある(Haskell Symposium 2012)
+
+<iframe width="600" height="400" src="https://www.youtube.com/embed/CH8UQJiv9Q4" frameborder="0" allowfullscreen></iframe>
+
+---
+class: middle, center
+
+![](image/shrinking-function.png)
+
+---
+class: middle
+
+- 関数をLazyな特殊な(?)データ構造に変換
+- それに変換すると、なぜかShrinkできる
+- そのデータ構造は、また関数に戻すこともできる
+
+---
+class: middle
+
+```haskell
+data a :-> c where
+  Pair  :: (a :-> (b :-> c)) -> ((a,b) :-> c)
+  (:+:) :: (a :-> c) -> (b :-> c) -> (Either a b :-> c)
+  Unit  :: c -> (() :-> c)
+  Nil   :: a :-> c
+  Table :: Eq a => [(a,c)] -> (a :-> c)
+  Map   :: (a -> b) -> (b -> a) -> (b :-> c) -> (a :-> c)
+```
+
+
+---
+class: middle
+
+```scala
+sealed abstract class :->[A, B]
+
+case class Pair[A, B, C](a: A :-> (B :-> C))
+  extends (LazyTuple2[A, B] :-> C)
+
+case class :+:[A, B, C](
+  x: (A :-> C), y: (B :-> C)
+) extends ((A \/ B) :-> C)
+
+case class Unit[A](a: A) extends (scala.Unit :-> A)
+
+case class Nil[A, B]() extends (A :-> B)
+
+case class Table[A: Equal, B](
+  a: Stream[LazyTuple2[A, B]]
+) extends (A :-> B)
+
+case class Map[A, B, C](
+  x: A => B, y: B => A, z: (B :-> C)
+) extends (A :-> C)
+```
+
+---
+class: middle, center
+
+<pre style="font-size: 300%;">data a <span style="color: orange;">:-></span> c where</pre>
+
+---
+class: middle, center
+
+<pre style="font-size: 800%;">:-></pre>
+
+---
+class: middle, center
+
+<img src="image/splatoon.jpg" height="400px;" />
+
+イカ？
+
+---
+class: middle
+
+- scalapropsに [Test.QuickCheck.Function](https://github.com/nick8325/quickcheck/blob/2.8.1/Test/QuickCheck/Function.hs) は最低限実装できて別branchにあるけどmasterに入れてない
+- ライブラリのAPI設計として使い勝手よくするの難しい、そもそもshrink以外の方法を頑張っていきたい、という理由
+
+---
+class: middle, center
+
+## ここからまた別の話
+
+---
+class: middle, center
+
+## 新たなるShrinkの方法のご提案
+
+---
+class: middle, center
+
+## [SmartCheckの論文](https://www.cs.indiana.edu/~lepike/pubs/smartcheck.pdf)
+
+<blockquote>
+Automatic and Efficient Counterexample Reduction and Generalization
+</blockquote>
+
+2014年
+
+---
+class: middle, center
+
+[https://github.com/leepike/SmartCheck](https://github.com/leepike/SmartCheck)
+
+[https://hackage.haskell.org/package/smartcheck](https://hackage.haskell.org/package/smartcheck)
+
+
+---
+class: middle, center
+
+<iframe width="600" height="400" src="https://www.youtube.com/embed/zhZjS_xDBwA" frameborder="0" allowfullscreen></iframe>
+
+---
+class: middle, center
+
+名前見間違いやすい件
+
+## Sma<span style="color: red;">ll</span>check
+
+## Sma<span style="color: red;">rt</span>check
+
+---
+class: middle, center
+
+## <span style="font-size: 150%;">Smartcheck</span>
+
+Smartに(賢く)Shrinkを実行する
+
+---
+class: middle, center
+
+
+## <span style="font-size: 300%;">SubHask</span>
+
+<https://github.com/mikeizbicki/subhask#automated-testing>
+
+---
+class: middle
+
+![subhask numeric](https://raw.githubusercontent.com/mikeizbicki/subhask/master/img/hierarchy-numeric.png)
+
+---
+class: middle
+
+## SubHask
+
+<blockquote>
+SubHask is a radical rewrite of the Haskell Prelude. The goal is to make numerical computing in Haskell fun and fast. The main idea is to use a type safe interface for programming in arbitrary subcategories of Hask.
+</blockquote>
+
+---
+class: middle
+
+## SubHask
+
+- そもそもtype classの階層を一から作りなおそう!?という、すごく気合を感じる何か
+- テストという観点以外からも面白そう
+- わりと新しい(作り始めてから1年くらい?)
+- テスト自動生成するの？
+
+
+---
+class: middle
+
+- 調べれば調べるほど、Haskell界隈のテストの資料無限に出てくる・・・
+- おそらく、まだまだ紹介してない面白い手法たくさんありそう
+
+---
+class: middle, center
+
+## その他Haskell以外
+
+---
+class: middle, center
+
+## [EasyCheck — Test Data for Free](http://www-ps.informatik.uni-kiel.de/~sebf/data/pub/flops08.pdf)
+
+curryという言語
+
+---
+class: middle, center
+
+## curryとは・・・？
+
+![](image/curry-google.png)
+
+---
+class: middle, center
+
+Haskell Brooks Curry さん(1900 ~ 1982)
+
+![](image/haskell-curry.jpg)
+
+---
+class: middle
+
+- [日本語wikipedia ハスケル・カリー](https://ja.wikipedia.org/wiki/%E3%83%8F%E3%82%B9%E3%82%B1%E3%83%AB%E3%83%BB%E3%82%AB%E3%83%AA%E3%83%BC)
+- <https://wiki.haskell.org/Haskell_Brooks_Curry>
+
+---
+class: middle, center
+
+ハスケル・カリーさん。wikipediaより
+
+<blockquote>
+ハスケル・ブルックス・カリー（Haskell Brooks Curry、1900年9月12日 - 1982年9月1日）はアメリカの数学者、論理学者。
+
+マサチューセッツ州ミリスで教育者サミュエル・サイラス・カリーの子として生まれる。ハーバード大学を卒業後、1930年、ゲッティンゲン大学でダフィット・ヒルベルトに師事し、博士号を得た。
+</blockquote>
+
+---
+class: middle, center
+
+![](image/curry-logo.png)
+
+---
+class: middle
+
+## curry
+
+- Functional Logic Language らしい
+- <http://www-ps.informatik.uni-kiel.de/currywiki/>
+- <http://www-ps.informatik.uni-kiel.de/currywiki/tools/easycheck>
+- お客様の中にcurryに詳しい方はいらっしゃいませんか？
+
+
+---
+class: middle
+
+今までに紹介したHaskellの使用ライブラリの話など
+
+- [Test.QuickCheck.Poly](https://github.com/nick8325/quickcheck/blob/2.8.1/Test/QuickCheck/Poly.hs)
+ - Template Haskell
+- feat
+ - Template Haskell
+- Smartcheck
+ - GHC.Generics
+
+
+---
+class: middle
+
+- 黒魔術多い？
+- Scalaに移植可能なのか不明(移植したい)
+
+---
+class: middle, center
+
+ところで、GCH.Genericsといえば・・・
+
+---
+class: middle, center
+
+
+<pre style="font-size: 300%;">
+＿人人人人人人人＿
+＞　Shapeless　＜
+￣Y^Y^Y^Y^Y^￣
+</pre>
+
+
+---
+class: middle
+
+<img style="display: inline;" src="image/xuwei.gif" width="60" height="60" /> さんのblog記事
+
+- [代数的データ型とshapelessのマクロによる型クラスのインスタンスの自動導出](http://d.hatena.ne.jp/xuwei/20141207/1417940174)
+- [shapeless.TypeClassとGHC.Generic](http://d.hatena.ne.jp/xuwei/20141214/1418577727)
+
+---
+class: middle
+
+## 結論(?)
+
+みんなshapelessを覚えて、Haskellのもっとすごいライブラリの移植をscalapropsに入れよう！(ぇ
+
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.11.0.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
