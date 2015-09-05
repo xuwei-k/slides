@@ -385,7 +385,7 @@ class: middle
 ---
 class: middle
 
-## <span style="font-size: 160%"> [scalaprops.Cogen](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Cogen.scala) </span>
+## <span style="font-size: 160%"> [scalaprops.Cogen](https://github.com/scalaprops/scalaprops/blob/v0.1.13/gen/src/main/scala/scalaprops/Cogen.scala) </span>
 
 ```scala
 abstract class Cogen[A] {
@@ -400,7 +400,7 @@ case class CogenState[A](rand: Rand, gen: Gen[A])
 ---
 class: middle
 
-## <span style="font-size: 160%"> [scalaprops.Cogen](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Cogen.scala) </span>
+## <span style="font-size: 160%"> [scalaprops.Cogen](https://github.com/scalaprops/scalaprops/blob/v0.1.13/gen/src/main/scala/scalaprops/Cogen.scala) </span>
 
 - Genとの対称性的にCoArbitraryではなくCogenという名前に
   - 名前違うだけで同じもの
@@ -448,7 +448,7 @@ class: middle
 - seed指定可能機能ついた
   - immutableな[メルセンヌツイスタ](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/mt.html)
 - (scalazの)型クラスの重複テスト回避機能
-  - [最初からTreeとしてテストを階層構造化](https://github.com/scalaprops/scalaprops/blob/v0.1.11/core/src/main/scala/scalaprops/Properties.scala)
+  - [最初からTreeとしてテストを階層構造化](https://github.com/scalaprops/scalaprops/blob/v0.1.13/core/src/main/scala/scalaprops/Properties.scala)
 - GenとArbitraryは、Genだけにした
 
 ---
@@ -481,9 +481,9 @@ class: middle
 ## scalazのlawのcheckモジュール
 
 - [scalazのscalacheck-binding](https://github.com/scalaz/scalaz/tree/v7.1.3/scalacheck-binding/src/main/scala/scalaz/scalacheck) に相当
-- [ソースコードだとこのあたり](https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalazlaws/src/main/scala/scalaprops/scalazlaws)
+- [ソースコードだとこのあたり](https://github.com/scalaprops/scalaprops/tree/v0.1.13/scalazlaws/src/main/scala/scalaprops/scalazlaws)
 - scalaz本体側にないものもテストしてる
- - [Arrow](https://github.com/scalaprops/scalaprops/blob/v0.1.11/scalazlaws/src/main/scala/scalaprops/scalazlaws/ArrowLaws.scala), [MonadTrans](https://github.com/scalaprops/scalaprops/blob/v0.1.11/scalazlaws/src/main/scala/scalaprops/scalazlaws/monadTrans.scala) など
+ - [Arrow](https://github.com/scalaprops/scalaprops/blob/v0.1.13/scalazlaws/src/main/scala/scalaprops/scalazlaws/ArrowLaws.scala), [MonadTrans](https://github.com/scalaprops/scalaprops/blob/v0.1.13/scalazlaws/src/main/scala/scalaprops/scalazlaws/monadTrans.scala) など
 
 
 ---
@@ -491,7 +491,7 @@ class: middle
 
 <pre>
 <code class="scala hljs remark-code" style="font-size: 75%;">libraryDependencies +=
-  "com.github.scalaprops" %% "scalaprops-scalazlaws" % "0.1.11" % "test"
+  "com.github.scalaprops" %% "scalaprops-scalazlaws" % "0.1.13" % "test"
 </code>
 </pre>
 
@@ -500,12 +500,12 @@ class: middle
 
 - scalaprops作成の動機として、scalaz自体のテストをすることも目的
 - なのでscalazのテストを半分以上書き直してる
-- <span style="font-size: 50%;"> <https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalaprops/src/test/scala/scalaprops> </span>
+- <span style="font-size: 50%;"> <https://github.com/scalaprops/scalaprops/tree/v0.1.13/scalaprops/src/test/scala/scalaprops> </span>
 
 ---
 class: middle
 
-[![](image/scalaprops-test1.png)](https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalaprops/src/test/scala/scalaprops)
+[![](image/scalaprops-test1.png)](https://github.com/scalaprops/scalaprops/tree/v0.1.13/scalaprops/src/test/scala/scalaprops)
 
 ---
 class: middle
@@ -531,7 +531,7 @@ object IListTest extends Scalaprops {
 }
 ```
 
-- <span style="font-size: 50%;"> <https://github.com/scalaprops/scalaprops/tree/v0.1.11/scalaprops/src/test/scala/scalaprops/IListTest.scala> </span>
+- <span style="font-size: 50%;"> <https://github.com/scalaprops/scalaprops/tree/v0.1.13/scalaprops/src/test/scala/scalaprops/IListTest.scala> </span>
 
 ---
 class: middle
@@ -542,7 +542,7 @@ class: middle
 ---
 class: middle
 
-[![scalaz Gen](image/scalaz-gen.png)](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Gen.scala)
+[![scalaz Gen](image/scalaz-gen.png)](https://github.com/scalaprops/scalaprops/blob/v0.1.13/gen/src/main/scala/scalaprops/Gen.scala)
 
 
 ---
@@ -572,7 +572,7 @@ class: middle
 ```scala
 scalapropsSettings
 
-scalapropsVersion := "0.1.11"
+scalapropsVersion := "0.1.13"
 ```
 
 ---
@@ -643,7 +643,7 @@ class: middle
 ---
 class: middle
 
-## [Treeのscalaprops.Genの定義つらい](https://github.com/scalaprops/scalaprops/blob/v0.1.11/gen/src/main/scala/scalaprops/Gen.scala#L826-L868)
+## [Treeのscalaprops.Genの定義つらい](https://github.com/scalaprops/scalaprops/blob/v0.1.13/gen/src/main/scala/scalaprops/Gen.scala#L857-L899)
 
 <pre>
 <code class="scala hljs remark-code" style="font-size: 50%;">
