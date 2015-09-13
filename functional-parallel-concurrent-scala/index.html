@@ -607,7 +607,7 @@ class: middle
 ```scala
 for {
   a <- Future(/* なにか処理 */)
-  b <- Future(/* ここでbは使わない */)
+  b <- Future(/* ここでaは使わない */)
 } yield {
   // aとbを使った処理
 }
