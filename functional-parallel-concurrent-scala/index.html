@@ -1,0 +1,1031 @@
+<DOCTYPE html>
+<html>
+  <head>
+    <title>Scalaにおける関数型並列並行プログラミング</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Scalaにおける<br>関数型並列並行<br>プログラミング
+
+[![クリエイティブ・コモンズ・ライセンス](http://i.creativecommons.org/l/by/2.1/jp/88x31.png)](http://creativecommons.org/licenses/by/2.1/jp/)
+
+---
+class: middle
+
+<img src="image/xuwei.gif" alt="アイコン" width="100" height="100" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog [http://d.hatena.ne.jp/xuwei](http://d.hatena.ne.jp/xuwei)
+
+---
+class: middle
+
+## 近況
+
+---
+class: middle
+
+- 例の猫での、Streamとかそれのモナドトランスフォーマー追加のpull req
+- [Add Stream, StreamT, Nondeterminism, etc.](https://github.com/non/cats/pull/455)
+
+---
+class: middle
+
+<pre style="font-size: 200%;">
+＿人人人人人人人人人人人人人人人＿
+＞　モナド則の破れを4連続で発見　＜
+￣^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^￣
+</pre>
+
+
+---
+class: middle
+
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">The excellent Scalaprops library by <a href="https://twitter.com/xuwei_k">@xuwei_k</a> is the cutting edge of property-based testing in Scala: <a href="https://t.co/memTQQ2b4M">https://t.co/memTQQ2b4M</a></p>&mdash; ☢ eiríkr ☢ (@d6) <a href="https://twitter.com/d6/status/635846519342661632">August 24, 2015</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+
+---
+class: middle
+
+テストライブラリに関しては、以前発表した
+
+## [Property Based Testing <br> scalapropsとscalacheckとその他色々](http://xuwei-k.github.io/slides/scalaprops/#1)
+
+---
+class: middle
+
+## 今日話したいこと<br/><span style="font-size: 40%;">(全部話すとは言っていない)</style>
+
+- FP in Scalaに出てきたやつ
+- 標準と非標準を含めたparallel collections
+- Actor
+- twitter社は何使ってるの
+- Scala標準のFuture
+- scalazのFuture, Task
+- scalaz-stream
+
+---
+class: middle
+
+- つまり、色んなものを紹介するけれど<br>とくに結論とかないので注意
+- 話の流れとかもあまりないです
+
+---
+class: middle
+
+![FP in Scala](image/fp-in-scala.png)
+
+---
+class: middle
+
+## 注意事項
+
+FP in Scalaをしっかり読んで理解していれば、<br>半分近く？は退屈かもしれません
+
+---
+class: middle
+
+## まずScala標準ライブラリ<br>の話・・・
+
+---
+class: middle
+
+の前に、Javaの標準ライブラリの話をしないといけないが、そこまで詳しくないので省略(ぇ
+
+<https://docs.oracle.com/javase/jp/8/api/java/util/concurrent/package-summary.html>
+
+---
+class: middle
+
+## Scala標準ライブラリ
+
+- [並列コレクション](https://github.com/scala/scala/tree/v2.11.7/src/library/scala/collection/parallel)
+- [scala.concurrent.Future](https://github.com/scala/scala/blob/v2.11.7/src/library/scala/concurrent/Future.scala)
+- [scala.concurrent.Promise](https://github.com/scala/scala/blob/v2.11.7/src/library/scala/concurrent/Promise.scala)
+- [非推奨になって標準から外されたActor](https://github.com/scala/scala/blob/v2.11.7/src/actors/scala/actors/Actor.scala)
+
+---
+class: middle
+
+## 並列コレクション
+
+- [公式ドキュメント](http://docs.scala-lang.org/overviews/parallel-collections/overview.html)
+- [公式ドキュメント日本語訳](http://docs.scala-lang.org/ja/overviews/parallel-collections/overview.html)
+- [論文](http://infoscience.epfl.ch/record/150220/files/pc.pdf)
+
+---
+class: middle
+
+## たぶん一番中心になって<br>並列コレクション<br>作った人
+
+- github [@axel22](https://github.com/axel22)
+- twitter [@alexprokopec](https://twitter.com/alexprokopec)
+- [論文とかライブラリまとめ](http://axel22.github.io/home/professional/)
+
+---
+class: middle
+
+## 少し脇道にそれる<br>(alexさんの紹介)
+
+---
+class: middle, center
+
+## 本書いたらしい
+
+
+[Learning Concurrent Programming in Scala](https://www.packtpub.com/application-development/learning-concurrent-programming-scala)
+
+---
+class: middle, center
+
+![learning concurrent programming in scala](image/concurrent-scala-book.jpg)
+
+---
+class: middle
+
+Learning Concurrent Programming in Scala
+
+- 1 - Introduction
+- 2 - Concurrency on the JVM and the Java Memory Model
+- 3 - Traditional Building Blocks on Concurrency
+- 4 - Asynchronous Programming with Futures and Promises
+- 5 - Data-Parallel Collections
+- 6 - Concurrent Programming with Reactive Extensions
+- 7 - Software Transactional Memory
+- 8 - Actors
+- 9 - Concurrency in Practice
+
+---
+class: middle
+
+## 標準ライブラリの業績
+
+- [TrieMap](https://github.com/scala/scala/blob/v2.11.7/src/library/scala/collection/concurrent/TrieMap.scala)
+- 他にもあった気がするけど、調べる時間なかった・・・
+
+---
+class: middle
+
+## <https://scala-blitz.github.io/>
+
+並列コレクションかつ、マクロ使って(並列以外のものも)最適化されてるなにか
+
+---
+class: middle
+
+## <https://github.com/storm-enroute>
+
+- 最近scala-blitz更新されてない？
+- scala-blitzと似たような何か？別のもの？後継？
+
+---
+class: middle
+
+## <span style="font-size:300%;">Actor</span>
+
+---
+class: middle
+
+## Actorとは・・・?
+
+---
+class: middle, center
+
+<blockquote>
+The Actor Model provides a higher level of abstraction for writing concurrent and distributed systems
+</blockquote>
+
+
+[akkaの公式ドキュメントより](http://doc.akka.io/docs/akka/2.3.13/scala/actors.html)
+
+---
+class: middle
+
+- Erlang由来?
+- Carl Hewittさんという人が1973年に・・・
+- 歴史とかπ計算とか詳しくないです、すいません・・・
+- スレッド直接使うよりは、抽象化されてて色々メリットがあるけど、辛い部分もいっぱい 
+
+---
+class: middle
+
+## Actor色々
+- <http://akka.io/>
+- [非推奨になった標準ライブラリ](https://github.com/scala/scala/tree/v2.11.7/src/actors/scala/actors)
+- [ScalazのActor](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/Actor.scala)
+- [Liftというweb framework内にもある？](https://github.com/lift/framework/blob/2.6-release/core/actor/src/main/scala/net/liftweb/actor/LiftActor.scala)
+
+---
+class: middle
+
+## [Akka](http://akka.io/)
+
+- JavaからもScalaからも使える
+- そもそもActor以外にもいっぱいある
+- ここ一年くらい仕事でも使ってる
+
+---
+class: middle
+## [Akka](http://akka.io/)
+
+- 2015-09-13時点の最新安定版は2.3.13
+- もうすぐ2.4が安定版になる(今は2.4.0-RC2)
+
+---
+class: middle
+## [Akka](http://akka.io/) のモジュール例
+
+actor, agent, cluster, distributed-data, osgi, persistence, remote, typed, testkit
+
+---
+class: middle, center
+## [Akka](http://akka.io/) のつらいところ
+
+---
+class: middle
+## Actorに型がつかない！
+
+- すべてが [`PartitalFunction[Any, Unit]`](https://github.com/akka/akka/blob/v2.3.13/akka-actor/src/main/scala/akka/actor/Actor.scala#L330)
+
+---
+class: middle
+
+## PartitalFunction[Any, Unit]
+
+- すべての型の値を取る可能性があって
+- それをパターンマッチで判断して
+- なにか内部で副作用を発生させる
+
+---
+class: middle, center
+
+## 関数型とは一体なんだったのか・・・
+
+---
+class: middle
+
+## akkaにおける型つきActorの黒歴史
+
+---
+class: middle
+
+## akkaにおける型つきActorの黒歴史
+
+- 2.2時代も2.3時代もそれっぽい何かがあった?
+- Experimentalのまま、安定モジュールにならず消えていった
+- <http://doc.akka.io/docs/akka/2.3.13/scala/typed-actors.html>
+
+---
+class: middle, center
+
+なんで型つきActor死んでしまうん・・・
+
+---
+class: middle
+- 2.4からまた違うものが入るがExperimental
+- Experimental = マイナーversion間でバイナリ互換保持されない
+- <http://doc.akka.io/docs/akka/2.4.0-RC2/scala/typed.html>
+
+---
+class: middle
+
+## 名前が超ややこしい問題
+
+- 2.3で非推奨になったやつ = <span style="font-size: 200%;">typed-actor</span>
+- 2.4で実験的に入るやつ = <span style="font-size: 200%;">akka-typed</span>
+
+---
+class: middle, center
+
+<pre style="font-size: 250%;">
+＿人人人人人人人人人人＿
+＞　前後入れ替えただけ　＜
+￣Y^Y^Y^Y^Y^Y^Y^Y^Y^￣
+</pre>
+
+---
+class: middle
+
+## ScalazのActor
+
+- <https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/Actor.scala>
+
+---
+class: middle
+
+## runaroramaさんのscalazの<br>concurrentに関する資料<br><span style="font-size: 50%;">(FP in Scalaの作者かつScalazコミッタ)</span>
+
+- <https://www.dropbox.com/s/567s5mxlcyzzh8h/PurelyFunctionalConcurrency.pdf>
+
+
+---
+class: middle
+
+scalazにあるけど、そんなに使ってるの見たことないやつ
+
+- [`MVar`](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/MVar.scala)
+- [`Chan`](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/Chan.scala)
+- [`PhasedLatch`](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/PhasedLatch.scala)
+
+---
+class: middle
+
+## ScalazのActor
+
+- 88行しかない!?
+- akkaと比べて数百倍、数千倍のコード量の差
+- <https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/Actor.scala>
+
+---
+class: middle
+
+## ScalazのActor
+
+- 型がつく
+- 速いらしい？
+- 最低限の機能以外なにもない
+
+---
+class: middle
+
+## ScalazのActorのアルゴリズム
+
+[non-intrusive MPSC node-based queue, described by Dmitriy Vyukov](http://www.1024cores.net/home/lock-free-algorithms/queues/non-intrusive-mpsc-node-based-queue)
+
+---
+class: middle
+
+## ScalaのActorのベンチマーク
+
+- <https://github.com/plokhotnyuk/actors>
+- 継続的に更新されてる
+- scalazにもpull reqくれていた
+- なんでそんなにActorのベンチマークするの好きなの？という謎
+
+---
+class: middle
+
+## Actorに対する批判
+
+- [Why I Don't Like Akka Actors](http://noelwelsh.com/programming/2013/03/04/why-i-dont-like-akka-actors/)
+- [Don't use Actors for concurrency](https://www.chrisstucchio.com/blog/2013/actors_vs_futures.html)
+- [Why do I hate akka?](http://stew.vireo.org/posts/I-hate-akka/)
+
+---
+class: middle
+
+## Actorに対する批判(FP in Scala作者)
+
+- [Actors are not a good concurrency model](http://pchiusano.blogspot.jp/2010/01/actors-are-not-good-concurrency-model.html)
+- [上記のblogの続き](http://pchiusano.blogspot.jp/2010/03/follow-up-to-actors-are-not-good.html)
+
+---
+class: middle
+
+## Actorの批判に対するとても雑なまとめというか、個人的な感覚
+
+- Actorはスレッドなどよりは抽象度は高いが、まだまだ低レベルだし、(関数を合成するように)合成が不可能
+- Actorより抽象度高いもので済む場合はそれを使おう
+
+---
+class: middle
+
+## Twitter
+
+- 大昔は(今は非推奨になった)標準のActorをforkしてたらしい？
+- 今はActor使ってない
+- では、何を使ってるのか？
+
+---
+class: middle, center
+
+## [twitter の IVar Offer Broker について](http://togetter.com/li/323790)
+
+---
+class: middle, center
+
+## [Effective Scala - OfferとBroker](http://twitter.github.io/effectivescala/index-ja.html#Twitterの標準ライブラリ-Offer と Broker)
+
+---
+class: middle
+
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/okapies">@okapies</a> Offer/Broker is derived from concurrent ML (<a href="http://t.co/TuOtRP8L">http://t.co/TuOtRP8L</a>); IVars are a convenient abstraction for implementing Promise</p>&mdash; marius eriksen (@marius) <a href="https://twitter.com/marius/status/215099653648171008">June 19, 2012</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+---
+class: middle
+
+- concurrent MLとは・・・
+- お客様の中にconcurrent MLに詳しい方はいらっしゃいませんか
+
+---
+class: middle
+
+- [Reactive Manifestoではないほうの本当のReactive Programming？](http://d.hatena.ne.jp/xuwei/20140926/1411754004)
+- [SBTB 2014, Marius Eriksen: Functional Systems](https://youtu.be/YF5-f5H19AY?t=31m34s)
+- [com/twitter/util/Var.scala](https://github.com/twitter/util/blob/util-6.27.0/util-core/src/main/scala/com/twitter/util/Var.scala)
+
+---
+class: middle, center
+
+<iframe width="600" height="400" src="https://www.youtube.com/embed/YF5-f5H19AY" frameborder="0" allowfullscreen></iframe>
+
+---
+class: middle
+
+## FutureやTask
+
+- FP in Scalaの翻訳や、runaroramaさんの資料読めばあまり言うことなし
+
+---
+class: middle
+
+## FutureやTaskのソースコード
+
+- [Task](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/Task.scala)
+- [Future](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/Future.scala)
+- [Nondeterminism](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/core/src/main/scala/scalaz/Nondeterminism.scala)
+
+---
+class: middle
+
+## scalazのFutureやTask
+
+- scalazのFutureは例外処理を持たないので、直接使うのは実質ありえない
+- Taskは単なる純粋なデータ構造だよ。なにか問題でも？
+
+---
+class: middle
+
+## scalazのFutureやTaskは速いらしい？
+
+- 以下のrunaroramaさんのblog参照
+- [Easy Performance Wins With Scalaz](http://blog.higher-order.com/blog/2015/06/18/easy-performance-wins-with-scalaz/)
+
+---
+class: middle
+
+![task benchmark](http://blog.higher-order.com/images/futuretaskplot.png)
+
+---
+class: middle
+
+## 速さの要因？<br>標準ライブラリとの違い
+
+---
+class: middle
+
+### mapメソッド
+
+- [標準ライブラリ](https://github.com/scala/scala/blob/v2.11.7/src/library/scala/concurrent/Future.scala#L233)
+
+```scala
+def map[S](f: T => S)(implicit executor: ExecutionContext): Future[S]
+```
+
+- [ScalazのTask](https://github.com/scalaz/scalaz/blob/v7.2.0-M3/concurrent/src/main/scala/scalaz/concurrent/Task.scala#L41)
+
+```scala
+def map[B](f: A => B): Task[B]
+```
+
+---
+class: middle
+
+## AkkaコミッターがTaskのようなもの標準に入れたいと言ってる
+
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/KenScambler">@KenScambler</a> For 2.12 I&#39;d love to see a scalaz.Task-like feature which allows to stage operations. /cc <a href="https://twitter.com/etorreborre">@etorreborre</a></p>&mdash; Viktor Klang (@viktorklang) <a href="https://twitter.com/viktorklang/status/616157255516442624">July 1, 2015</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+---
+class: middle
+
+## TaskをFreeモナドと統合したい話
+
+<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">Here&#39;s my sketch of the design for the successor to <a href="http://t.co/R2xIxMxk5E">http://t.co/R2xIxMxk5E</a> and scalaz.concurrent.Task: <a href="https://t.co/tVe4Ps1Yn1">https://t.co/tVe4Ps1Yn1</a></p>&mdash; Rúnar Óli (@runarorama) <a href="https://twitter.com/runarorama/status/442080953478152192">March 7, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+---
+class: middle
+
+## TaskをFreeモナドと統合したい話
+
+- 言い始めてから2年以上経過しました・・・的な
+- 関連する話として、[IOモナドってFreeモナドで表せるよねというような話](http://blog.higher-order.com/blog/2013/11/01/free-and-yoneda/)
+
+---
+class: middle
+
+## 標準のFuture
+
+- scalazのFutureとの違い
+- ダメなところ
+
+---
+class: middle
+
+## 標準のFutureのだめなことろ
+
+- 純粋ではない？(純粋とは・・・)
+- 「走っている状態」しか存在しない
+- 逆にScalazのTaskは、走っている状態が明確に分離
+- 再利用できない(ScalazのTaskは何度でも走らせることが可能)
+
+---
+class: middle, center
+
+## for式でやると、実質逐次実行になってハマる
+
+<br>
+
+## とは
+
+---
+class: middle
+
+最初のFutureが完了するまで、<br>2つめのFutureは　<strong>startすらしない</strong>
+
+```scala
+for {
+  a <- Future(/* なにか処理 */)
+  b <- Future(/* ここでbは使わない */)
+} yield {
+  // aとbを使った処理
+}
+```
+
+---
+class: middle
+
+残念な？回避策
+
+
+```scala
+val aa = Future()
+val bb = Future()
+for {
+  a <- aa
+  b <- aa
+} yield {
+  // aとbを使った処理
+}
+```
+
+---
+class: middle
+
+- つらい実例
+- <https://github.com/yahoo/kafka-manager/blob/1.2.7/app/kafka/manager/KafkaManager.scala#L408-L424>
+
+---
+class: middle
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 80%;">val futureTopicIdentities = tryWithKafkaManagerActor(KMClusterQueryRequest(clusterName, BVGetTopicIdentities))(identity[Map[String, TopicIdentity]])
+val futureTopicList = tryWithKafkaManagerActor(KMClusterQueryRequest(clusterName, KSGetTopics))(identity[TopicList])
+val futureTopicsReasgn = getTopicsUnderReassignment(clusterName)
+implicit val ec = apiExecutionContext
+for {
+  errOrTi <- futureTopicIdentities
+  errOrTl <- futureTopicList
+  errOrRap <- futureTopicsReasgn
+} yield {
+  for {
+    ti <- errOrTi
+    tl <- errOrTl
+    rap <- errOrRap
+  } yield {
+    TopicListExtended(tl.list.map(t => (t, ti.get(t))).sortBy(_._1), tl.deleteSet, rap)
+  }
+}
+</code>
+</pre>
+
+
+---
+class: middle
+
+## [ScalaでFutureとEitherを組み合わせたときに綺麗に書く方法](http://d.hatena.ne.jp/xuwei/20140919/1411136788)
+
+---
+class: middle
+
+- [もしくはFutureのzipメソッドを使う](https://github.com/scala/scala/blob/v2.11.7/src/library/scala/concurrent/Future.scala#L358)
+- scalazのTaskにはこういう問題発生しない
+- Taskを並列に実行したいならfor式ではなく別のメソッド使う必要はある
+
+---
+class: middle
+
+```scala
+def zip[U](that: Future[U]): Future[(T, U)]
+```
+
+---
+class: middle
+
+## TwitterのFuture
+
+<https://github.com/twitter/util/blob/util-6.27.0/util-core/src/main/scala/com/twitter/util/Future.scala#L202-L327>
+
+---
+class: middle
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 70%;">def join[A,B](a: Future[A],b: Future[B]): Future[(A,B)] = join(Seq(a,b)) map { _ => (Await.result(a),Await.result(b)) }
+def join[A,B,C](a: Future[A],b: Future[B],c: Future[C]): Future[(A,B,C)] = join(Seq(a,b,c)) map { _ => (Await.result(a),Await.result(b),Await.result(c)) }
+def join[A,B,C,D](a: Future[A],b: Future[B],c: Future[C],d: Future[D]): Future[(A,B,C,D)] = join(Seq(a,b,c,d)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d)) }
+def join[A,B,C,D,E](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E]): Future[(A,B,C,D,E)] = join(Seq(a,b,c,d,e)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e)) }
+def join[A,B,C,D,E,F](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F]): Future[(A,B,C,D,E,F)] = join(Seq(a,b,c,d,e,f)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f)) }
+def join[A,B,C,D,E,F,G](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G]): Future[(A,B,C,D,E,F,G)] = join(Seq(a,b,c,d,e,f,g)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g)) }
+def join[A,B,C,D,E,F,G,H](a: Future[A],b: Future[B],c: Future[C],d: Future[D],e: Future[E],f: Future[F],g: Future[G],h: Future[H]): Future[(A,B,C,D,E,F,G,H)] = join(Seq(a,b,c,d,e,f,g,h)) map { _ => (Await.result(a),Await.result(b),Await.result(c),Await.result(d),Await.result(e),Await.result(f),Await.result(g),Await.result(h)) }
+
+// 22 まである
+</code>
+</pre>
+
+
+---
+class: middle
+
+## Scala Async
+
+- <https://github.com/scala/async>
+- Scalaのコミッターの人が中心になって作ってる
+- FutureをC#のasync, awaitっぽく書けるらしい？
+- 個人的に必要性をあまり感じない・・・
+
+---
+class: middle
+
+- ここからstreaming系のライブラリの話
+- Haskell界隈だとpipeとかconduit
+
+
+---
+class: middle
+
+## scala-conduits
+
+- <https://github.com/arjanblokzijl/scala-conduits>
+- 全然メンテされてない
+- 実験的に作っただけみたい?
+- 実用されてるのみたことない
+- 忘れてください・・・
+
+---
+class: middle
+
+## scala-pipes
+
+- <https://github.com/pthariensflame/scala-pipes>
+- github検索すると、いくつか見つかる
+- 全然メンテされてない
+- 実験的に作っただけみたい?
+- 実用されてるのみたことない
+- 忘れてください・・・
+
+
+---
+class: middle, center
+
+Haskellのものをそのまま移植するのは難しいのだろうか・・・
+
+---
+class: middle
+
+## Iteratee
+
+- そんなものなかった
+- scalazにもplayにもあるがオワコンらしい
+- [akkaにも昔あったが消えた](https://github.com/akka/akka/blob/v2.2.4/akka-actor/src/main/scala/akka/actor/IO.scala#L376)
+- [scalazのIteratee](https://github.com/scalaz/scalaz/tree/v7.2.0-M3/iteratee/src/main/scala/scalaz/iteratee)
+- [playframeworkのIteratee](https://github.com/playframework/playframework/blob/2.4.3/framework/src/iteratees/src/main/scala/play/api/libs/iteratee/Iteratee.scala)
+- playframeworkのものは、最近全体的にakka-streamsに置き換え中
+
+---
+class: middle
+
+## scala-machines
+
+- [HaskellにもあるやつのScala版](https://github.com/ekmett/machines/)
+- あまりメンテされてない？
+- <https://github.com/runarorama/scala-machines>
+
+---
+class: middle
+
+## akka-stream
+
+- 話したいけどあまり詳しくないし、そこまで時間もない・・・
+- [Comparing akka-stream and scalaz-stream](https://softwaremill.com/comparing-akka-stream-scalaz-stream/)
+
+
+---
+class: middle
+
+## reactive stream
+
+- <http://www.reactive-streams.org/>
+- <https://github.com/reactive-streams/reactive-streams-jvm> 
+
+---
+class: middle
+
+## okapiesさんの資料読もう<span style="font-size: 50%;">(丸投げ)</span>
+
+- [非同期ストリーム処理の標準化を目指す "Reactive Streams" とは](http://okapies.hateblo.jp/entry/2014/04/20/212821)
+- [JJUG ナイトセミナーで Reactive Streams について発表しました](http://okapies.hateblo.jp/entry/2015/06/26/024505)
+
+---
+class: middle, center
+
+Java9に入るかもしれないですよ
+
+- [JEP draft: Concurrency Updates for JDK 9](http://openjdk.java.net/jeps/8132960)
+
+---
+class: middle
+
+## scalaz-stream
+
+- いよいよこの話
+- しかし、最初に重要なお知らせ
+
+---
+class: middle
+
+<pre style="font-size: 150%;">
+＿人人人人人人人人人人人人人人人人人人人人人人＿
+＞　scalaz-streamはfs2という名前になります　＜
+￣Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y^Y￣
+</pre>
+
+---
+class: middle, center
+
+## Q. なぜscalaz-streamは名前<br>変わるのか？
+
+---
+class: middle, center
+
+## A. scalazの依存がなくなるから
+
+---
+class: middle, center
+
+## Q. なぜscalazの依存が<br>なくなるのか？
+
+---
+class: middle, center
+
+![non/cats](https://camo.githubusercontent.com/c7a1d594954b34a8277bce52343fe731b14870ad/687474703a2f2f706c61737469632d69646f6c617472792e636f6d2f6572696b2f63617473322e706e67)
+
+---
+class: middle, center
+
+## 猫騒動・・・うっ・・・頭が・・・
+
+---
+class: middle, center
+
+[Pick new name for project #428](https://github.com/scalaz/scalaz-stream/issues/428)
+
+---
+class: middle, center
+
+<span style="font-size: 150%;">
+Functional Streams for Scala
+</span>
+
+---
+class: middle, center
+
+<span style="font-size: 300%;">
+<span style="color: red;">F</span>unctional<br><span style="color: red;">S</span>treams for<br><span style="color: red;">S</span>cala</span>
+
+---
+class: middle, center
+
+<span style="font-size: 300%;">F</span><br>
+<span style="font-size: 300%;">S</span><br>
+<span style="font-size: 300%;">S</span>
+
+---
+class: middle, center
+
+Sが2つなのでまとめて
+
+<span style="font-size: 500%;">FS2</span>
+
+---
+class: middle, center
+
+## scalaz-streamの資料一覧ページ
+
+- <https://github.com/scalaz/scalaz-stream/wiki/Additional-Resources>
+
+
+---
+class: middle, center
+
+- <https://github.com/scalaz/scalaz-stream/graphs/contributors>
+
+![fs2-contributors](image/fs2-contributors.png)
+
+---
+class: middle, center
+
+以前gistにまとめたやつ
+
+[Scalaz-Streamの基本的なクラスや概念まとめ](https://gist.github.com/xuwei-k/6574b69abd5ed47a6743)
+
+---
+class: middle, center
+
+## 突然ですが、Googleで1と検索してみましょう
+
+---
+class: middle, center
+
+![google 1](image/google-1.png)
+
+---
+class: middle
+
+<a target="_blank" href="http://www.nicovideo.jp/watch/1397552685">【ニコニコ動画】ご注文はうさぎですか？<br>第1羽「ひと目で、尋常でないもふもふだと見抜いたよ」</a>
+
+
+<script type="text/javascript" src="http://ext.nicovideo.jp/thumb_watch/1397552685?w=490&h=307"></script><noscript><a href="http://www.nicovideo.jp/watch/1397552685">【ニコニコ動画】ご注文はうさぎですか？　第1羽「ひと目で、尋常でないもふもふだと見抜いたよ」</a></noscript>
+
+---
+class: middle, center
+
+<pre style="font-size: 250%;">
+＿人人人人人人人＿
+＞　500万再生！　＜
+￣Y^Y^Y^Y^Y^Y￣
+</pre>
+
+
+---
+class: middle, center
+
+## うさぎ?
+
+![usagi](image/usagi.gif)
+
+---
+class: middle, center
+
+## うさぎ = ラビット
+
+---
+class: middle, center
+
+<pre style="font-size: 300%;">
+＿人人人人人人＿
+＞　Rabbit MQ　＜
+￣Y^Y^Y^Y^Y￣
+</pre>
+
+
+---
+class: middle, center
+
+<https://www.rabbitmq.com/>
+
+![rabbitmq_logo](image/rabbitmq_logo.png)
+
+---
+class: middle, center
+
+## <https://github.com/xuwei-k/usagi>
+
+---
+class: middle
+
+## usagi
+
+- scalaz-stream(fs2)を使ったRabbitmqのクライアント
+- Confirmsに対応した
+- Akka Actorで書いたものと比べても似たようなパフォーマンスでた<span style="font-size: 50%;"> (それほどちゃんとベンチマークとってない)</span>
+
+
+---
+class: middle
+
+## usagiの命名の余談
+
+- "ごちうさ" か "ティッピー" と名付けようというのが一瞬頭をよぎったけど、そこまで勇気がなかった
+- 誰かお願いします
+
+---
+class: middle
+
+## RabbitmqのConfirmsとは
+
+- <https://www.rabbitmq.com/confirms.html>
+- Publish側のAckやNack
+- AMQPの範囲ではないRabbitmqの独自拡張
+- AMQPにもPublishのAckあるらしいが、遅いから独自に作ったみたいなこと書いてあった<span style="font-size: 50%;">(うろ覚え)</span>
+
+---
+class: middle
+
+usagiで使ってるscalaz-streamの機能
+
+- [Process](https://github.com/scalaz/scalaz-stream/blob/release/0.7.2a/src/main/scala/scalaz/stream/Process.scala)
+- Sink
+- [Queue](https://github.com/scalaz/scalaz-stream/blob/release/0.7.2a/src/main/scala/scalaz/stream/async/mutable/Queue.scala)
+
+---
+class: middle
+
+## usagi
+
+- 内部実装はある程度mutable
+- 外から見ればimmutebleかつスレッドセーフ、なはず?
+- Actorに比べれば、Processで返ってくるので使いやすいはず？
+- <span style="font-size: 50%;">実際作った後放置してて全然使ってないので自分でもよくわかってない</span>
+
+
+---
+class: middle
+
+- 色々話したけど、おそらく、まだまだ紹介してないもの色々あります
+- 時間がアレばコードリーディングか質問タイムをして、終わり
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.11.0.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
