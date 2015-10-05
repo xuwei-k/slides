@@ -1,0 +1,382 @@
+<DOCTYPE html>
+<html>
+  <head>
+    <title>OSSコミュニティがある日突然壊れたときにどうすればいいか</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# OSSコミュニティが<br>ある日突然壊れたときに<br>どうすればいいか
+
+---
+class: middle
+
+<img src="image/xuwei.gif" alt="アイコン" width="100" height="100" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog [http://d.hatena.ne.jp/xuwei](http://d.hatena.ne.jp/xuwei)
+
+---
+class: center, middle
+
+## 壊れたときに<br>どうすればいい・・・？
+
+---
+class: center, middle
+
+## そんなのわからないので教えて下さい！！！
+
+---
+class: center, middle
+
+## それではあまりにも酷いので・・・
+
+---
+class: center, middle
+
+## 壊れたときに<br>「自分がどうしたか？」<br>を話に来ました
+
+---
+class: center, middle
+
+## 今日話すことは<br>どのコミュニティでも原理的には発生しうることだと思ってる
+
+---
+class: center, middle
+
+##「OSSコミュニティとは何か？」<br>を少しでも考えるきっかけになって欲しい
+
+---
+class: center, middle
+
+## 「Scala界隈怖い」<br>みたいな単純な感想で終わってほしくない
+
+---
+class: center, middle
+
+コミット数が3年連続1位のとあるScalaのライブラリ
+
+## <https://github.com/scalaz/scalaz/>
+
+
+---
+class: center, middle
+
+[![scalaz-graph](image/scalaz-graph.png)](https://github.com/scalaz/scalaz/graphs/contributors)
+
+---
+class: center, middle
+
+## そもそも「突然壊れる」<br>とは？
+
+---
+class: center, middle
+
+## とても手短にまとめると・・・
+
+---
+class: center, middle
+
+<pre style="font-size: 250%;">
+＿人人人人人人人人人＿
+＞　突然のクーデター ＜
+￣Y^Y^^Y^Y^Y^Y^Y￣
+</pre>
+
+
+---
+class: center, middle
+
+クーデター受けた側の本人は "ハイジャック" と言ってたが、(最初から乗っ取る前提か否か？)という意味で、個人的にはクーデターだった、と思ってる
+
+---
+class: center, middle
+
+## クーデター、とは？
+
+---
+class: center, middle
+
+## わかりやすく(?)<br>例えつつ言うと・・・
+
+---
+class: center, middle
+
+## Linux開発者のLinusみたいにアレな言動が多い人がいる
+
+(ライブラリ原作者)
+
+---
+class: center, middle
+
+## 追いだそう！ (えっ！？
+
+---
+class: center, middle
+
+## という突然の流れ・・・
+
+---
+class: center, middle
+
+## 追い出そうとした方法が<br>結果的に最悪だった
+
+---
+class: center, middle
+
+## 1 - Code of conduct<br>作ったよ
+
+---
+class: center, middle
+
+## 2 - 彼はそれに違反した<br>ことあるね
+
+---
+class: center, middle
+
+## 3 - 追いだそう！ (えっ！？
+
+---
+class: middle
+
+- 完全なる後出しジャンケン・・・
+- 追い出すための口実として作られた・・・？
+- 個人的にCode of conductというものへの嫌な印象しか残らない・・・
+
+---
+class: center, middle
+
+## 数ヶ月による論争の末・・・
+
+---
+class: center, middle
+
+<pre style="font-size: 250%;">
+＿人人人人人人人人＿
+＞　クーデター失敗 ＜
+￣Y^Y^Y^Y^Y^Y^Y￣
+</pre>
+
+---
+class: center, middle
+
+<pre style="font-size: 250%;">
+＿人人人人人人人人人人＿
+＞　コミュニティが分裂 ＜
+￣Y^Y^Y^Y^Y^Y^Y^Y^￣
+</pre>
+
+
+---
+class: center, middle
+
+## ひたすらつらい・・・
+
+---
+class: center, middle
+
+### 技術的論争ではなく、ほぼ<br><span style="font-size: 200%;">政治的な理由のみ</span><br>で分裂したという意味で最悪
+
+---
+class: center, middle
+
+## 数ヶ月の論争の間 <span><img src="image/xuwei.gif" height=100 width=100>は</span>何してたか？
+
+---
+class: middle
+
+## ひたすら傍観・・・
+
+---
+class: middle
+
+### そういう話をそんなにしたくなかったし<br>そもそもするための英語力がなかった・・・
+
+---
+class: middle
+
+- 分裂防ぐために頑張ろうとしてくれた人もいた・・・
+- 結局ダメになってその人はどちらにも積極的にかかわらなくなってしまった(scalaz-stream原作者)
+- 悲しい・・・
+
+---
+class: middle
+
+- クーデター起こした本人も気まずかった？
+- 確かにアレだけど「あのやり方は酷いだろ」みたいな第三者的意見
+- 新しいライブラリを作った人は、クーデター起こした人とは別の人
+
+---
+class: middle, center
+
+## 新しく作られたライブラリが目指すもの
+
+---
+class: middle
+
+## [Principles for approachable, modular, <br>functional libraries](http://plastic-idolatry.com/erik/sw2015.pdf)
+
+---
+class: middle 
+
+- とても正論で理想が高くて素晴らしい
+- 個人的には(少なくとも、こちらの原作者も)とても尊敬している
+- 自分がこれほどまでにscalazに関わってなかったら、こっちに参加してただろう
+
+---
+class: middle, center
+
+## コミュニティは確かに<br>大事だが・・・？
+
+---
+class: middle, center
+
+### 本当にいいコミュニティとは<br>多少言動がアレな人さえも<br><span style="font-size: 200%;">受け入れる寛容さ</span><br>を持つべきではないのか？
+
+---
+class: middle, center
+
+### コミュニティばかり強調するあまり<br><span style="font-size: 200%;">それ以外の技術的なことが軽視</span><br>される可能性？
+
+---
+class: middle, center
+
+## また同じことが発生したら<br>また分裂するのか？<br>という可能性への疑問
+
+
+---
+class: middle, center
+
+### Linusを例に出したのは<br>同じように原作者であり<br><span style="font-size: 200%;">正しい知識を持っていて尊敬できる</span><br>という意味でもある
+
+---
+class: middle, center
+
+## 自分はどうするか？<br>どうしたいか？
+
+---
+class: middle, center
+
+## 新しいライブラリが<br>技術的、安定度的に<br>すぐにscalazを超えるものを作れるとは思えない
+
+---
+class: middle, center
+
+## 3年以上関わった思い入れ
+
+---
+class: middle, center
+
+## Scalaで関数型ライブラリを作る際の限界を知っている、はず
+
+---
+class: middle, center
+
+## 作りなおしても<br>そこまで違ったものは出来ない?
+
+---
+class: middle, center
+
+## たとえscalaz側が滅びることになっても、最後までメンテしようという覚悟
+
+---
+class: middle, center
+
+## 間違ったものを作られてそちらが流行ったら最悪なので、
+
+---
+class: middle, center
+
+## [テストライブラリ作った](http://xuwei-k.github.io/slides/scalaprops/#1)り、ひたすら論文読んで、<del>技術で殴る</del>正しいツッコミだけ入れていく
+
+---
+class: middle, center
+
+## [モナド則満たしてないですよ<br>と4回連続指摘するという伝説(?)](https://github.com/non/cats/pull/455)
+
+---
+class: middle, center
+
+## コミュニティが壊れても動じない心を手に入れた(?)
+
+---
+class: middle, center
+
+## 怒り駆動開発(?)
+
+---
+class: middle, center
+
+<p>とくに結論とかないです</p>
+
+
+<p>これを聞いて、みなさん<br><span style="font-size: 125%;">「OSSコミュニティとはなんなのか？」</span><br>を、それぞれ考えてみて欲しい</p>
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.12.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
