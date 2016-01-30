@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+<DOCTYPE html>
 <html>
   <head>
-    <title></title>
+    <title>Scala.js cross build</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <style type="text/css">
       @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
@@ -58,6 +58,8 @@
 
 class: center, middle
 
+# Scala.js<br/>cross build
+
 [2016/01/30 Scala Matsuri](http://scalamatsuri.org/)
 
 ![CC-BY-NC-SA](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)
@@ -70,6 +72,277 @@ class: middle
 - twitter [@xuwei_k](https://twitter.com/xuwei_k)
 - github [@xuwei-k](https://github.com/xuwei-k)
 - blog <http://d.hatena.ne.jp/xuwei>
+
+---
+class: middle
+
+## committer
+
+- [scalaz](https://github.com/scalaz/scalaz)
+- [scalikejdbc](https://github.com/scalikejdbc/scalikejdbc)
+- [argonaut](https://github.com/argonaut-io/argonaut)
+- [sbt-protobuf](https://github.com/sbt/sbt-protobuf)
+- [json4s](https://github.com/json4s/json4s)
+- [nscala-time](https://github.com/nscala-time/nscala-time)
+
+---
+class: middle
+
+## My Libraries
+
+- [scalaprops](https://github.com/scalaprops/scalaprops)
+ - property based testing library
+- [msgpack4z](https://github.com/msgpack4z)
+ - functional msgpack libraries for Scala
+- [httpz](https://github.com/xuwei-k/httpz)
+ - purely functional http client with scalaz.Free
+- [sbt-class-diagram](https://github.com/xuwei-k/sbt-class-diagram)
+ - sbt plugin to create a class diagram
+- [scalajspack](https://github.com/xuwei-k/scalajspack)
+ - JSON to MessagePack converter powered by scala-js
+
+---
+class: middle
+
+<https://twitter.com/not_ScalaMaturi/likes>
+<https://github.com/xuwei-k/favorite_typo>
+
+![not_ScalaMaturi](image/not_ScalaMaturi.png)
+
+---
+class: center, middle
+
+<span style="font-size: 150%;"><del>Scala Matsuri</del></span>
+
+<span style="font-size: 250%;">Scala.js<br>Matsuri</span>
+
+---
+class: center, middle
+
+## <http://www.scala-js.org/>
+
+write Scala => JavaScript!
+
+---
+class: center, middle
+
+超有名な情報商材(?)
+
+[![tototoshi](image/tototoshi-js.jpg)](http://tototoshi.github.io/slides/tenka1altjs-scalajs/)
+
+@copyright [@tototoshi](https://twitter.com/tototoshi)
+
+---
+class: middle
+
+## Scala.js and sbt
+
+- <http://www.scala-js.org/doc/project/>
+- <http://www.scala-js.org/doc/project/cross-build>
+
+---
+class: center, middle
+
+project/plugin.sbt
+
+```scala
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.6")
+```
+
+---
+class: center, middle
+
+### JavaScript only
+
+build.sbt
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 150%;">enablePlugins(ScalaJSPlugin)</code>
+</pre>
+
+---
+class: middle
+
+## [CrossType](https://github.com/scala-js/scala-js/blob/v0.6.6/sbt-plugin/src/main/scala/scala/scalajs/sbtplugin/cross/CrossType.scala)
+
+1. Full
+1. Pure
+1. Dummy
+
+---
+class: middle
+
+- since 0.6
+- implemented by [@gzm0](https://github.com/gzm0)
+- [Provide subset of scalaJSSettings for cross Scala/Scala.js modules](https://github.com/scala-js/scala-js/issues/1067)
+- [Fix #1067: Add a simple CrossProject mechanism](https://github.com/scala-js/scala-js/pull/1346)
+
+---
+class: middle
+
+both shared and individual JVM/JS sources
+
+```scala
+<project root>
+ +- jvm
+ |   +- src/main/scala
+ +- js
+ |   +- src/main/scala
+ +- shared
+     +- src/main/scala
+```
+
+---
+class: middle
+
+- default is Full
+- [crossProject is macro](https://github.com/scala-js/scala-js/blob/v0.6.6/sbt-plugin/src/main/scala/scala/scalajs/sbtplugin/cross/CrossProject.scala#L330)
+
+```scala
+// This is NOT sbt.Project
+lazy val foo = crossProject.in(file(".")).
+  settings(
+    name := "foo",
+    scalaVersion := "2.11.7"
+  ).jvmSettings(
+    // Add JVM-specific settings here
+  ).jsSettings(
+    // Add JS-specific settings here
+  )
+```
+
+---
+class: middle
+
+build.sbt
+
+```scala
+lazy val root = project.in(file(".")).
+  aggregate(fooJS, fooJVM).
+  settings(
+    publish := {},
+    publishLocal := {}
+  )
+
+lazy val fooJVM = foo.jvm
+lazy val fooJS = foo.js
+```
+
+
+---
+class: middle
+
+- Does not have individual JVM/JS sources
+- only generated files in `.jvm`, `.js`
+
+```scala
+<project root>
+  +- src/main/scala
+  +- .jvm/
+  +- .js/
+```
+
+---
+class: middle
+
+- Does not have individual JVM/JS sources
+
+```scala
+lazy val foo =
+  crossProject.crossType(CrossType.Pure)
+
+lazy val fooJVM = foo.jvm
+lazy val fooJS = foo.js
+```
+
+
+---
+class: middle
+
+Does not have shared JVM/JS sources
+
+[`CrossType.Dummy`](https://github.com/scala-js/scala-js/blob/v0.6.6/sbt-plugin/src/main/scala/scala/scalajs/sbtplugin/cross/CrossProject.scala#L100-L116)
+
+```scala
+<project root>
+ +- jvm
+ |   +- src/main/scala
+ +- js
+     +- src/main/scala
+```
+
+---
+class: middle
+
+I don't want to move many files...
+
+JVM only project
+```scala
+<project root>
+ +- src/main/scala
+```
+
+↓
+
+cross build project
+```scala
+<project root>
+ +- jvm
+ |   +- src/main/scala
+ +- js
+ |   +- src/main/scala
+ +- src/main/scala // not shared/src/main/scala
+```
+
+---
+class: middle
+
+[write your CrossType!](https://github.com/scala-js/scala-js/blob/v0.6.6/sbt-plugin/src/main/scala/scala/scalajs/sbtplugin/cross/CrossProject.scala#L193-L206)
+```scala
+object MyCrossType extends CrossType {
+  def projectDir(crossBase: File, projectType: String) =
+    crossBase / projectType
+
+  def sharedSrcDir(projectBase: File, conf: String) =
+    Some(projectBase.getParentFile / "src" / conf / "scala")
+} 
+```
+
+---
+class: middle
+
+- [Scala.jsに対応したscodec-msgpackをリリースしました - pocketberserkerの暴走](http://pocketberserker.hatenablog.com/entry/2015/11/30/100000)
+- [support scala-js - scodec-msgpack pull request #6](https://github.com/pocketberserker/scodec-msgpack/pull/6)
+
+
+---
+class: center, middle
+
+scodec-msgpackがやったなら<br/>msgpack4zもScala.js対応するか
+
+↓
+
+[scala-jsでBigIntegerのバグ見つけた](http://d.hatena.ne.jp/xuwei/20160110/1452441238)
+
+
+---
+class: center, middle
+
+msgpack4zのテストにscalaprops使ってるから<br/>せっかくだしこれもやるか
+
+↓
+
+scalapropsはscalazに依存してるし<br/>scalazも公式でやるか
+
+
+---
+class: middle
+
+## Coming soon ... ?
+
+- [scalaz](https://github.com/scalaz/scalaz) & scala.js
+- [scalaprops](https://github.com/scalaprops/scalaprops) & scala.js
+- [msgpack4z](https://github.com/msgpack4z) & scala.js
 
     </textarea>
     <script src="http://gnab.github.io/remark/downloads/remark-0.13.min.js" type="text/javascript"></script>
