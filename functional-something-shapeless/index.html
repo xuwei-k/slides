@@ -1,426 +1,629 @@
+<DOCTYPE html>
 <html>
-      <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-        <title>shapelessの紹介</title>
-        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
-        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
-        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-        <script type="text/javascript" src="assets/js/show.js"></script>
-        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
-        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
-      <script type="text/javascript"><!--
-        window.onload=function() { prettyPrint(); };
-      --></script>
-      </head>
-      <body>
-        <div id="slides">
-          <div id="reel">
-            <div class="content" id="slide-0"><div class="container">
-                  <h1 id="Shapeless%E3%81%AE%E7%B4%B9%E4%BB%8B">Shapelessの紹介</h1><br /><br />
-<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <head>
+    <title>Shapelessの紹介</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <style type="text/css">
+      @import url(//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-                </div>
-      </div><div class="content" id="slide-1"><div class="container">
-                  <img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
-<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
-</li><li>github <a  href="https://github.com/xuwei-k">@xuwei-k</a>
-</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-2"><div class="container">
-                  <p><a  href="https://github.com/scalaz/scalaz/graphs/contributors?from=2013-01-01&amp;to=2013-12-31&amp;type=c">https://github.com/scalaz/scalaz/graphs/contributors?from=2013-01-01&amp;to=2013-12-31&amp;type=c</a>
-</p><p><img alt="2013"  src="./scalaz2013.png" />
-</p>
-                </div>
-      </div><div class="content" id="slide-3"><div class="container">
-                  <p><a  href="https://github.com/scalaz/scalaz/graphs/contributors?from=2014-01-01&amp;to=2014-10-25&amp;type=c">https://github.com/scalaz/scalaz/graphs/contributors?from=2014-01-01&amp;to=2014-10-25&amp;type=c</a>
-</p><p><img alt="2014"  src="./scalaz2014.png" />
-</p>
-                </div>
-      </div><div class="content" id="slide-4"><div class="container">
-                  <h2 id="%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9%E6%B4%BB%E5%8B%95">オープンソース活動</h2><br />
-<ul><li>(2014-10-25日現在)2年連続Scalazのコミット数1位
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-5"><div class="container">
-                  <h2 id="%E7%8F%BE%E5%AE%9F%28%E4%BB%95%E4%BA%8B%29">現実(仕事)</h2><br />
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3 {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Shapelessの紹介
+
+<a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
+
+2014年10月25日
+[函数型なんたらの集い 2014](http://connpass.com/event/8634/)
+
+---
+class: middle
+
+<img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog <http://d.hatena.ne.jp/xuwei/>
+
+
+---
+class: middle
+
+<https://github.com/scalaz/scalaz/graphs/contributors?from=2013-01-01&to=2013-12-31&type=c>
+
+![2013](./scalaz2013.png)
+
+---
+class: middle
+
+<https://github.com/scalaz/scalaz/graphs/contributors?from=2014-01-01&to=2014-10-25&type=c>
+
+![2014](./scalaz2014.png)
+
+
+---
+class: middle
+
+## オープンソース活動
+
+
+
+- (2014-10-25日現在)2年連続Scalazのコミット数1位
+
+---
+class: middle
+
+## 現実(仕事)
+
+
+
 <blockquote class="twitter-tweet" lang="en"><p>毎日テストに Thread.sleep 書いてる気がする・・・</p>&mdash; Kenji Yoshida <a href="https://twitter.com/xuwei_k/status/499418167697866754">August 13, 2014</a></blockquote>
 
-                </div>
-      </div><div class="content" id="slide-6"><div class="container">
-                  <h2 id="%E7%8F%BE%E5%AE%9F%28%E4%BB%95%E4%BA%8B%29">現実(仕事)</h2><br />
+
+---
+class: middle
+
+## 現実(仕事)
+
+
+
 <blockquote class="twitter-tweet" lang="en"><p>Scala祭明けの、最初の仕事のコミットです&#10;&#10;git commit -a -m &quot;テストがJenkins上だと稀に失敗するので、Thread.sleepを追加&quot;</p>&mdash; Kenji Yoshida <a href="https://twitter.com/xuwei_k/status/509182633587130368">September 9, 2014</a></blockquote>
 
-                </div>
-      </div><div class="content" id="slide-7"><div class="container">
-                  <ul><li>ニコニコの色んなサービスの裏側をScalaやAkkaで作ってます
-</li><li>今のところ <a  href="https://github.com/rickynils/scalacheck">Scalacheck(QuickcheckのScala版)</a> と、それに伴いScalazを少しテストコードに混ぜ込むくらいしかやってない
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-8"><div class="container">
-                  <ul><li>Scalaにおける函数型プログラミングといえば、Scalazがあまりにも有名
-</li><li><a  href="http://connpass.com/event/7261/">勉強会もやりました</a>
-</li><li>しかし今日は、Scalazの話も少しするけど、主にそれ以外の話をします
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-9"><div class="container">
-                  <pre style="font-size: 200%;">
-＿人人人人人人人人＿
+
+---
+class: middle
+
+- ニコニコの色んなサービスの裏側をScalaやAkkaで作ってます
+- 今のところ [Scalacheck(QuickcheckのScala版)](https://github.com/rickynils/scalacheck) と、それに伴いScalazを少しテストコードに混ぜ込むくらいしかやってない
+
+---
+class: middle
+
+- Scalaにおける函数型プログラミングといえば、Scalazがあまりにも有名
+- [勉強会もやりました](http://connpass.com/event/7261/)
+- しかし今日は、Scalazの話も少しするけど、主にそれ以外の話をします
+
+---
+class: middle, center
+
+<pre style="font-size: 350%;">
+＿人人人人人人＿
 ＞　shapeless　＜
-￣Y^Y^Y^Y^Y^Y^Y￣
+￣Y^Y^Y^Y^Y￣
 </pre>
 
-                </div>
-      </div><div class="content" id="slide-10"><div class="container">
-                  <p><a  href="https://github.com/milessabin/shapeless">https://github.com/milessabin/shapeless</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-11"><div class="container">
-                  <p>Scalazが扱わない函数型な領域を扱う、Scalaにおけるラスボス的な何か(勝手なイメージ)
-</p>
-                </div>
-      </div><div class="content" id="slide-12"><div class="container">
-                  <ul><li>ただし一部Scalazと重複してるものもある
-</li><li>重複していたけど、shapelessのほうが優れているものは、Scalazから消された
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-13"><div class="container">
-                  <h3 id="%E5%80%8B%E4%BA%BA%E7%9A%84%E3%81%AB">個人的に</h3><br />
-<ul><li>shapeless本体には、今のところ1コミットもしたことない
-</li><li>Scalazコミッターの自分ですら、かなり難しいと感じる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-14"><div class="container">
-                  <h3 id="%E3%81%AA%E3%81%9CScalaz%E3%81%AB%E6%85%A3%E3%82%8C%E3%81%A6%E3%81%84%E3%81%A6%E3%82%82%E9%9B%A3%E3%81%97%E3%81%84%E3%81%A8%E6%84%9F%E3%81%98%E3%82%8B%E3%81%AE%E3%81%8B%E8%80%83%E3%81%88%E3%81%A6%E3%81%BF%E3%81%9F">なぜScalazに慣れていても難しいと感じるのか考えてみた</h3>
-                </div>
-      </div><div class="content" id="slide-15"><div class="container">
-                  <h3 id="%E9%9B%A3%E3%81%97%E3%81%95%EF%BC%9F%E3%81%AE%E5%8E%9F%E5%9B%A0">難しさ？の原因</h3><br />
-<ul><li>dependent method type<span style="font-size: 60%;">(とimplicitの組み合わせ)</span>
-</li><li>macro
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-16"><div class="container">
-                  <p><a  href="https://github.com/milessabin/shapeless/blob/b34d0f/core/src/main/scala/shapeless/alacarte.scala#L162-L172">https://github.com/milessabin/shapeless/blob/b34d0f/core/src/main/scala/shapeless/alacarte.scala#L162-L172</a>
-</p><p><img alt="implicit8"  src="./implicit8.png" />
-</p>
-                </div>
-      </div><div class="content" id="slide-17"><div class="container">
-                  <ul><li>Scalazは現時点(7.1.0)ではmacro全く使ってない
-</li><li><p>dependent method typeもあまり使ってない?
-</p><ul><li>Scalazで使ってる例 <a  href="http://eed3si9n.com/learning-scalaz/ja/Unapply.html">Unapply</a>
-</li></ul></li></ul>
-                </div>
-      </div><div class="content" id="slide-18"><div class="container">
-                  <h3 id="README%E3%81%AE%E8%A8%98%E8%BF%B0">READMEの記述</h3><br />
-<p>implementing
+---
+class: middle, center
+
+<https://github.com/milessabin/shapeless>
+
+---
+class: middle, center
+
+Scalazが扱わない函数型な領域を扱う<br/>Scalaにおけるラスボス的な何か(勝手なイメージ)
+
+---
+class: middle
+
+- ただし一部Scalazと重複してるものもある
+- 重複していたけど、shapelessのほうが優れているものは、Scalazから消された
+
+---
+class: middle
+
+## 個人的に
+
+- shapeless本体には、今のところ1コミットもしたことない
+- Scalazコミッターの自分ですら、かなり難しいと感じる
+
+---
+class: middle
+
+## なぜScalazに慣れていても難しいと感じるのか考えてみた
+
+
+---
+class: middle
+
+## 難しさ？の原因
+
+- dependent method type<span style="font-size: 60%;">(とimplicitの組み合わせ)</span>
+- macro
+
+---
+class: middle
+
+<https://github.com/milessabin/shapeless/blob/b34d0f/core/src/main/scala/shapeless/alacarte.scala#L162-L172>
+
+![implicit8](./implicit8.png)
+
+---
+class: middle
+
+- Scalazは現時点(7.1.0)ではmacro全く使ってない
+- dependent method typeもあまり使ってない?
+    - Scalazで使ってる例 [Unapply](http://eed3si9n.com/learning-scalaz/ja/Unapply.html)
+
+---
+class: middle, center
+
+## READMEの記述
+
+
+implementing
 <span style="font-size: 140%;">scrap your boilerplate</span> and
 <span style="font-size: 140%;">higher rank polymorphism</span> in Scala
-</p>
-                </div>
-      </div><div class="content" id="slide-19"><div class="container">
-                  <h3 id=""><a  href="http://research.microsoft.com/en-us/um/people/simonpj/papers/hmap/">scrap your boilerplate</a></h3><ul><li>Haskellの有名なアレ
-</li><li>一部移植した例 <a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/sybclass.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/sybclass.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-20"><div class="container">
-                  <h3 id="higher+rank+polymorphism">higher rank polymorphism</h3><br />
-<ul><li>論文のリンクっぽいけどリンク切れ・・・
-</li><li>RankNとかそういうの？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-21"><div class="container">
-                  <p>代表的な機能一覧はwikiにまとまってる
-</p><p><a  href="https://github.com/milessabin/shapeless/wiki/Feature-overview:-shapeless-2.0.0">https://github.com/milessabin/shapeless/wiki/Feature-overview:-shapeless-2.0.0</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-22"><div class="container">
-                  <p>もしくはサンプルコードがある程度豊富
-</p><p><a  href="https://github.com/milessabin/shapeless/tree/shapeless-2.0.0/examples/src/main/scala/shapeless/examples">https://github.com/milessabin/shapeless/tree/shapeless-2.0.0/examples/src/main/scala/shapeless/examples</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-23"><div class="container">
-                  <ul><li>最新安定版 2.0.0
-</li><li>2.0.0がでてから結構経過していて、masterとはわりと異なるので注意
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-24"><div class="container">
-                  <p>ここから、大雑把にwikiに載っていたものを中心に解説
-</p>
-                </div>
-      </div><div class="content" id="slide-25"><div class="container">
-                  <h3 id="Polymorphic+function+values">Polymorphic function values</h3>
-                </div>
-      </div><div class="content" id="slide-26"><div class="container">
-                  <code><span style="font-size: 800%;">
+
+
+---
+class: middle
+
+## [scrap your boilerplate](http://research.microsoft.com/en-us/um/people/simonpj/papers/hmap/)
+  - Haskellの有名なアレ
+  - 一部移植した例 <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/sybclass.scala>
+
+---
+class: middle
+
+## higher rank polymorphism
+
+- 論文のリンクっぽいけどリンク切れ・・・
+- RankNとかそういうの？
+
+---
+class: middle, center
+
+代表的な機能一覧はwikiにまとまってる
+
+<https://github.com/milessabin/shapeless/wiki/Feature-overview:-shapeless-2.0.0>
+
+---
+class: middle, center
+
+もしくはサンプルコードがある程度豊富
+
+<https://github.com/milessabin/shapeless/tree/shapeless-2.0.0/examples/src/main/scala/shapeless/examples>
+
+---
+class: middle
+
+- コレ書いてる現在の最新安定版 2.0.0
+- 2.0.0がでてから結構経過していて、masterとはわりと異なるので注意
+
+---
+class: middle, center
+
+ここから、大雑把にwikiに載っていた<br/>ものを中心に解説
+
+---
+class: middle, center
+
+## Polymorphic function values
+
+---
+class: middle, center
+
+<code><span style="font-size: 1200%;">
 ~>
 </span></code>
 
-                </div>
-      </div><div class="content" id="slide-27"><div class="container">
-                  <ul><li>Scalazやsbtにもある(記号もみんな同じ)
-</li><li>Scalazのものより、この函数を使えるものが豊富だったりするかも
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/poly.scala#L142">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/poly.scala#L142</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-28"><div class="container">
-                  <p>例えば <code>List[A]</code> (任意のA) から <code>Option[A]</code> への函数
-</p><br />
-<pre><code class="prettyprint lang-scala">val headOption: List ~&gt; Option =
-  new (List ~&gt; Option){
+---
+class: middle
+
+- Scalazやsbtにもある(記号もみんな同じ)
+- Scalazのものより、この函数を使えるものが豊富だったりするかも
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/poly.scala#L142>
+
+---
+class: middle
+
+例えば `List[A]` (任意のA) から `Option[A]` への函数
+
+```scala
+val headOption: List ~> Option =
+  new (List ~> Option){
     def apply[A](a: List[A]) =
       a.headOption
   }
-</code></pre>
-                </div>
-      </div><div class="content" id="slide-29"><div class="container">
-                  <h3 id="Heterogenous+lists">Heterogenous lists</h3><br />
-<ul><li>みんな大好き?HList
-</li><li>Scala界隈では、Tuple22制限などの影響で、いくつかのライブラリでHListの再発明が
-</li><li>色んなメソッドがあったり機能豊富という意味では一番優れてる(と思う)
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-30"><div class="container">
-                  <h3 id="Heterogenous+lists">Heterogenous lists</h3><ul><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hlists.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hlists.scala</a>
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/hlists.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/hlists.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-31"><div class="container">
-                  <h3 id="HList%E3%81%AE%E6%A9%9F%E8%83%BD%E3%81%AE%E8%B1%8A%E5%AF%8C%E3%81%95">HListの機能の豊富さ</h3><br />
-<ul><li>HListに型レベル自然数を渡すことにより、型安全にN番目の要素が取れるとか当たり前
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-32"><div class="container">
-                  <h3 id="%E3%81%9D%E3%81%AE%E4%BB%96HList%E3%81%AE%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89%E9%81%94%28%E4%B8%80%E9%83%A8%29">その他HListのメソッド達(一部)</h3><br />
-<p>head, tail, cons, ++, reverse, last, init, filter, replace, updateWith, take, drop, split, reverse, map, flatMap, foldMap, foldLeft, foldMap, zip
-</p><pre><code></code></pre>
-                </div>
-      </div><div class="content" id="slide-33"><div class="container">
-                  <ul><li>これらのメソッドが全部 dependent method type と implicit で作られているので、型シグネチャがやばい
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/hlists.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/hlists.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-34"><div class="container">
-                  <h3 id="HList-style+operations+on+standard+Scala+tuples">HList-style operations on standard Scala tuples</h3><br />
-<ul><li>Tupleを自動でHListっぽく扱える機能
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-35"><div class="container">
-                  <ul><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/std/tuples.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/std/tuples.scala</a>
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/tuples.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/tuples.scala</a>
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/tuples.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/tuples.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-36"><div class="container">
-                  <h3 id="Heterogenous+maps">Heterogenous maps</h3>
-                </div>
-      </div><div class="content" id="slide-37"><div class="container">
-                  <code><span style="font-size: 800%;">
+```
+
+---
+class: middle
+
+## Heterogenous lists
+
+- みんな大好き?HList
+- Scala界隈では、Tuple22制限などの影響で、いくつかのライブラリでHListの再発明が
+- 色んなメソッドがあったり機能豊富という意味では一番優れてる(と思う)
+
+---
+class: middle
+
+## Heterogenous lists
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hlists.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/hlists.scala>
+
+---
+class: middle
+
+## HListの機能の豊富さ
+
+
+- HListに型レベル自然数を渡すことにより、型安全にN番目の要素が取れるとか当たり前
+
+---
+class: middle
+
+## その他HListの<br/>メソッド達(一部)
+
+
+head, tail, cons, ++, reverse, last, init, filter, replace, updateWith, take, drop, split, reverse, map, flatMap, foldMap, foldLeft, foldMap, zip
+    
+---
+class: middle
+
+- これらのメソッドが全部 dependent method type と implicit で作られているので、型シグネチャがやばい
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/hlists.scala>
+
+
+---
+class: middle
+
+## HList-style operations on standard Scala tuples
+
+
+- Tupleを自動でHListっぽく扱える機能
+
+---
+class: middle
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/std/tuples.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/ops/tuples.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/tuples.scala>
+
+---
+class: middle
+
+## Heterogenous maps
+
+---
+class: middle, center
+
+<code><span style="font-size: 1000%;">
 ~?>
 </span></code>
 
-                </div>
-      </div><div class="content" id="slide-38"><div class="container">
-                  <ul><li>KeyとValueの型の組み合わせ規則を定義すると、どんな型のKeyとValueも型安全に詰め込めるMap
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hmap.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hmap.scala</a>
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/hmap.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/hmap.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-39"><div class="container">
-                  <h3 id="Singleton-typed+literals%2C+Singleton-typed+Symbols%2C+Extensible+records">Singleton-typed literals, Singleton-typed Symbols, Extensible records</h3><br />
-<ul><li>Scalaの謎仕様を最大限悪用(?)したヤバイやつ
-</li><li>一言で言うと、無名case classが簡単に作れる
-</li><li><a  href="http://d.hatena.ne.jp/xuwei/20140718/1405581087">http://d.hatena.ne.jp/xuwei/20140718/1405581087</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-40"><div class="container">
-                  <pre><code class="prettyprint lang-scala">$ scala
+---
+class: middle
+
+- KeyとValueの型の組み合わせ規則を定義すると、どんな型のKeyとValueも型安全に詰め込めるMap
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/hmap.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/test/scala/shapeless/hmap.scala>
+
+---
+class: middle
+
+### Singleton-typed literals,<br/> Singleton-typed Symbols,<br/> Extensible records
+
+
+- Scalaの謎仕様を最大限悪用(?)したヤバイやつ
+- 一言で言うと、無名case classが簡単に作れる
+- <http://d.hatena.ne.jp/xuwei/20140718/1405581087>
+
+---
+class: middle
+
+```scala
+$ scala
 Welcome to Scala version 2.11.1 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_11).
 Type in expressions to have them evaluated.
 Type :help for more information.
  
-scala&gt; val a = &quot;a&quot;
+scala> val a = "a"
 a: String = a
  
-scala&gt; final val b = &quot;b&quot;
-b: String(&quot;b&quot;) = b
+scala> final val b = "b"
+b: String("b") = b
  
-scala&gt; def foo(c: b.type) = c
-foo: (c: String(&quot;b&quot;))String
+scala> def foo(c: b.type) = c
+foo: (c: String("b"))String
  
-scala&gt; foo(&quot;bar&quot;)
-&lt;console&gt;:10: error: type mismatch;
- found   : String(&quot;bar&quot;)
- required: String(&quot;b&quot;)
-              foo(&quot;bar&quot;)
+scala> foo("bar")
+<console>:10: error: type mismatch;
+ found   : String("bar")
+ required: String("b")
+              foo("bar")
                   ^
  
-scala&gt; foo(&quot;b&quot;)
+scala> foo("b")
 res1: java.lang.String = b
-</code></pre>
-                </div>
-      </div><div class="content" id="slide-41"><div class="container">
-                  <p>関連して、将来的に
-</p><br />
+```
+
+---
+class: middle
+
+関連して、将来的に
+
+
 <pre><code class="prettyprint lang-scala" style="font-size: 250%;">val a: 42.type = 42
 </code></pre>
-<br />
-<p>と書けるようになるかもしれないという話がある
-</p><br />
-<p><a  href="http://docs.scala-lang.org/sips/pending/42.type.html">SIP-23 - Literal-based singleton types</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-42"><div class="container">
-                  <h3 id="Extensible+records">Extensible records</h3><ul><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/records.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/records.scala</a>
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala</a> 
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/records.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/records.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-43"><div class="container">
-                  <h3 id="Coproducts+and+discriminated+unions">Coproducts and discriminated unions</h3><br />
-<ul><li>Union型と言えばいいのだろうか・・・
-</li><li>任意の数の型の組み合わせを自分で定義して、それを一つの型として扱える
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/coproduct.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/coproduct.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-44"><div class="container">
-                  <h3 id="Coproducts+and+discriminated+unions">Coproducts and discriminated unions</h3><br />
-<ul><li>例えば「<code>Int</code>か<code>String</code>か<code>Boolean</code>のどれか」という感じ
-</li><li>これ単体でも使えるが、shapeless内の他のclassと密接に関連している
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-45"><div class="container">
-                  <ul><li><a  href="http://d.hatena.ne.jp/xuwei/20140618/1403054751">CoproductとInjectを使ったFree Monadの合成とExtensible Effects</a>
-</li><li><a  href="https://github.com/mandubian/injective/blob/bc57d09d/src/test/scala/InjectiveSpec.scala#L63">ScalazのCoproductの代わりに、shapelessのものを使うと便利かも？</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-46"><div class="container">
-                  <h3 id="Generic+representation+of+%28sealed+families+of%29+case+classes">Generic representation of (sealed families of) case classes</h3><br />
-<ul><li>GHC7.2以降に入っている Generics と似てる、と書いてある
-</li><li><a  href="http://www.haskell.org/haskellwiki/GHC.Generics">http://www.haskell.org/haskellwiki/GHC.Generics</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-47"><div class="container">
-                  <ul><li>自動で、case classとHListの相互変換のためのオブジェクトが手に入る
-</li><li>実装はマクロ
-</li><li>sealed classやtraitなら?その子供のclassも含めて考慮
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-48"><div class="container">
-                  <ul><li>LabelledGeneric という、case classのフィード名もマクロで取得してきて汎用的に利用できる機能とか
-</li><li>後で話すが、型クラスのインスタンスの自動生成に利用
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-49"><div class="container">
-                  <h3 id="Boilerplate-free+lenses+for+arbitrary+case+classes">Boilerplate-free lenses for arbitrary case classes</h3><br />
-<ul><li>ScalaにはLensのライブラリいっぱい・・・
-</li><li>shapelessのものは、マクロ使っていて、定義が短く書けて便利
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-50"><div class="container">
-                  <h3 id="First+class+lazy+values+tie+implicit+recursive+knots">First class lazy values tie implicit recursive knots</h3><br />
-<ul><li>自己のインスタンス定義に、自分のインスタンスが必要という再帰的構造の場合に、Scalaではうまくいかない
-</li><li>例えば、FreeやCofreeのEqの定義
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-51"><div class="container">
-                  <ul><li>そういった問題を解決
-</li><li>マクロで実装されてる
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/lazy.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/lazy.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-52"><div class="container">
-                  <ul><li><a  href="http://d.hatena.ne.jp/xuwei/20131223/1387798959">http://d.hatena.ne.jp/xuwei/20131223/1387798959</a> 問題点を別の方法で解決を試みた
-</li><li><a  href="https://github.com/xuwei-k/scalaz/commit/8f4a0fb7ee44732c">https://github.com/xuwei-k/scalaz/commit/8f4a0fb7ee44732c</a> Scalazに直接入れてみた例
-</li><li><a  href="https://github.com/typelevel/shapeless-contrib/pull/9/files">https://github.com/typelevel/shapeless-contrib/pull/9/files</a> shapeless-contribというのに入れた
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-53"><div class="container">
-                  <h3 id="Collections+with+statically+known+sizes">Collections with statically known sizes</h3><br />
-<ul><li>サイズが型レベルで決まっているList
-</li><li>HListとは違い、要素の型は全部同じ
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-54"><div class="container">
-                  <h3 id="Type+safe+cast">Type safe cast</h3><br />
-<ul><li>HaskellにおけるTypeableっぽいことがある程度可能らしい？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-55"><div class="container">
-                  <h3 id="Testing+for+non-compilation">Testing for non-compilation</h3><br />
-<ul><li>マクロによって「コンパイルが通らない」ことがテストできる
-</li><li>最近はScalatestとかにもある
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-56"><div class="container">
-                  <h3 id="Zipper">Zipper</h3><br />
-<p>普通のZipperではなく、HListに関連するもの
-</p>
-                </div>
-      </div><div class="content" id="slide-57"><div class="container">
-                  <p>その他にもまだ紹介できてない機能あるかも
-</p>
-                </div>
-      </div><div class="content" id="slide-58"><div class="container">
-                  <h2 id="%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E3%81%AE%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90%E3%81%AE%E8%A9%B1">型クラスのインスタンスの自動生成の話</h2>
-                </div>
-      </div><div class="content" id="slide-59"><div class="container">
-                  <p>これ読めばよい
-</p><ul><li><a  href="http://typelevel.org/blog/2013/06/24/deriving-instances-1.html">http://typelevel.org/blog/2013/06/24/deriving-instances-1.html</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-60"><div class="container">
-                  <h3 id="%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90%E3%81%A7%E3%81%8D%E3%82%8B%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AE%E7%A8%AE%E9%A1%9E">自動生成できる型クラスの種類</h3><br />
-<ul><li><p>Scalazだと例えば以下のようなやつ
-</p><ul><li><code>Semigroup</code>
-</li><li><code>Monoid</code>
-</li><li><code>Equal</code>
-</li><li><code>Order</code>
-</li><li><code>Show</code>
-</li></ul></li></ul>
-                </div>
-      </div><div class="content" id="slide-61"><div class="container">
-                  <ul><li>つまり、Haskellの標準の範囲と同じ?で、Kindが<code>Eq</code>と同じやつ
-</li><li><code>Functor</code> とかはできない
-</li><li>あれどういうアルゴリズムでやってるんですか、教えてください・・・ 
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-62"><div class="container">
-                  <p>ちなみに、newtypeの場合は<span style="font-size: 50%;">(ある程度Haskellより面倒だが)</span><br /> <code>deriving Functor</code> 相当の仕組みはScalaz自体に存在する
-</p>
-                </div>
-      </div><div class="content" id="slide-63"><div class="container">
-                  <ul><li>実際のライブラリはこちら
-</li><li><a  href="https://github.com/typelevel/shapeless-contrib/tree/v0.3/scalaz/main/scala">https://github.com/typelevel/shapeless-contrib/tree/v0.3/scalaz/main/scala</a>
-</li><li><p>Scalaz以外にも対応可能
-</p><ul><li>spire
-</li><li>scalacheck
-</li><li>その他自分で定義すれば(kindが<code>Eq</code>と同じならば)
-</li></ul></li></ul>
-                </div>
-      </div><div class="content" id="slide-64"><div class="container">
-                  <h3 id="%E5%86%85%E9%83%A8%E3%81%AE%E6%A7%8B%E9%80%A0%E3%81%A8%E3%81%8B%E4%BD%9C%E3%82%8A%E6%96%B9%E3%81%AE%E8%AA%AC%E6%98%8E">内部の構造とか作り方の説明</h3><br />
-<ul><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/typeclass.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/typeclass.scala</a>
-</li><li><code>なんとかTypeClass</code> という、型クラスをderivingするための型クラス、というメタ的な何か
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-65"><div class="container">
-                  <ul><li><p>例えば
-</p><ul><li><code>TypeClass[Equal]</code>
-</li><li><code>ProductTypeClass[Monoid]</code>
-</li></ul></li><li>Haskellではコンパイラ(GHC)が勝手にやってくれるので、対応する型クラスは存在しない
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-66"><div class="container">
-                  <h3 id=""></h3><ul><li><p>4種類
-</p><ul><li>ProductTypeClass
-</li><li>TypeClass
-</li><li>LabelledProductTypeClass
-</li><li>LabelledTypeClass
-</li></ul></li></ul>
-                </div>
-      </div><div class="content" id="slide-67"><div class="container">
-                  <svg width="423pt" height="120pt"
+
+
+と書けるようになるかもしれないという話がある
+
+
+[SIP-23 - Literal-based singleton types](http://docs.scala-lang.org/sips/pending/42.type.html)
+
+---
+class: middle
+
+## Extensible records
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/records.scala>
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala> 
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/records.scala>
+
+---
+class: middle
+
+## Coproducts and discriminated unions
+
+
+- Union型と言えばいいのだろうか・・・
+- 任意の数の型の組み合わせを自分で定義して、それを一つの型として扱える
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/coproduct.scala>
+
+---
+class: middle
+## Coproducts and discriminated unions
+
+
+- 例えば「`Int`か`String`か`Boolean`のどれか」という感じ
+- これ単体でも使えるが、shapeless内の他のclassと密接に関連している
+
+---
+class: middle
+
+- [CoproductとInjectを使ったFree Monadの合成とExtensible Effects](http://d.hatena.ne.jp/xuwei/20140618/1403054751)
+- [ScalazのCoproductの代わりに、shapelessのものを使うと便利かも？](https://github.com/mandubian/injective/blob/bc57d09d/src/test/scala/InjectiveSpec.scala#L63)
+
+---
+class: middle
+
+
+## Generic representation of (sealed families of) case classes
+
+
+- GHC7.2以降に入っている Generics と似てる、と書いてある
+- <http://www.haskell.org/haskellwiki/GHC.Generics>
+
+---
+class: middle
+
+- 自動で、case classとHListの相互変換のためのオブジェクトが手に入る
+- 実装はマクロ
+- sealed classやtraitなら?その子供のclassも含めて考慮
+
+---
+class: middle
+
+- LabelledGeneric という、case classのフィード名もマクロで取得してきて汎用的に利用できる機能とか
+- 後で話すが、型クラスのインスタンスの自動生成に利用
+
+---
+class: middle
+
+## Boilerplate-free lenses for arbitrary case classes
+
+
+
+- ScalaにはLensのライブラリいっぱい・・・
+- shapelessのものは、マクロ使っていて、定義が短く書けて便利
+
+---
+class: middle
+
+## First class lazy values tie implicit recursive knots
+
+
+
+- 自己のインスタンス定義に、自分のインスタンスが必要という再帰的構造の場合に、Scalaではうまくいかない
+- 例えば、FreeやCofreeのEqの定義
+
+---
+class: middle
+
+- そういった問題を解決
+- マクロで実装されてる
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/lazy.scala>
+
+---
+class: middle
+
+- <http://d.hatena.ne.jp/xuwei/20131223/1387798959> 問題点を別の方法で解決を試みた
+- <https://github.com/xuwei-k/scalaz/commit/8f4a0fb7ee44732c> Scalazに直接入れてみた例
+- <https://github.com/typelevel/shapeless-contrib/pull/9/files> shapeless-contribというのに入れた
+
+---
+class: middle
+
+## Collections with statically known sizes
+
+
+
+- サイズが型レベルで決まっているList
+- HListとは違い、要素の型は全部同じ
+
+---
+class: middle
+
+## Type safe cast
+
+
+
+- HaskellにおけるTypeableっぽいことがある程度可能らしい？
+
+---
+class: middle
+
+## Testing for non-compilation
+
+
+
+- マクロによって「コンパイルが通らない」ことがテストできる
+- 最近はScalatestとかにもある
+
+---
+class: middle, center
+
+## Zipper
+
+
+普通のZipperではなく、HListに関連するもの
+
+
+---
+class: middle, center
+
+その他にもまだ紹介できてない機能あるかも
+
+---
+class: middle
+
+## 型クラスのインスタンスの<br/>自動生成の話
+
+
+---
+class: middle, center
+
+これ読めばよい
+
+<http://typelevel.org/blog/2013/06/24/deriving-instances-1.html>
+
+---
+class: middle
+
+## 自動生成できる型クラスの種類
+
+
+
+- Scalazだと例えば以下のようなやつ
+    - `Semigroup`
+    - `Monoid`
+    - `Equal`
+    - `Order`
+    - `Show`
+
+---
+class: middle
+
+- つまり、Haskellの標準の範囲と同じ?で、Kindが`Eq`と同じやつ
+- `Functor` とかはできない
+- あれどういうアルゴリズムでやってるんですか、教えてください・・・ 
+    
+---
+class: middle
+
+ちなみに、newtypeの場合は<span style="font-size: 50%;">(ある程度Haskellより面倒だが)</span> `deriving Functor` 相当の仕組みはScalaz自体に存在する
+
+---
+class: middle
+
+- 実際のライブラリはこちら
+- <https://github.com/typelevel/shapeless-contrib/tree/v0.3/scalaz/main/scala>
+- Scalaz以外にも対応可能
+    - spire
+    - scalacheck
+    - その他自分で定義すれば(kindが`Eq`と同じならば)
+
+---
+class: middle
+
+## 内部の構造とか作り方の説明
+
+
+
+- <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/typeclass.scala>
+- `なんとかTypeClass` という、型クラスをderivingするための型クラス、というメタ的な何か
+
+---
+class: middle
+
+- 例えば
+    - `TypeClass[Equal]`
+    - `ProductTypeClass[Monoid]`
+- Haskellではコンパイラ(GHC)が勝手にやってくれるので、対応する型クラスは存在しない
+
+---
+class: middle
+
+## 
+
+- 4種類
+    - ProductTypeClass
+    - TypeClass
+    - LabelledProductTypeClass
+    - LabelledTypeClass
+
+---
+class: middle
+
+<svg width="423pt" height="120pt"
  viewBox="0.00 0.00 423.00 120.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 116)">
 <title>diagram</title>
@@ -458,167 +661,251 @@ res1: java.lang.String = b
 </g>
 </svg>
 
-                </div>
-      </div><div class="content" id="slide-68"><div class="container">
-                  <ul><li>Labelledとは、case classのfield名を使うか否か
-</li><li>例えば、case classに対して、JsonのEncode、Decodeのための型クラスのインスタンスを自動生成したい
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-69"><div class="container">
-                  <ul><li>その場合に、field名をそのままJsonのKeyにしたい
-</li><li><a  href="https://github.com/argonaut-io/argonaut/pull/128/files">https://github.com/argonaut-io/argonaut/pull/128/files</a> 
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-70"><div class="container">
-                  <h3 id="Product%E3%81%8C%E4%BB%98%E3%81%84%E3%81%A6%E3%81%84%E3%82%8B%E3%81%8B%E3%81%84%E3%81%AA%E3%81%84%E3%81%8B%E3%81%AE%E9%81%95%E3%81%84">Productが付いているかいないかの違い</h3><br />
-<ul><li>継承関係から分かるように、Productがついていないほうが強い(できることが多い)
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-71"><div class="container">
-                  <p>ProductTypeClassのみでEqualのインスタンスの自動生成が可能
-</p><br />
-<pre><code class="prettyprint lang-scala">final case class Person(id: Int, name: String)
-</code></pre>
-                </div>
-      </div><div class="content" id="slide-72"><div class="container">
-                  <ul><li><code>ProductTypeClass</code> のみでderiving不可能
-</li><li><code>TypeClass[Equal]</code> が必要
-</li></ul><br />
-<pre><code class="prettyprint lang-scala">sealed trait Tree[T]
+---
+class: middle
+
+- Labelledとは、case classのfield名を使うか否か
+- 例えば、case classに対して、JsonのEncode、Decodeのための型クラスのインスタンスを自動生成したい
+
+---
+class: middle
+
+- その場合に、field名をそのままJsonのKeyにしたい
+- <https://github.com/argonaut-io/argonaut/pull/128/files> 
+
+---
+class: middle
+
+## Productが付いているか<br/>いないかの違い
+
+
+
+- 継承関係から分かるように、Productがついていないほうが強い(できることが多い)
+
+---
+class: middle, center
+
+ProductTypeClassのみでEqualの<br/>インスタンスの自動生成が可能
+
+
+```scala
+final case class Person(id: Int, name: String)
+```
+
+---
+class: middle
+
+- `ProductTypeClass` のみでderiving不可能
+- `TypeClass[Equal]` が必要
+
+
+
+```scala
+sealed trait Tree[T]
 case class Leaf[T](t: T) extends Tree[T]
 case class Node[T](l: Tree[T], r: Tree[T]) extends Tree[T]
-</code></pre><br />
+```
+
+
+
 <span style="font-size: 50%;">
 (もちろん、型パラメータの <code>T</code> の <code>Equal</code> のインスタンスが存在する場合)
 </span>
 
-                </div>
-      </div><div class="content" id="slide-73"><div class="container">
-                  <h3 id="%E3%81%9D%E3%81%AE%E4%BB%96%E4%BE%BF%E5%88%A9%E3%81%AA%E5%BF%9C%E7%94%A8%E4%BE%8B">その他便利な応用例</h3>
-                </div>
-      </div><div class="content" id="slide-74"><div class="container">
-                  <p><code>F[_]</code> が <code>Applicative</code> <br />
-</p><p>なら<br />
-</p><code>F[A] :: F[B] :: F[C] :: HNil</code><br />
-<p>を<br />
-</p><code>F[A :: B :: C :: HNil]</code><br />
-<p>に変換可能(逆も可能)
-</p>
-                </div>
-      </div><div class="content" id="slide-75"><div class="container">
-                  <p>例1
-</p><br />
-<pre><code class="prettyprint lang-scala">Option[Int] :: Option[String] :: HNil
+---
+class: middle
+
+## その他便利な応用例
+
+---
+class: middle, center
+
+<code>F[_]</code> が `Applicative` 
+
+なら
+
+<code>F[A] :: F[B] :: F[C] :: HNil</code>
+
+を
+
+<code>F[A :: B :: C :: HNil]</code>
+
+に変換可能(逆も可能)
+
+---
+class: middle
+
+例1
+
+```scala
+Option[Int] :: Option[String] :: HNil
 
 Option[Int :: String :: HNil]
-</code></pre>
-                </div>
-      </div><div class="content" id="slide-76"><div class="container">
-                  <p>例2
-<br />
-</p><pre><code class="prettyprint lang-scala">Either[Int, String] :: Either[Boolean, String] :: HNil
+```
+
+---
+class: middle
+
+例2
+
+```scala
+Either[Int, String] :: Either[Boolean, String] :: HNil
 
 Either[Int :: Boolean :: HNil, String]
-</code></pre>
-                </div>
-      </div><div class="content" id="slide-77"><div class="container">
-                  <p>つまり、Haskellにおける<code>Traversable</code>の<code>sequenceA</code>などが<code>HList</code>に対して可能
-</p><p><a  href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-Traversable.html#v:sequenceA">http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-Traversable.html#v:sequenceA</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-78"><div class="container">
-                  <p><a  href="http://d.hatena.ne.jp/xuwei/20140727/1406445058">252要素のcase classまでのplayframeworkのJsonのReadsやWritesやFormatを生成できるライブラリ作った</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-79"><div class="container">
-                  <blockquote class="twitter-tweet" lang="en"><p>こういう感じのコード生成してコンパイル始めたら、Scalaコンパイラさんが数十分ずっとコンパイルしてて終わらない・・・ <a href="http://t.co/TNp92zYvO5">pic.twitter.com/TNp92zYvO5</a></p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/492998634011521024">July 26, 2014</a></blockquote>
-<span style="font-size: 50%;">vimがシンタックスハイライトを途中で諦めてる(´･_･`)</span>
+```
 
-                </div>
-      </div><div class="content" id="slide-80"><div class="container">
-                  <blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/xuwei_k">@xuwei_k</a> 結果、1時間くらいコンパイル時間がかかるようになってしまって全く実用的ではないので、(どうせimplicitの探索が遅いのだろうから)implicitをすべて明示的に呼び出してコンパイル時間の短縮を試みるというScalaコンパイラへの思いやりあふれる作業している</p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/493045911627390976">July 26, 2014</a></blockquote>
+---
+class: middle
 
-                </div>
-      </div><div class="content" id="slide-81"><div class="container">
-                  <blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/xuwei_k">@xuwei_k</a> what are you doing!?!</p>&mdash; Miles Sabin (@milessabin) <a href="https://twitter.com/milessabin/status/493094054696341504">July 26, 2014</a></blockquote>
+つまり、Haskellにおける`Traversable`の`sequenceA`などが`HList`に対して可能
 
-                </div>
-      </div><div class="content" id="slide-82"><div class="container">
-                  <ul><li>なにも考えないで実装すると、1時間経ってもコンパイル終わらないコードが出来上がる
-</li><li>頑張っても10分以上かかる
-</li><li>ソースコードが13MB, バイナリ11MB
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-83"><div class="container">
-                  <ul><li>shapeless作者から “what are you doing!?!” というmentionくる 
-</li><li>C++メタプログラミングのように、コンパイル時のアルゴリズムのオーダーとか考える必要
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-84"><div class="container">
-                  <h2 id="%E3%81%9D%E3%81%AE%E4%BB%96%E9%9B%91%E5%A4%9A%E3%81%AA%E8%A9%B1%2C+example%E3%81%AE%E7%B4%B9%E4%BB%8B%E3%81%AA%E3%81%A9">その他雑多な話, exampleの紹介など</h2>
-                </div>
-      </div><div class="content" id="slide-85"><div class="container">
-                  <h3 id="typelevel+fibonacci">typelevel fibonacci</h3><p><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/fibonacci.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/fibonacci.scala</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-86"><div class="container">
-                  <h3 id="typelevel+FizzBuzz">typelevel FizzBuzz</h3><p><a  href="https://gist.github.com/travisbrown/4108026">https://gist.github.com/travisbrown/4108026</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-87"><div class="container">
-                  <p><a  href="http://research.microsoft.com/en-us/um/people/simonpj/papers/boxy/boxy-icfp.pdf">Boxy Types: Inference for Higher-Rank Types and Impredicativity</a>
-という、Simon Peyton Jonesセンセの論文<br />
-</p><p>の一部をshapelessでやってみたもの?
-</p><p><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/impredicative.scala">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/impredicative.scala</a>
-</p>
-                </div>
-      </div><div class="content" id="slide-88"><div class="container">
-                  <h2 id="shepeless%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6%E3%82%8B%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA">shepelessを使ってるライブラリ</h2>
-                </div>
-      </div><div class="content" id="slide-89"><div class="container">
-                  <h3 id="scodec">scodec</h3><ul><li><a  href="https://github.com/scodec/scodec">https://github.com/scodec/scodec</a>
-</li><li>バイナリデータなどをEncode, Decodeするライブラリ
-</li><li>shapeless結構使ってる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-90"><div class="container">
-                  <h3 id="scodec">scodec</h3><p><img alt="scodec"  src="./scodec.png" />
-</p>
-                </div>
-      </div><div class="content" id="slide-91"><div class="container">
-                  <h3 id="spray">spray</h3><ul><li>routingまわりで使われているらしい
-</li><li><a  href="https://github.com/spray/spray/blob/v1.3.2/spray-routing/src/main/scala/spray/routing/HListDeserializer.scala">https://github.com/spray/spray/blob/v1.3.2/spray-routing/src/main/scala/spray/routing/HListDeserializer.scala</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-92"><div class="container">
-                  <h3 id="akka-http">akka-http</h3><ul><li>よってsprayから移植されたakka-httpにもある
-</li><li><a  href="https://github.com/akka/akka/tree/akka-stream-and-http-experimental-0.9/akka-parsing/src/main/scala/akka/shapeless">https://github.com/akka/akka/tree/akka-stream-and-http-experimental-0.9/akka-parsing/src/main/scala/akka/shapeless</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-93"><div class="container">
-                  <h3 id="parboiled2">parboiled2</h3><ul><li>マクロを大量に使ってる、PEG Parser
-</li><li><a  href="https://github.com/sirthias/parboiled2">https://github.com/sirthias/parboiled2</a>
-</li><li>個人的にあまり詳しくないのでわからない・・・(´･_･`)
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-94"><div class="container">
-                  <h3 id="http4s">http4s</h3><ul><li>Scalatraの人達が、次期Scalatraの内部で使うために、色々とかなり低レベルなところからscalaz-stream使い作成中のなにか
-</li><li>parboiled2経由で少し使ってる？
-</li><li><a  href="https://github.com/http4s/http4s">https://github.com/http4s/http4s</a>
-</li><li>もみあげさん <a  href="https://twitter.com/pocketberserker">@pocketberserker</a> が、少し詳しい？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-95"><div class="container">
-                  <h3 id="%E3%81%BE%E3%81%A8%E3%82%81%3F">まとめ?</h3><br />
-<ul><li>ただでさえ遅いコンパイル時間が更に長く！
-</li><li>型がとにかくヤバイ、けどその分とにかくスゴイ
-</li><li><p>ソース読むとマクロ関連のバグのURLいくつかあったりして怖い
-</p><ul><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/generic.scala#L219">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/generic.scala#L219</a>
-</li><li><a  href="https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala#L40">https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala#L40</a></li></ul></li></ul>
-                </div>
-      </div>
-          </div>
-        </div>
-        
-      </body>
-    </html>
+<http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-Traversable.html#v:sequenceA>
+
+---
+class: middle
+
+[252要素のcase classまでのplayframeworkのJsonのReadsやWritesやFormatを生成できるライブラリ作った](http://d.hatena.ne.jp/xuwei/20140727/1406445058)
+
+---
+class: middle
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="ja" dir="ltr">こういう感じのコード生成してコンパイル始めたら、Scalaコンパイラさんが数十分ずっとコンパイルしてて終わらない・・・ <a href="http://t.co/TNp92zYvO5">pic.twitter.com/TNp92zYvO5</a></p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/492998634011521024">July 26, 2014</a></blockquote>
+
+---
+class: middle
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/xuwei_k">@xuwei_k</a> 結果、1時間くらいコンパイル時間がかかるようになってしまって全く実用的ではないので、(どうせimplicitの探索が遅いのだろうから)implicitをすべて明示的に呼び出してコンパイル時間の短縮を試みるというScalaコンパイラへの思いやりあふれる作業している</p>&mdash; Kenji Yoshida (@xuwei_k) <a href="https://twitter.com/xuwei_k/status/493045911627390976">July 26, 2014</a></blockquote>
+
+
+---
+class: middle
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/xuwei_k">@xuwei_k</a> what are you doing!?!</p>&mdash; Miles Sabin (@milessabin) <a href="https://twitter.com/milessabin/status/493094054696341504">July 26, 2014</a></blockquote>
+
+
+---
+class: middle
+
+- なにも考えないで実装すると、1時間経ってもコンパイル終わらないコードが出来上がる
+- 頑張っても10分以上かかる
+- ソースコードが13MB, バイナリ11MB
+
+---
+class: middle
+
+- shapeless作者から "what are you doing!?!" というmentionくる 
+- C++メタプログラミングのように、コンパイル時のアルゴリズムのオーダーとか考える必要
+
+---
+class: middle
+
+## その他雑多な話<br/>exampleの紹介など
+
+---
+class: middle
+
+## typelevel fibonacci
+
+<https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/fibonacci.scala>
+
+---
+class: middle
+
+## typelevel FizzBuzz
+
+<https://gist.github.com/travisbrown/4108026>
+
+---
+class: middle, center
+
+[Boxy Types: Inference for Higher-Rank Types and Impredicativity](http://research.microsoft.com/en-us/um/people/simonpj/papers/boxy/boxy-icfp.pdf)
+という<br/>Simon Peyton Jonesセンセの論文
+
+の一部をshapelessでやってみたもの?
+
+<https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/examples/src/main/scala/shapeless/examples/impredicative.scala>
+
+---
+class: middle
+
+## shepelessを使ってる<br/>ライブラリ
+
+---
+class: middle
+
+## scodec
+
+- <https://github.com/scodec/scodec>
+- バイナリデータなどをEncode, Decodeするライブラリ
+- shapeless結構使ってる
+
+---
+class: middle
+
+## scodec
+
+![scodec](./scodec.png)
+
+---
+class: middle
+
+## spray
+
+- routingまわりで使われているらしい
+- <https://github.com/spray/spray/blob/v1.3.2/spray-routing/src/main/scala/spray/routing/HListDeserializer.scala>
+
+---
+class: middle
+
+## akka-http
+
+- よってsprayから移植されたakka-httpにもある
+- <https://github.com/akka/akka/tree/akka-stream-and-http-experimental-0.9/akka-parsing/src/main/scala/akka/shapeless>
+
+---
+class: middle
+
+## parboiled2
+
+- マクロを大量に使ってる、PEG Parser
+- <https://github.com/sirthias/parboiled2>
+- 個人的にあまり詳しくないのでわからない・・・(´･_･`)
+
+---
+class: middle
+
+## http4s
+
+- Scalatraの人達が、次期Scalatraの内部で使うために、色々とかなり低レベルなところからscalaz-stream使い作成中のなにか
+- parboiled2経由で少し使ってる？
+- <https://github.com/http4s/http4s>
+- もみあげさん [@pocketberserker](https://twitter.com/pocketberserker) が、少し詳しい？
+
+
+---
+class: middle
+
+## まとめ?
+
+- ただでさえ遅いコンパイル時間が更に長く！
+- 型がとにかくヤバイ、けどその分とにかくスゴイ
+- ソース読むとマクロ関連のバグのURLいくつかあったりして怖い
+    - <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/generic.scala#L219>
+    - <https://github.com/milessabin/shapeless/blob/shapeless-2.0.0/core/src/main/scala/shapeless/syntax/records.scala#L40>
+
+    </textarea>
+    <script src="//gnab.github.io/remark/downloads/remark-0.12.min.js" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.12.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
