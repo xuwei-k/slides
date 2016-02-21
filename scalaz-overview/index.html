@@ -1,233 +1,384 @@
+<DOCTYPE html>
 <html>
-      <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-        <title>Scalazの歴史と概要</title>
-        <link type="text/css" rel="stylesheet" href="assets/css/show.css" />
-        <link type="text/css" rel="stylesheet" href="assets/css/prettify.css" />
-        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-        <script type="text/javascript" src="assets/js/show.js"></script>
-        <script type="text/javascript" src="assets/js/prettify/prettify.js"></script>
-        <script type="text/javascript" src="assets/js/prettify/lang-apollo.js"></script><script type="text/javascript" src="assets/js/prettify/lang-css.js"></script><script type="text/javascript" src="assets/js/prettify/lang-hs.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lisp.js"></script><script type="text/javascript" src="assets/js/prettify/lang-lua.js"></script><script type="text/javascript" src="assets/js/prettify/lang-ml.js"></script><script type="text/javascript" src="assets/js/prettify/lang-proto.js"></script><script type="text/javascript" src="assets/js/prettify/lang-scala.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-sql.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vb.js"></script><script type="text/javascript" src="assets/js/prettify/lang-vhdl.js"></script><script type="text/javascript" src="assets/js/prettify/lang-wiki.js"></script><script type="text/javascript" src="assets/js/prettify/lang-yaml.js"></script>
-      <script type="text/javascript"><!--
-        window.onload=function() { prettyPrint(); };
-      --></script>
-      </head>
-      <body>
-        <div id="slides">
-          <div id="reel">
-            <div class="content" id="slide-0"><div class="container">
-                  <h1 id="Scalaz%E3%81%AE%E6%AD%B4%E5%8F%B2%E3%81%A8%E6%A6%82%E8%A6%81">Scalazの歴史と概要</h1><br /><br />
+  <head>
+    <title>Scalazの歴史と概要</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: 'Droid Serif';
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Scalazの歴史と概要
+
+
 <a style="font-size: 10%" rel="license" href="http://creativecommons.org/licenses/by/2.1/jp/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="http://i.creativecommons.org/l/by/2.1/jp/88x31.png" /></a>
 
-                </div>
-      </div><div class="content" id="slide-1"><div class="container">
-                  <img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
-<ul><li>twitter <a  href="https://twitter.com/xuwei_k">@xuwei_k</a>
-</li><li>github <a  href="https://github.com/xuwei-k">@xuwei-k</a>
-</li><li>blog <a  href="http://d.hatena.ne.jp/xuwei/">http://d.hatena.ne.jp/xuwei/</a>
-</li><li>2014年3月からドワンゴで働いてる(まだ4ヶ月)
-</li><li>もちろん毎日仕事でScala(not Scalaz)書いてる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-2"><div class="container">
-                  <p>話すこと
-</p><ul><li>Scalazとは
-</li><li>歴史やversion間の違い
-</li><li>モジュール構成
-</li><li>自分とScalaz
-</li><li>なぜ使うべきか？いつ使うべきか？
-</li><li>Scalazを勉強する方法、そのための資料
-</li><li>コミッターの紹介
-</li><li>関連ライブラリ紹介
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-3"><div class="container">
-                  <h2 id="Scalaz%E3%81%A8%E3%81%AF%EF%BC%9F">Scalazとは？</h2>
-                </div>
-      </div><div class="content" id="slide-4"><div class="container">
-                  <code>|@|&#10;&lt;*&gt;&#10;&lt;**&gt;&#10;^&#10;***&#10;&amp;&amp;&amp;&#10;:-&gt;&#10;&lt;-:&#10;&gt;&gt;=&#10;|||&#10;&lt;&lt;&lt;&#10;&gt;&gt;&gt;&#10;|=&gt;&#10;&lt;=|&#10;|&gt;&#10;??&#10;|+|&#10;!&amp;&amp;&#10;--&gt;&#10;|&#10;?&#10;&lt;^&gt;&#10;!?&#10;:?&gt;&gt;&#10;&lt;&lt;?:&#10;:++&gt;&#10;:++&gt;&gt;&#10;&lt;++:&#10;&lt;===&gt;&#10;-+-&#10;=?=&#10;⊛&#10;</code>
 
-                </div>
-      </div><div class="content" id="slide-5"><div class="container">
-                  <h2 id="%E8%B6%85%E5%9F%BA%E6%9C%AC%E7%9A%84%E3%81%AA%E6%83%85%E5%A0%B1">超基本的な情報</h2><br />
-<ul><li>リポジトリ <a  href="https://github.com/scalaz/scalaz">https://github.com/scalaz/scalaz</a>
-</li><li>流石に最近はググってもgithubのほうが上位に表示されるが、google codeは古いので一応注意
-</li><li>scaladoc一覧 <a  href="http://scalaz.github.io/scalaz/">http://scalaz.github.io/scalaz/</a>
-</li><li>メーリングリスト <a  href="http://groups.google.com/group/scalaz">http://groups.google.com/group/scalaz</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-6"><div class="container">
-                  <h2 id="%E8%AA%AD%E3%81%BF%E6%96%B9">読み方</h2><br />
-<ul><li>すからぜっど ？
-</li><li>すからじぃー ?
-</li></ul><p>どっちも聞いたことある気がする。まぁどうでもいい。“すからず” ではない、と思う
-</p>
-                </div>
-      </div><div class="content" id="slide-7"><div class="container">
-                  <h2 id="%E5%90%8D%E5%89%8D%E3%81%AE%E7%94%B1%E6%9D%A5%28%3F%29">名前の由来(?)</h2><ul><li><a  href="https://gist.github.com/tonymorris/5367920">https://gist.github.com/tonymorris/5367920</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-8"><div class="container">
-                  <h2 id="%E9%81%A9%E5%BD%93%E3%81%AA%E8%A6%81%E7%B4%84">適当な要約</h2><ul><li>2008年、Scalaを仕事でつかうことにしたけど、ゴミみたいなライブラリしかない
-</li><li>同僚と、オープンソースで作ることに
-</li><li>最初は内部的にscalaxという名前だった
-</li><li>しかし、scalaxという名前のライブラリは他に存在してた
-</li><li>見てみたけど、それもまたゴミ
-</li><li>よって、scalazになった
-</li><li>(結局zの意味は語られていない・・・？)
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-9"><div class="container">
-                  <p>githubには
-</p><p>“An extension to the core Scala library for functional programming”
-</p>
-                </div>
-      </div><div class="content" id="slide-10"><div class="container">
-                  <p>It provides purely functional data structures to complement those from the Scala standard library. It defines a set of foundational type classes (e.g. Functor, Monad) and corresponding instances for a large number of data structures.
-</p>
-                </div>
-      </div><div class="content" id="slide-11"><div class="container">
-                  <p>Scalaはオブジェクト指向と関数型を融合させた言語</p>
+---
+class: middle
+
+<img src="https://pbs.twimg.com/profile_images/1931553270/xuwei.gif" width="100" height="100" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog <http://d.hatena.ne.jp/xuwei/>
+- 2014年3月からドワンゴで働いてる(まだ4ヶ月)
+- もちろん毎日仕事でScala(not Scalaz)書いてる
+
+---
+class: middle
+
+## 話すこと
+
+- Scalazとは
+- 歴史やversion間の違い
+- モジュール構成
+- 自分とScalaz
+- なぜ使うべきか？いつ使うべきか？
+- Scalazを勉強する方法、そのための資料
+- コミッターの紹介
+- 関連ライブラリ紹介
+
+---
+class: middle
+
+## Scalazとは？
+
+---
+class: middle
+
+|@|    &lt;*&gt;    &lt;**&gt;    ^    ***    &amp;&amp;&amp;    :-&gt;    &lt;-:    &gt;&gt;=    |||    &lt;&lt;&lt;    &gt;&gt;&gt;    |=&gt;    &lt;=|    |&gt;    ??    |+|    !&amp;&amp;    --&gt;    |    ?    &lt;^&gt;    !?    :?&gt;&gt;    &lt;&lt;?:    :++&gt;    :++&gt;&gt;    &lt;++:    &lt;===&gt;    -+-    =?=    ⊛
+
+---
+class: middle
+
+## 超基本的な情報
+
+- リポジトリ <https://github.com/scalaz/scalaz>
+- 流石に最近はググってもgithubのほうが上位に表示されるが、google codeは古いので一応注意
+- scaladoc一覧 <http://scalaz.github.io/scalaz/>
+- メーリングリスト <http://groups.google.com/group/scalaz>
+
+---
+class: middle
+
+## 読み方
+
+- すからぜっど ？
+- すからじぃー ?
+
+どっちも聞いたことある気がする。まぁどうでもいい。<br/>"すからず" ではない、と思う
+
+---
+class: middle
+
+## 名前の由来(?)
+
+- <https://gist.github.com/tonymorris/5367920>
+
+---
+class: middle
+
+## 適当な要約
+
+- 2008年、Scalaを仕事でつかうことにしたけど、ゴミみたいなライブラリしかない
+- 同僚と、オープンソースで作ることに
+- 最初は内部的にscalaxという名前だった
+- しかし、scalaxという名前のライブラリは他に存在してた
+- 見てみたけど、それもまたゴミ
+- よって、scalazになった
+- (結局zの意味は語られていない・・・？)
+
+---
+class: middle, center
+
+githubには
+
+"An extension to the core Scala library for functional programming"
+
+
+---
+class: middle, center
+
+It provides purely functional data structures to complement those from the Scala standard library. It defines a set of foundational type classes (e.g. Functor, Monad) and corresponding instances for a large number of data structures.
+
+---
+class: middle, center
+
+Scalaはオブジェクト指向と関数型を融合させた言語
+
+
+だが
+
+---
+class: middle, center
+
+Scalazはその<br/><span style="font-size: 200%;">オブジェクト指向部分を<br/>基本的に全否定</span><br/>して、Scalaにおける関数型プログラミングのみを追求
+
+---
+class: middle
+
+
+「関数型プログラミング」と一言でいっても、広いので、Scala標準ライブラリで足りない(もしくは使いづらい)部分は、基本的になんでも入っていて、結果大きくなる
+
+
+
+---
+class: middle
+
+- Scala2.11.1 の scala-library.jar は <span style="font-size: 200%;">5.3MB</span>
+- scalaz-core_2.11-7.1.0-RC1.jar は <span style="font-size: 200%;">8.6MB</span>
+
 <br />
-<p>だが
-</p>
-                </div>
-      </div><div class="content" id="slide-12"><div class="container">
-                  <p>Scalazはその<span style="font-size: 200%;">オブジェクト指向部分を基本的に全否定</span>して、Scalaにおける関数型プログラミングのみを追求
-</p>
-                </div>
-      </div><div class="content" id="slide-13"><div class="container">
-                  <p>「関数型プログラミング」と一言でいっても、広いので、Scala標準ライブラリで足りない(もしくは使いづらい)部分は、基本的になんでも入っていて、結果大きくなる
-</p>
-                </div>
-      </div><div class="content" id="slide-14"><div class="container">
-                  <ul><li>Scala2.11.1 の scala-library.jar は <span style="font-size: 200%;">5.3MB</span>
-</li><li>scalaz-core_2.11-7.1.0-RC1.jar は <span style="font-size: 200%;">8.6MB</span>
-</li></ul><br />
-<ul><li><a  href="http://central.maven.org/maven2/org/scalaz/scalaz-core_2.11/7.1.0-RC1/">http://central.maven.org/maven2/org/scalaz/scalaz-core_2.11/7.1.0-RC1/</a>
-</li><li><a  href="http://central.maven.org/maven2/org/scala-lang/scala-library/2.11.1/">http://central.maven.org/maven2/org/scala-lang/scala-library/2.11.1/</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-15"><div class="container">
-                  <h2 id="%E6%AD%B4%E5%8F%B2%E3%80%81version%E3%81%AE%E9%81%95%E3%81%84%E3%81%AE%E8%A9%B3%E7%B4%B0">歴史、versionの違いの詳細</h2><p>大きく分けて以下
-</p><ul><li>6.x 系
-</li><li>7.0.x 系
-</li><li>7.1.x 系
-</li><li>7.2.x 系
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-16"><div class="container">
-                  <h2 id="6+%E3%81%A8%E3%81%9D%E3%82%8C%E4%BB%A5%E5%89%8D">6 とそれ以前</h2><ul><li><a  href="https://github.com/scalaz/scalaz/tree/v6.0.4">https://github.com/scalaz/scalaz/tree/v6.0.4</a>
-</li><li>バイナリ互換という概念を保持しようという発想自体なかった
-</li><li>typesafeがmigration-manegerをそもそも出していなかったので <a  href="https://github.com/typesafehub/migration-manager">https://github.com/typesafehub/migration-manager</a>
-</li><li>6系は 6.0.4 が出てからほぼ更新されていない(2012年)
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-17"><div class="container">
-                  <h2 id="6%E3%81%A8%E3%81%9D%E3%82%8C%E4%BB%A5%E5%89%8D">6とそれ以前</h2><ul><li>Scala2.10までしか対応してない
-</li><li>そもそもgoogle codeな時代だったり
-</li><li>そもそもpull reqベースでの開発が主流でなかった時代
-</li><li>Scalaz7以降と、かなり異なる部分多い
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-18"><div class="container">
-                  <h2 id="6%E4%BB%A5%E5%89%8D%E3%81%A8%E3%81%9D%E3%82%8C%E4%BB%A5%E9%99%8D%E3%81%AE%E3%82%B3%E3%83%9F%E3%83%83%E3%83%88%E6%95%B0%E6%AF%94%E8%BC%83">6以前とそれ以降のコミット数比較</h2><ul><li>v6.0.4まで 1789 commit
-</li><li>v7.0.6まで 3642 commit
-</li><li>v7.1.0-RC1 4761 commit
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-19"><div class="container">
-                  <h3 id="%E3%81%A4%E3%81%BE%E3%82%8A%E3%80%816%E4%BB%A5%E5%89%8D%E3%81%AB%E3%81%8F%E3%82%89%E3%81%B9%E3%81%A6%E3%80%81%E3%81%9D%E3%82%8C%E4%BB%A5%E9%99%8D%E3%81%AE%E9%96%8B%E7%99%BA%E3%81%AF%E3%81%8B%E3%81%AA%E3%82%8A%E6%B4%BB%E7%99%BA">つまり、6以前にくらべて、それ以降の開発はかなり活発</h3><ul><li><a  href="https://github.com/scalaz/scalaz/tree/v6.0.4">https://github.com/scalaz/scalaz/tree/v6.0.4</a>
-</li><li><a  href="https://github.com/scalaz/scalaz/tree/v7.0.6">https://github.com/scalaz/scalaz/tree/v7.0.6</a>
-</li><li><a  href="https://github.com/scalaz/scalaz/tree/v7.1.0-RC1">https://github.com/scalaz/scalaz/tree/v7.1.0-RC1</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-20"><div class="container">
-                  <h2 id="6%E3%81%A7%E6%B6%88%E3%81%88%E3%81%9F%E3%81%8B%E5%A4%89%E6%9B%B4%E3%81%95%E3%82%8C%E3%81%9F%E3%82%82%E3%81%AE">6で消えたか変更されたもの</h2><ul><li>geo 一旦消えたが別リポジトリに復活
-</li><li><a  href="https://github.com/scalaz/scalaz-geo">https://github.com/scalaz/scalaz-geo</a>
-</li><li>http 消えた
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-21"><div class="container">
-                  <h2 id="7.0.x+%E7%B3%BB">7.0.x 系</h2><ul><li><a  href="http://d.hatena.ne.jp/xuwei/20131226/1388027060">2013年のScalaz</a> (自分のblog)
-</li><li>2013年4月22日に7.0.0finalリリース
-</li><li>それ以降、一部の例外を除いて、バイナリ互換性を維持してマイナーリリース(つまり1年以上続いてる)
-</li><li>7.0.0 final 以降は、wikiにとても詳細にリリースノートまとまってる
-</li><li><a  href="https://github.com/scalaz/scalaz/wiki">https://github.com/scalaz/scalaz/wiki</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-22"><div class="container">
-                  <h2 id="7.0.x+%E7%B3%BB">7.0.x 系</h2><ul><li>現在7.0.6が最新
-</li><li>7.0.7も出す予定
-</li><li>Scala2.9.2 から 2.11 に対応
-</li><li><a  href="http://d.hatena.ne.jp/xuwei/20140123/1390473456">Scala2.11でのvarianceに関する変更とScalaz</a>
-</li><li>Scala 2.12 対応は未定<span style="font-size: 70%;">(簡単にできそうならやるかもしれないが、簡単にできないかもしれない)</span>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-23"><div class="container">
-                  <h2 id="6%E7%B3%BB%E3%81%A87.0.x%E4%BB%A5%E9%99%8D%E3%81%AE%E9%81%95%E3%81%84">6系と7.0.x以降の違い</h2><ul><li>importを分けられるようになった、MAやMABがなくなり、syntaxやOpsができた、という大きな設計変更
-</li><li><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/project/GenTypeClass.scala">半自動コード生成という謎技術</a>
-</li><li>モジュール細かく別れた
-</li><li>その他数えきれないほど色々
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-24"><div class="container">
-                  <h2 id="7.1.x%E7%B3%BB">7.1.x系</h2><ul><li>7.0.0 finalが2013年4月にでたことにより、開発開始
-</li><li>Scala 2.9.3 から 2.11 に対応
-</li><li>Scala 2.12 対応は未定だが、7.0.xに比べればやりやすいはずなので、たぶんやる?
-</li><li>7.1.0-M1からM7まで、7つのマイルストーンと、RC1
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-25"><div class="container">
-                  <h2 id="7.1.x%E7%B3%BB">7.1.x系</h2><ul><li>もうすぐfinalがでるはず
-</li><li>7.1.0 finalがでるまでは、バイナリ互換は保証されない
-</li><li>基本的に、specs2などの7.0.x系に依存してるライブラリと共存できないので注意
-</li><li>様々な機能追加はあるが、6から7の変更に比べれば、それなりに互換性ある
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-26"><div class="container">
-                  <h2 id="7.1.x%E7%B3%BB">7.1.x系</h2><ul><li>他のライブラリとの相性やバイナリ互換を考えて慎重を期すなら、まだ7.0.x使ったほうがいい
-</li><li>そのあたり気にする必要ない場合や、7.1.xにしか入ってない機能を使いたい場合は、もう7.1.0使うべき
-</li><li>バイナリ互換崩れないものは、7.0.xにバックポートされてる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-27"><div class="container">
-                  <h2 id="7.0.x%E3%81%8B%E3%82%897.1.x%E3%81%A7%E3%80%81%E4%BB%8A%E3%81%AE%E3%81%A8%E3%81%93%E3%82%8D%E3%83%90%E3%83%83%E3%82%AF%E3%83%9D%E3%83%BC%E3%83%88%E3%81%95%E3%82%8C%E3%81%A6%E3%81%AA%E3%81%84%E5%A4%89%E6%9B%B4%E7%82%B9%28%E4%B8%80%E9%83%A8%29">7.0.xから7.1.xで、今のところバックポートされてない変更点(一部)</h2><ul><li>varianceの変更(共変や反変を使わない流れになった)
-</li><li><a  href="https://github.com/scalaz/scalaz/pull/383/files">https://github.com/scalaz/scalaz/pull/383/files</a>
-</li><li>abstract classのほうがバイナリ互換崩れないことがわかったので、traitから変更
-</li><li><a  href="https://github.com/scalaz/scalaz/pull/450/files">https://github.com/scalaz/scalaz/pull/450/files</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-28"><div class="container">
-                  <h2 id="7.0.x%E3%81%8B%E3%82%897.1.x%E3%81%A7%E9%9D%9E%E6%8E%A8%E5%A5%A8%E3%81%AB%E3%81%AA%E3%81%A3%E3%81%9F%E3%82%82%E3%81%AE">7.0.xから7.1.xで非推奨になったもの</h2><ul><li>BKTree, MetricSpace, Cojoin, Each, Length, Index
-</li><li><a  href="http://eed3si9n.com/learning-scalaz/ja/Lawless-typeclasses.html">無法者の型クラス</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-29"><div class="container">
-                  <h2 id="7.0.x%E3%81%8B%E3%82%897.1.x%E3%81%A7%E3%80%81%E4%BB%8A%E3%81%AE%E3%81%A8%E3%81%93%E3%82%8D%E3%83%90%E3%83%83%E3%82%AF%E3%83%9D%E3%83%BC%E3%83%88%E3%81%95%E3%82%8C%E3%81%A6%E3%81%AA%E3%81%84%E8%BF%BD%E5%8A%A0%E3%81%95%E3%82%8C%E3%81%9F%E3%82%82%E3%81%AE">7.0.xから7.1.xで、今のところバックポートされてない追加されたもの</h2><ul><li>InvariantFunctor, Align, Inject, ISet, Endomorphic, NotNothing, Scala標準ライブラリのFutureのインスタンス
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-30"><div class="container">
-                  <h2 id="7.2.x%E7%B3%BB">7.2.x系</h2><ul><li>まだ開発始まってない
-</li><li>7.1.0 の final が出れば開発開始
-</li><li>Scala2.9を切り捨てる予定
-</li><li>よって、value classやmacroを多用して、大きな改善が？
-</li><li>IOモナドとFutureをFreeモナドベースで統合?
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-31"><div class="container">
-                  <h2 id="%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E6%A7%8B%E6%88%90">モジュール構成</h2><ul><li>core
-</li><li>concurrent
-</li><li>effect
-</li><li>iteratee
-</li><li>iterv
-</li><li>scalacheck-binding
-</li><li>typelevel
-</li><li>xml
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-32"><div class="container">
-                  <svg width="582pt" height="287pt"
+
+- <http://central.maven.org/maven2/org/scalaz/scalaz-core_2.11/7.1.0-RC1/>
+- <http://central.maven.org/maven2/org/scala-lang/scala-library/2.11.1/>
+
+---
+class: middle
+
+## 歴史、versionの違いの詳細
+
+大きく分けて以下
+
+- 6.x 系
+- 7.0.x 系
+- 7.1.x 系
+- 7.2.x 系
+
+---
+class: middle
+
+## 6 とそれ以前
+
+- <https://github.com/scalaz/scalaz/tree/v6.0.4>
+- バイナリ互換という概念を保持しようという発想自体なかった
+- typesafeがmigration-manegerをそもそも出していなかったので <https://github.com/typesafehub/migration-manager>
+- 6系は 6.0.4 が出てからほぼ更新されていない(2012年)
+
+
+---
+class: middle
+
+## 6とそれ以前
+
+- Scala2.10までしか対応してない
+- そもそもgoogle codeな時代だったり
+- そもそもpull reqベースでの開発が主流でなかった時代
+- Scalaz7以降と、かなり異なる部分多い
+
+---
+class: middle
+
+## 6以前とそれ以降の<br/>コミット数比較
+
+- v6.0.4まで 1789 commit
+- v7.0.6まで 3642 commit
+- v7.1.0-RC1 4761 commit
+
+
+---
+class: middle
+
+### つまり、6以前にくらべて<br/>それ以降の開発はかなり活発
+
+- <https://github.com/scalaz/scalaz/tree/v6.0.4>
+- <https://github.com/scalaz/scalaz/tree/v7.0.6>
+- <https://github.com/scalaz/scalaz/tree/v7.1.0-RC1>
+
+---
+class: middle
+
+## 6で消えたか変更されたもの
+
+- geo 一旦消えたが別リポジトリに復活
+- <https://github.com/scalaz/scalaz-geo>
+- http 消えた
+
+---
+class: middle
+
+## 7.0.x 系
+
+- [2013年のScalaz](http://d.hatena.ne.jp/xuwei/20131226/1388027060) (自分のblog)
+- 2013年4月22日に7.0.0finalリリース
+- それ以降、一部の例外を除いて、バイナリ互換性を維持してマイナーリリース(つまり1年以上続いてる)
+- 7.0.0 final 以降は、wikiにとても詳細にリリースノートまとまってる
+- <https://github.com/scalaz/scalaz/wiki>
+
+
+---
+class: middle
+
+
+## 7.0.x 系
+
+- 現在7.0.6が最新
+- 7.0.7も出す予定
+- Scala2.9.2 から 2.11 に対応
+- [Scala2.11でのvarianceに関する変更とScalaz](http://d.hatena.ne.jp/xuwei/20140123/1390473456)
+- Scala 2.12 対応は未定<span style="font-size: 70%;">(簡単にできそうならやるかもしれないが、簡単にできないかもしれない)</span>
+
+
+---
+class: middle
+
+
+## 6系と7.0.x以降の違い
+
+- importを分けられるようになった、MAやMABがなくなり、syntaxやOpsができた、という大きな設計変更
+- [半自動コード生成という謎技術](https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/project/GenTypeClass.scala)
+- モジュール細かく別れた
+- その他数えきれないほど色々
+
+---
+class: middle
+
+
+## 7.1.x系
+
+- 7.0.0 finalが2013年4月にでたことにより、開発開始
+- Scala 2.9.3 から 2.11 に対応
+- Scala 2.12 対応は未定だが、7.0.xに比べればやりやすいはずなので、たぶんやる?
+- 7.1.0-M1からM7まで、7つのマイルストーンと、RC1
+
+---
+class: middle
+
+
+## 7.1.x系
+
+- もうすぐfinalがでるはず
+- 7.1.0 finalがでるまでは、バイナリ互換は保証されない
+- 基本的に、specs2などの7.0.x系に依存してるライブラリと共存できないので注意
+- 様々な機能追加はあるが、6から7の変更に比べれば、それなりに互換性ある
+
+---
+class: middle
+
+## 7.1.x系
+
+- 他のライブラリとの相性やバイナリ互換を考えて慎重を期すなら、まだ7.0.x使ったほうがいい
+- そのあたり気にする必要ない場合や、7.1.xにしか入ってない機能を使いたい場合は、もう7.1.0使うべき
+- バイナリ互換崩れないものは、7.0.xにバックポートされてる
+
+
+
+---
+class: middle
+
+
+## 7.0.xから7.1.xで、今のところバックポートされてない変更点(一部)
+
+- varianceの変更(共変や反変を使わない流れになった)
+- <https://github.com/scalaz/scalaz/pull/383/files>
+- abstract classのほうがバイナリ互換崩れないことがわかったので、traitから変更
+- <https://github.com/scalaz/scalaz/pull/450/files>
+
+
+
+---
+class: middle
+
+
+## 7.0.xから7.1.xで<br/>非推奨になったもの
+
+- BKTree, MetricSpace, Cojoin, Each, Length, Index
+- [無法者の型クラス](http://eed3si9n.com/learning-scalaz/ja/Lawless-typeclasses.html)
+
+
+
+---
+class: middle
+
+
+## 7.0.xから7.1.xで、今のところバックポートされてない追加されたもの
+
+- InvariantFunctor, Align, Inject, ISet, Endomorphic, NotNothing, Scala標準ライブラリのFutureのインスタンス
+
+---
+class: middle
+
+## 7.2.x系
+
+- まだ開発始まってない
+- 7.1.0 の final が出れば開発開始
+- Scala2.9を切り捨てる予定
+- よって、value classやmacroを多用して、大きな改善が？
+- IOモナドとFutureをFreeモナドベースで統合?
+
+---
+class: middle
+
+## モジュール構成
+
+- core
+- concurrent
+- effect
+- iteratee
+- iterv
+- scalacheck-binding
+- typelevel
+- xml
+
+---
+class: middle
+
+
+<svg width="582pt" height="287pt"
  viewBox="0.00 0.00 582.00 287.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 283)">
 <title>dependency&#45;graph</title>
@@ -335,28 +486,38 @@
 </g>
 </svg>
 
-                </div>
-      </div><div class="content" id="slide-33"><div class="container">
-                  <h2 id="core">core</h2><ul><li><a  href="https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/core/src/main/scala/scalaz/">https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/core/src/main/scala/scalaz/</a>
-</li><li>Scala標準ライブラリ以外に依存ライブラリなし
-</li><li>他のモジュールはすべて必ずこれに依存してる
-</li><li>数多くのデータ構造や型クラス入ってる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-34"><div class="container">
-                  <h2 id="core">core</h2><ul><li>一番利用者多いのも明らかにこれ(おそらく9割以上)
-</li><li>単に“Scalaz“といった場合に、coreを指すこともあるくらい？
-</li><li>基本的にこれを使いこなすことから始めて、他のモジュールは気にしなくてもよい、くらいに中身濃い
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-35"><div class="container">
-                  <h2 id="core">core</h2><ul><li>大きすぎるのでモジュール分けたい話がでたが、(デメリット多すぎで)現実的じゃないという結論になり、大きいまま
-</li><li>型クラスは @gakuzzzz さんが話してくれるはず
-</li><li>データ構造は @pocketberserker さんが話してくれるはず
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-36"><div class="container">
-                  <svg width="988pt" height="490pt"
+---
+class: middle
+
+## core
+
+- <https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/core/src/main/scala/scalaz/>
+- Scala標準ライブラリ以外に依存ライブラリなし
+- 他のモジュールはすべて必ずこれに依存してる
+- 数多くのデータ構造や型クラス入ってる
+
+---
+class: middle
+
+## core
+
+- 一番利用者多いのも明らかにこれ(おそらく9割以上)
+- 単に"Scalaz"といった場合に、coreを指すこともあるくらい？
+- 基本的にこれを使いこなすことから始めて、他のモジュールは気にしなくてもよい、くらいに中身濃い
+
+---
+class: middle
+
+## core
+
+- 大きすぎるのでモジュール分けたい話がでたが、(デメリット多すぎで)現実的じゃないという結論になり、大きいまま
+- 型クラスは @gakuzzzz さんが話してくれるはず
+- データ構造は @pocketberserker さんが話してくれるはず
+
+---
+class: middle
+
+<svg width="988pt" height="490pt"
  viewBox="0.00 0.00 988.00 490.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 486)">
 <title>class&#45;diagram</title>
@@ -614,9 +775,12 @@
 </g>
 </svg>
 
-                </div>
-      </div><div class="content" id="slide-37"><div class="container">
-                  <svg width="703pt" height="194pt"
+
+---
+class: middle
+
+
+<svg width="703pt" height="194pt"
  viewBox="0.00 0.00 703.00 194.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 190)">
 <title>class&#45;diagram</title>
@@ -734,297 +898,461 @@
 </g>
 </svg>
 
-                </div>
-      </div><div class="content" id="slide-38"><div class="container">
-                  <h2 id="effect">effect</h2><ul><li><a  href="https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/effect/src/main/scala/scalaz/effect">https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/effect/src/main/scala/scalaz/effect</a>
-</li><li>coreのみに依存
-</li><li>IOモナド、STモナドなど
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-39"><div class="container">
-                  <h2 id="concurrent">concurrent</h2><ul><li>effectに依存
-</li><li><a  href="https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/concurrent/src/main/scala/scalaz/concurrent">https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/concurrent/src/main/scala/scalaz/concurrent</a>
-</li><li>型がつくActor, Future, MVar, Chan など
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-40"><div class="container">
-                  <h2 id="iterv">iterv</h2><ul><li>古いIteratee
-</li><li>effectに依存
-</li><li>350行程度のファイル1つのみ
-</li><li><a  href="https://github.com/scalaz/scalaz/blob/v7.0.6/iterv/src/main/scala/scalaz/Iteratee.scala">https://github.com/scalaz/scalaz/blob/v7.0.6/iterv/src/main/scala/scalaz/Iteratee.scala</a>
-</li><li>オワコン
-</li><li>7.0.xまでしか存在せず、7.1.xには無い
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-41"><div class="container">
-                  <h2 id="iteratee">iteratee</h2><ul><li>effectに依存
-</li><li><a  href="https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/iteratee/src/main/scala/scalaz/iteratee">https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/iteratee/src/main/scala/scalaz/iteratee</a>
-</li><li>itervに比べれば新しいIteratee
-</li><li>だがこれももうすぐオワコン？
-</li><li>scalaz-streamに置き換えたいらしい
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-42"><div class="container">
-                  <h2 id="iteratee">iteratee</h2><ul><li>play2のiterateeよりジェネリックな感じ(play2はFuture固定)
-</li><li>それほど実用してるの見かけない
-</li><li>パフォーマンス出るのかどうかも謎?
-</li><li>メンテも、少し放置され気味
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-43"><div class="container">
-                  <h2 id="scalacheck-binding">scalacheck-binding</h2><ul><li>他の全部のモジュールに依存
-</li><li><a  href="http://scalacheck.org/">http://scalacheck.org/</a>
-</li><li>唯一、本体のリポジトリのモジュールでは、外部のライブラリであるScalacheckに依存
-</li><li>Scalazのテストは、<a  href="http://d.hatena.ne.jp/xuwei/20121222/1356203049">他のScalaライブラリにはない面白い仕組みがある</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-44"><div class="container">
-                  <h2 id="typelevel">typelevel</h2><ul><li>coreのみに依存
-</li><li><a  href="https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/typelevel/src/main/scala/scalaz/typelevel">https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/typelevel/src/main/scala/scalaz/typelevel</a>
-</li><li>HList、型レベル自然数、など
-</li><li>オワコンになってしまった
-</li><li>shapelessと機能が被るから、という理由
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-45"><div class="container">
-                  <h2 id="xml">xml</h2><ul><li><a  href="https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/xml/src/main/scala/scalaz/xml">https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/xml/src/main/scala/scalaz/xml</a>
-</li><li>coreのみに依存
-</li><li>純粋関数型なスタイルでxmlをparseするためのもの
-</li><li>Haskellのポーティング
-</li><li>あまり使われてない？
-</li><li>パフォーマンスでるのかどうか謎
-</li><li>将来的に本体のリポジトリから外す(geoのような扱いにする)ことが検討されてる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-46"><div class="container">
-                  <p>自分とScalaz
-</p><ul><li>2013年6月からコミッター
-</li><li>2013年のコミット数1位
-</li><li>2014年もコミット数だと今のところ1位
-</li><li>(細かい変更が多いので)変更行数だと、総合5位くらい？
-</li><li>総合のコミット数2位
-</li><li><a  href="https://github.com/scalaz/scalaz/graphs/contributors">https://github.com/scalaz/scalaz/graphs/contributors</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-47"><div class="container">
-                  <blockquote class="twitter-tweet" lang="en"><p>「<a href="https://twitter.com/xuwei_k">@xuwei_k</a> は普通に読んでても気付かないような細かいバグに気付いてる。どうやっているんだ?」みたいなことを Scalaz の他のコミッタが nescala 後の懇親会で言ってた。あと「彼は nescala に来るべきだった」</p>&mdash; eugene yokota (@eed3si9n_ja) <a href="https://twitter.com/eed3si9n_ja/statuses/443248298926043136">March 11, 2014</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-                </div>
-      </div><div class="content" id="slide-48"><div class="container">
-                  <h2 id="Scalaz%E3%82%B3%E3%83%9F%E3%83%83%E3%82%BF%E3%81%AB%E3%81%AA%E3%82%8B%E6%96%B9%E6%B3%95">Scalazコミッタになる方法</h2><ul><li>無職になる
-</li><li>暇なので、iPadにソースコード入れるなどして、ひたすらコードを隅々まで読む(現実逃避)
-</li><li>細かいバグもしくは改善点見つかる
-</li><li>pull reqする
-</li><li>繰り返し
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-49"><div class="container">
-                  <h2 id="Scalaz%E3%82%B3%E3%83%9F%E3%83%83%E3%82%BF%E3%81%AB%E3%81%AA%E3%82%8B%E6%96%B9%E6%B3%95">Scalazコミッタになる方法</h2><ul><li>そのうちコミット権限貰える
-</li><li>✌(‘ω‘✌ )三✌(‘ω’)✌三( ✌‘ω’)✌
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-50"><div class="container">
-                  <h2 id="%E3%81%AA%E3%81%9C%E4%BD%BF%E3%81%86%E3%81%B9%E3%81%8D%EF%BC%9F">なぜ使うべき？</h2><h2 id="%E3%81%84%E3%81%A4%E4%BD%BF%E3%81%86%E3%81%B9%E3%81%8D%E3%81%8B%EF%BC%9F">いつ使うべきか？</h2>
-                </div>
-      </div><div class="content" id="slide-51"><div class="container">
-                  <h2 id="%E3%81%84%E3%81%A4%E4%BD%BF%E3%81%86%E3%81%B9%E3%81%8D%E3%81%8B%EF%BC%9F">いつ使うべきか？</h2><ul><li>Scala標準ライブラリでは(関数型プログラミングするのに)物足りないと感じたとき
-</li><li>チーム開発で使うなら、ある程度メンバーがついてこれそうなとき
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-52"><div class="container">
-                  <h2 id="%E4%BD%BF%E3%82%8F%E3%81%AA%E3%81%84%E6%96%B9%E3%81%8C%E3%81%84%E3%81%84%E3%81%8B%E3%80%81%E5%BF%85%E3%81%9A%E3%81%97%E3%82%82%E4%BD%BF%E3%81%86%E5%BF%85%E8%A6%81%E3%81%AA%E3%81%84%E3%81%A8%E3%81%8D">使わない方がいいか、必ずしも使う必要ないとき</h2><ul><li>Scalaの基本的な言語仕様自体や、標準ライブラリの使い方もわかってない場合
-</li><li>Scala標準ライブラリで事足りるかどうかもわかってないとき
-</li><li>Optionに少し便利メソッドを追加する程度の使い方(今後それ以外の部分も使っていく予定ならともかく、本当にそれだけのために使うなら微妙)
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-53"><div class="container">
-                  <h2 id="%E5%88%9D%E5%BF%83%E8%80%85%E3%81%AB%E3%81%8A%E3%81%8A%E3%81%99%E3%81%99%E3%82%81%E3%81%AA%E3%81%A8%E3%81%93%E3%82%8D">初心者におおすすめなところ</h2><ul><li><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/core/src/main/scala/scalaz/Either.scala">Either</a>
-</li><li><a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/core/src/main/scala/scalaz/Validation.scala">Validation</a> (@pab_tech さんがあとで発表してくれるはず)
-</li><li>(Scala標準ライブラリの) <a  href="https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/core/src/main/scala/scalaz/std/Future.scala">Futureのインスタンス</a>
-</li><li>Monoid
-</li><li>NonEmptyList
-</li><li>Foldable
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-54"><div class="container">
-                  <h2 id="%E5%8B%89%E5%BC%B7%E6%96%B9%E6%B3%95">勉強方法</h2><ul><li>コード読もう
-</li><li>Haskell勉強しよう？
-</li><li>圏論はあったら役に立つかもしれないけど、必須じゃない(自分も圏論わかりません)
-</li><li><a  href="http://www.manning.com/bjarnason/">Functional Programming in Scala</a> Scalazの本ではないが役に立つ
-</li><li><a  href="http://eed3si9n.com/learning-scalaz/ja/">独習Scalaz</a> 網羅してるのはごく一部だったり、説明や例が簡素なことが多いので注意
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-55"><div class="container">
-                  <h2 id="%E4%B8%BB%E8%A6%81%E3%81%AA%E3%82%B3%E3%83%9F%E3%83%83%E3%82%BF%E3%81%AE%E7%B4%B9%E4%BB%8B">主要なコミッタの紹介</h2>
-                </div>
-      </div><div class="content" id="slide-56"><div class="container">
-                  <h2 id="%40retronym">@retronym</h2><ul><li><a  href="https://github.com/retronym">https://github.com/retronym</a>
-</li><li>コミット数1位
-</li><li>Scalaのコミッターでもある
-</li><li>Scalaz7のプロトタイプを、ほぼ一人で作った
-</li><li>IntelliJ IDEAのScalaのプラグインもコミッタ
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-57"><div class="container">
-                  <h2 id="%40tonymorris">@tonymorris</h2><ul><li><a  href="https://github.com/tonymorris">https://github.com/tonymorris</a>
-</li><li>コミット数3位
-</li><li>Scalazの原作者
-</li><li>specs2作者の同僚？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-58"><div class="container">
-                  <h2 id="%40larsrh">@larsrh</h2><ul><li><a  href="https://github.com/larsrh">https://github.com/larsrh</a>
-</li><li>最近のリリース関連全部やってる
-</li><li>wikiのリリースノートもほぼ全部書いてる
-</li><li>バイナリ互換の方針とか、開発方針とか中心になってすすめてくれてる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-59"><div class="container">
-                  <h2 id="%40S11001001">@S11001001</h2><ul><li><a  href="https://github.com/S11001001">https://github.com/S11001001</a>
-</li><li>@ekmettの同僚(金融系？)
-</li><li>Bazaarというマイナーな(?)バージョン管理システムが好きらしい
-</li><li><a  href="https://launchpad.net/~scompall">https://launchpad.net/~scompall</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-60"><div class="container">
-                  <h2 id="%40runarorama">@runarorama</h2><ul><li><a  href="https://github.com/runarorama">https://github.com/runarorama</a>
-</li><li>@ekmettの元同僚
-</li><li>Freeモナド詳しい
-</li><li>Functional Programming in Scalaという本書いてる
-</li><li><a  href="http://www.manning.com/bjarnason/">http://www.manning.com/bjarnason/</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-61"><div class="container">
-                  <h2 id="%40pchiusano">@pchiusano</h2><ul><li><a  href="https://github.com/pchiusano">https://github.com/pchiusano</a>
-</li><li>scalaz-stream作者
-</li><li>Functional Programming in Scalaという本書いてる
-</li><li><a  href="http://www.manning.com/bjarnason/">http://www.manning.com/bjarnason/</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-62"><div class="container">
-                  <h2 id="%40puffnfresh">@puffnfresh</h2><ul><li><a  href="https://github.com/puffnfresh">https://github.com/puffnfresh</a>
-</li><li>RoyというAltJSの作者
-</li><li>pure scriptのコミッター？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-63"><div class="container">
-                  <h2 id="%40markhibberd">@markhibberd</h2><ul><li><a  href="https://github.com/markhibberd">https://github.com/markhibberd</a>
-</li><li>argonautのコミット数1位
-</li><li>tonymorrisさんの同僚
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-64"><div class="container">
-                  <h2 id="%40pthariensflame">@pthariensflame</h2><ul><li>pipeというHasekellのライブラリをScalaに移植してた(メンテされてない)
-</li><li>コミット数は別に多くない
-</li><li><a  href="https://github.com/scalaz/scalaz/issues/601#issuecomment-30088659">agdaのコード投げてきた人</a>
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-65"><div class="container">
-                  <h2 id="%E9%96%A2%E9%80%A3%E3%83%A9%E3%82%A4%E3%83%96%E3%83%A9%E3%83%AA%E7%B4%B9%E4%BB%8B">関連ライブラリ紹介</h2><ul><li><a  href="https://github.com/search?q=%22org.scalaz%22+%25%25+%22scalaz-core%22+7.0&amp;type=Code&amp;ref=searchresults">githubをScalazで検索した結果</a> 1000件以上？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-66"><div class="container">
-                  <h2 id=""><a  href="https://github.com/scodec/scodec">https://github.com/scodec/scodec</a></h2><ul><li>シリアライズ、デシリアライズ
-</li><li>scalaz-streamで使われている
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-67"><div class="container">
-                  <h2 id=""><a  href="https://github.com/scalaz/scalaz-stream">https://github.com/scalaz/scalaz-stream</a></h2><ul><li>scalazコミッタの人が作ってる
-</li><li>iterateeなどの代替となるはずもの
-</li><li>開発活発だし、パフォーマンス重視してて実用的？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-68"><div class="container">
-                  <h2 id=""><a  href="https://github.com/julien-truffaut/Monocle">https://github.com/julien-truffaut/Monocle</a></h2><ul><li>別のLens実装
-</li><li>Scalaz本体にもLensあるのに・・・
-</li><li>最近argonautがこれ使うようになった
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-69"><div class="container">
-                  <h2 id=""><a  href="https://github.com/puffnfresh/scala-lenz">https://github.com/puffnfresh/scala-lenz</a></h2><ul><li>別のLens実装その2
-</li><li>みんななぜそんなにLensライブラリ作るのか
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-70"><div class="container">
-                  <h2 id=""><a  href="https://github.com/argonaut-io/argonaut">https://github.com/argonaut-io/argonaut</a></h2><ul><li>Jsonライブラリ
-</li><li>一応、自分もコミッタ
-</li><li>それなりな速度でるらしいし、結構実用的かも？
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-71"><div class="container">
-                  <h2 id=""><a  href="https://github.com/etorreborre/specs2">https://github.com/etorreborre/specs2</a></h2><ul><li>みんな大好き(?) specs2
-</li><li>かなり有名なテストライブラリの一つ
-</li><li>昔からscalaz6を内部に取り込んで使ってた
-</li><li>salaz 7.0.0 finalでたあとは、直接依存
-</li><li>よって現状 scalaz 7.1.x と混ぜて使えないので注意
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-72"><div class="container">
-                  <h2 id=""><a  href="https://github.com/milessabin/shapeless">https://github.com/milessabin/shapeless</a></h2><ul><li>scalazに依存してるわけではない！
-</li><li>一部機能かぶってる(tagged type, Lens, HList など)
-</li><li>scalazよりある意味ヤバイ
-</li><li><a  href="https://github.com/typelevel/shapeless-contrib">https://github.com/typelevel/shapeless-contrib</a>
-</li><li>akka-streamやplay2のanormのテストに使われ始めるなど、実用されてる
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-73"><div class="container">
-                  <h2 id=""><a  href="https://github.com/non/spire">https://github.com/non/spire</a></h2><ul><li>scalazに依存してるわけではない！
-</li><li>これも一部機能かぶってる(Monoidなど)
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-74"><div class="container">
-                  <h2 id=""><a  href="https://github.com/runarorama/scala-machines">https://github.com/runarorama/scala-machines</a></h2><ul><li>scalaz-streamと似たなにか
-</li><li>オワコンなのか、メンテされるのか謎
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-75"><div class="container">
-                  <h2 id=""><a  href="https://github.com/scalaz/scalaz-geo">https://github.com/scalaz/scalaz-geo</a></h2><ul><li>一度削除されたが、別リポジトリで復活した
-</li><li>地理関係のなにか
-</li><li>あまり使ってる人多くないと思う
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-76"><div class="container">
-                  <h2 id=""><a  href="https://github.com/arjanblokzijl/scala-conduits">https://github.com/arjanblokzijl/scala-conduits</a></h2><ul><li>conduitsの移植
-</li><li>全然メンテされてない
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-77"><div class="container">
-                  <h2 id=""><a  href="https://github.com/http4s/http4s">https://github.com/http4s/http4s</a></h2><ul><li>scalaz-stream使ってる
-</li><li>Scalatra3(まだ出てない)は、これ使うようになるらしい
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-78"><div class="container">
-                  <h2 id=""><a  href="https://github.com/scalatra/scalatra">https://github.com/scalatra/scalatra</a></h2><ul><li>commandsのモジュールでscalazが使われている
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-79"><div class="container">
-                  <h2 id=""><a  href="https://github.com/pthariensflame/scala-pipes">https://github.com/pthariensflame/scala-pipes</a></h2><ul><li>Haskellにpipesというライブラリがあるのだが、それの移植
-</li><li>あまりメンテされてない
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-80"><div class="container">
-                  <h2 id=""><a  href="https://github.com/xuwei-k/play2scalaz">https://github.com/xuwei-k/play2scalaz</a></h2><ul><li>自作
-</li><li>play2とscalazの型クラスを相互変換するなど
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-81"><div class="container">
-                  <h2 id=""><a  href="https://github.com/xuwei-k/applybuilder">https://github.com/xuwei-k/applybuilder</a></h2><ul><li>自作その2
-</li><li>scalaz本体のApplyのsyntaxが12までしか使えなかったり、推論が残念なのを補うためのもの
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-82"><div class="container">
-                  <h2 id=""><a  href="https://github.com/xuwei-k/iarray">https://github.com/xuwei-k/iarray</a></h2><ul><li>自作その3
-</li><li>scalaz本体のImmutable Arrayが使いづらいので自作
-</li></ul>
-                </div>
-      </div><div class="content" id="slide-83"><div class="container">
-                  <p>おわり？質問タイム?
-</p>
-                </div>
-      </div>
-          </div>
-        </div>
-        
-      </body>
-    </html>
+
+---
+class: middle
+
+
+## effect
+
+- <https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/effect/src/main/scala/scalaz/effect>
+- coreのみに依存
+- IOモナド、STモナドなど
+
+---
+class: middle
+
+## concurrent
+
+- effectに依存
+- <https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/concurrent/src/main/scala/scalaz/concurrent>
+- 型がつくActor, Future, MVar, Chan など
+
+---
+class: middle
+
+## iterv
+
+- 古いIteratee
+- effectに依存
+- 350行程度のファイル1つのみ
+- <https://github.com/scalaz/scalaz/blob/v7.0.6/iterv/src/main/scala/scalaz/Iteratee.scala>
+- オワコン
+- 7.0.xまでしか存在せず、7.1.xには無い
+
+---
+class: middle
+
+## iteratee
+
+- effectに依存
+- <https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/iteratee/src/main/scala/scalaz/iteratee>
+- itervに比べれば新しいIteratee
+- だがこれももうすぐオワコン？
+- scalaz-streamに置き換えたいらしい
+
+---
+class: middle
+
+## iteratee
+
+- play2のiterateeよりジェネリックな感じ(play2はFuture固定)
+- それほど実用してるの見かけない
+- パフォーマンス出るのかどうかも謎?
+- メンテも、少し放置され気味
+
+---
+class: middle
+
+## scalacheck-binding
+
+- 他の全部のモジュールに依存
+- <http://scalacheck.org/>
+- 唯一、本体のリポジトリのモジュールでは、外部のライブラリであるScalacheckに依存
+- Scalazのテストは、[他のScalaライブラリにはない面白い仕組みがある](http://d.hatena.ne.jp/xuwei/20121222/1356203049)
+
+
+---
+class: middle
+
+## typelevel
+
+- coreのみに依存
+- <https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/typelevel/src/main/scala/scalaz/typelevel>
+- HList、型レベル自然数、など
+- オワコンになってしまった
+- shapelessと機能が被るから、という理由
+
+---
+class: middle
+
+## xml
+
+- <https://github.com/scalaz/scalaz/tree/v7.1.0-RC1/xml/src/main/scala/scalaz/xml>
+- coreのみに依存
+- 純粋関数型なスタイルでxmlをparseするためのもの
+- Haskellのポーティング
+- あまり使われてない？
+- パフォーマンスでるのかどうか謎
+- 将来的に本体のリポジトリから外す(geoのような扱いにする)ことが検討されてる
+
+---
+class: middle
+
+## 自分とScalaz
+
+- 2013年6月からコミッター
+- 2013年のコミット数1位
+- 2014年もコミット数だと今のところ1位
+- (細かい変更が多いので)変更行数だと、総合5位くらい？
+- 総合のコミット数2位
+- <https://github.com/scalaz/scalaz/graphs/contributors>
+
+---
+class: middle
+
+<blockquote class="twitter-tweet" data-conversation="none" data-lang="en"><p lang="ja" dir="ltr">「<a href="https://twitter.com/xuwei_k">@xuwei_k</a> は普通に読んでても気付かないような細かいバグに気付いてる。どうやっているんだ?」みたいなことを Scalaz の他のコミッタが nescala 後の懇親会で言ってた。あと「彼は nescala に来るべきだった」</p>&mdash; eugene yokota (@eed3si9n_ja) <a href="https://twitter.com/eed3si9n_ja/status/443248298926043136">March 11, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+---
+class: middle
+
+## Scalazコミッタになる方法
+
+- 無職になる
+- 暇なので、iPadにソースコード入れるなどして、ひたすらコードを隅々まで読む(現実逃避)
+- 細かいバグもしくは改善点見つかる
+- pull reqする
+- 繰り返し
+
+---
+class: middle
+
+
+## Scalazコミッタになる方法
+
+- そのうちコミット権限貰える
+- ✌('ω'✌ )三✌('ω')✌三( ✌'ω')✌
+
+
+---
+class: middle
+
+## なぜ使うべき？
+## いつ使うべきか？
+
+---
+class: middle
+
+## いつ使うべきか？
+
+- Scala標準ライブラリでは(関数型プログラミングするのに)物足りないと感じたとき
+- チーム開発で使うなら、ある程度メンバーがついてこれそうなとき
+
+---
+class: middle
+
+## 使わない方がいいか、必ずしも使う必要ないとき
+
+- Scalaの基本的な言語仕様自体や、標準ライブラリの使い方もわかってない場合
+- Scala標準ライブラリで事足りるかどうかもわかってないとき
+- Optionに少し便利メソッドを追加する程度の使い方
+ - <span style="font-size: 70%;">今後それ以外の部分も使っていく予定ならともかく、本当にそれだけのために使うなら微妙</span>
+
+---
+class: middle
+
+## 初心者におおすすめなところ
+
+- [Either](https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/core/src/main/scala/scalaz/Either.scala)
+- [Validation](https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/core/src/main/scala/scalaz/Validation.scala) (@pab_tech さんがあとで発表してくれるはず)
+- (Scala標準ライブラリの) [Futureのインスタンス](https://github.com/scalaz/scalaz/blob/v7.1.0-RC1/core/src/main/scala/scalaz/std/Future.scala)
+- Monoid
+- NonEmptyList
+- Foldable
+
+---
+class: middle
+
+## 勉強方法
+
+- コード読もう
+- Haskell勉強しよう？
+- 圏論はあったら役に立つかもしれないけど、必須じゃない(自分も圏論わかりません)
+- [Functional Programming in Scala](http://www.manning.com/bjarnason/) Scalazの本ではないが役に立つ
+- [独習Scalaz](http://eed3si9n.com/learning-scalaz/ja/) 網羅してるのはごく一部だったり、説明や例が簡素なことが多いので注意
+
+
+---
+class: middle
+
+
+## 主要なコミッタの紹介
+
+
+---
+class: middle
+
+## @retronym
+
+- <https://github.com/retronym>
+- コミット数1位
+- Scalaのコミッターでもある
+- Scalaz7のプロトタイプを、ほぼ一人で作った
+- IntelliJ IDEAのScalaのプラグインもコミッタ
+
+---
+class: middle
+
+
+## @tonymorris
+
+- <https://github.com/tonymorris>
+- コミット数3位
+- Scalazの原作者
+- specs2作者の同僚？
+
+
+---
+class: middle
+
+
+## @larsrh
+
+- <https://github.com/larsrh>
+- 最近のリリース関連全部やってる
+- wikiのリリースノートもほぼ全部書いてる
+- バイナリ互換の方針とか、開発方針とか中心になってすすめてくれてる
+
+---
+class: middle
+
+
+## @S11001001
+
+- <https://github.com/S11001001>
+- @ekmettの同僚(金融系？)
+- Bazaarというマイナーな(?)バージョン管理システムが好きらしい
+- <https://launchpad.net/~scompall>
+
+
+---
+class: middle
+
+
+## @runarorama
+
+- <https://github.com/runarorama>
+- @ekmettの元同僚
+- Freeモナド詳しい
+- Functional Programming in Scalaという本書いてる
+- <http://www.manning.com/bjarnason/>
+
+
+---
+class: middle
+
+
+## @pchiusano
+- <https://github.com/pchiusano>
+- scalaz-stream作者
+- Functional Programming in Scalaという本書いてる
+- <http://www.manning.com/bjarnason/>
+
+
+---
+class: middle
+
+
+## @puffnfresh
+- <https://github.com/puffnfresh>
+- RoyというAltJSの作者
+- pure scriptのコミッター？
+
+
+---
+class: middle
+
+
+## @markhibberd
+- <https://github.com/markhibberd>
+- argonautのコミット数1位
+- tonymorrisさんの同僚
+
+---
+class: middle
+
+
+## @pthariensflame
+- pipeというHasekellのライブラリをScalaに移植してた(メンテされてない)
+- コミット数は別に多くない
+- [agdaのコード投げてきた人](https://github.com/scalaz/scalaz/issues/601#issuecomment-30088659)
+
+
+---
+class: middle
+
+
+## 関連ライブラリ紹介
+
+- [githubをScalazで検索した結果](https://github.com/search?q=%22org.scalaz%22+%25%25+%22scalaz-core%22+7.0&type=Code&ref=searchresults) 1000件以上？
+
+
+---
+class: middle
+
+## <https://github.com/scodec/scodec>
+
+- シリアライズ、デシリアライズ
+- scalaz-streamで使われている
+
+---
+class: middle
+
+## <https://github.com/scalaz/scalaz-stream>
+
+- scalazコミッタの人が作ってる
+- iterateeなどの代替となるはずもの
+- 開発活発だし、パフォーマンス重視してて実用的？
+
+
+---
+class: middle
+
+## <https://github.com/julien-truffaut/Monocle>
+
+- 別のLens実装
+- Scalaz本体にもLensあるのに・・・
+- 最近argonautがこれ使うようになった
+
+---
+class: middle
+
+## <https://github.com/puffnfresh/scala-lenz>
+
+- 別のLens実装その2
+- みんななぜそんなにLensライブラリ作るのか
+
+
+---
+class: middle
+
+## <https://github.com/argonaut-io/argonaut>
+
+- Jsonライブラリ
+- 一応、自分もコミッタ
+- それなりな速度でるらしいし、結構実用的かも？
+
+
+---
+class: middle
+
+## <https://github.com/etorreborre/specs2>
+
+- みんな大好き(?) specs2
+- かなり有名なテストライブラリの一つ
+- 昔からscalaz6を内部に取り込んで使ってた
+- salaz 7.0.0 finalでたあとは、直接依存
+- よって現状 scalaz 7.1.x と混ぜて使えないので注意
+
+---
+class: middle
+
+## <https://github.com/milessabin/shapeless>
+
+- scalazに依存してるわけではない！
+- 一部機能かぶってる(tagged type, Lens, HList など)
+- scalazよりある意味ヤバイ
+- <https://github.com/typelevel/shapeless-contrib>
+- akka-streamやplay2のanormのテストに使われ始めるなど、実用されてる
+
+---
+class: middle
+
+## <https://github.com/non/spire>
+
+- scalazに依存してるわけではない！
+- これも一部機能かぶってる(Monoidなど)
+
+---
+class: middle
+
+## <https://github.com/runarorama/scala-machines>
+
+- scalaz-streamと似たなにか
+- オワコンなのか、メンテされるのか謎
+
+---
+class: middle
+
+## <https://github.com/scalaz/scalaz-geo>
+
+- 一度削除されたが、別リポジトリで復活した
+- 地理関係のなにか
+- あまり使ってる人多くないと思う
+
+---
+class: middle
+
+## <https://github.com/arjanblokzijl/scala-conduits>
+
+- conduitsの移植
+- 全然メンテされてない
+
+---
+class: middle
+
+## <https://github.com/http4s/http4s>
+
+- scalaz-stream使ってる
+- Scalatra3(まだ出てない)は、これ使うようになるらしい
+
+---
+class: middle
+
+## <https://github.com/scalatra/scalatra>
+
+- commandsのモジュールでscalazが使われている
+
+---
+class: middle
+
+## <https://github.com/pthariensflame/scala-pipes>
+
+- Haskellにpipesというライブラリがあるのだが、それの移植
+- あまりメンテされてない
+
+---
+class: middle
+
+## <https://github.com/xuwei-k/play2scalaz>
+
+- 自作
+- play2とscalazの型クラスを相互変換するなど
+
+---
+class: middle
+
+## <https://github.com/xuwei-k/applybuilder>
+
+- 自作その2
+- scalaz本体のApplyのsyntaxが12までしか使えなかったり、推論が残念なのを補うためのもの
+
+---
+class: middle
+
+## <https://github.com/xuwei-k/iarray>
+
+- 自作その3
+- scalaz本体のImmutable Arrayが使いづらいので自作
+
+---
+class: middle, center
+
+### おわり？質問タイム?
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-0.12.min.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
