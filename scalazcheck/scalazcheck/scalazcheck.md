@@ -12,7 +12,7 @@
 
 - twitter [@xuwei_k](https://twitter.com/xuwei_k)
 - github [@xuwei-k](https://github.com/xuwei-k)
-- blog <http://d.hatena.ne.jp/xuwei/>
+- blog <http://xuwei-k.hatenablog.com/>
 
 
 !SLIDE
