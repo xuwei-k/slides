@@ -1,0 +1,363 @@
+<DOCTYPE html>
+<html>
+  <head>
+    <title>kafkaでpublishのロジックを独自に作ってデータロスを無くす話</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3 {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# publishのロジックを独自に作ってデータロスを無くす話
+
+[2017/07/06 Kafka Meetup #3](https://kafka-apache-jp.connpass.com/event/58619)
+
+![CC-BY-NC-SA](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)
+
+---
+class: middle
+
+<img src="xuwei.gif" alt="icon" width="100" height="100" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog <http://xuwei-k.hatenablog.com>
+
+---
+class: middle, center
+
+先月(2017年6月)
+
+## Kafka 0.11 リリース🎉
+
+---
+class: middle, center
+
+## Exactly Once !?
+
+[Exactly-once Semantics are Possible: Here’s How Kafka Does it](https://www.confluent.io/blog/exactly-once-semantics-are-possible-heres-how-apache-kafka-does-it/)
+
+---
+class: middle, center
+
+ひたすら<br/>
+
+<span style="font-size: 150%;">At Least Once</span><br/>
+
+を死守するためにやったことの話をします・・・
+
+---
+class: middle, center
+
+### 1年半前
+
+<span style="font-size: 50%;"><http://xuwei-k.github.io/slides/kafka-matsuri></span>
+
+<iframe src="http://xuwei-k.github.io/slides/kafka-matsuri/#1" height="50%;" width="50%;">
+
+---
+class: middle, center
+
+### 1年ちょっと前
+
+<iframe src="http://www.slideshare.net/slideshow/embed_code/key/GSQqdBuGyGlRaa?startSlide=33" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"><a href="http://www.slideshare.net/matsu_chara/kafka-part2" title="Kafkaを使った マイクロサービス基盤 part2 ＋運用して起きたトラブル集" target="_blank">Kafkaを使った マイクロサービス基盤 part2 ＋運用して起きたトラブル集</a></div>
+
+---
+class: middle
+
+### スライド一枚で説明
+
+- イベントハブとしてkafka使っている
+- Java/Scala クライアントをhttpなどで隠蔽して社内他チームに提供(直接kafka触らせない)
+- RAIDコントローラーエラー事件(**中途半端な**死に方して、publish失敗する)
+- brokerのversionアップ時にもpublish微妙に失敗する
+
+---
+class: middle
+
+### 思いついた and/or 提案してもらった対策
+
+- RAID やめる
+- 1つのTopicあたりPartitionを2つ以上作って独自に頑張る<br/><span style="font-size: 50%;">(ある意味そういうことしてる、というのを以前のkafka meetupで聞いた気がする)</span>
+
+---
+class: middle, center
+
+## "Partition 2つ以上作って独自に頑張る" 案で勝利
+
+<img src="win.gif" height="160%;" width-"160%;">
+
+---
+class: middle
+
+
+![正常時](kafka-01.png)
+
+---
+class: middle
+
+![異常時](kafka-02.png)
+
+---
+class: middle, center
+
+基本的な考え方
+
+## partitionを冗長度を上げるため(だけ)に使う
+
+---
+class: middle
+
+## やったこと
+
+1. borkerを必ず6台以上用意
+2. 1つのtopicにつき必ず2つ以上partitionを用意
+3. topic/parition生成時の割合のロジックを自作
+4. publish部分を独自に作る
+
+---
+class: middle, center
+
+borkerを必ず6台以上用意
+
+## replica 3 ✕ partition 2<br/>= 6台必要
+
+
+---
+class: middle, center
+
+## 1つのtopicにつき必ず2つ以上partitionを用意
+
+1つのpartitionでは、調子悪くなったときの欠損や遅延を防げなかったので、2つ用意
+
+---
+class: middle, center
+
+## kafkaのデフォルトの割当ロジックがイケてない !
+
+これをやり始めたのは0.9系だが<br/>0.11.0.0でも変わってなさそう
+
+<span style="font-size: 50%;">
+<https://github.com/apache/kafka/blob/0.11.0.0/core/src/main/scala/kafka/admin/AdminUtils.scala#L137>
+<span>
+
+---
+class: middle
+
+以下のようなコード(Scala)で確かめられる
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 80%;">scalaVersion := "2.12.2"
+
+libraryDependencies += "org.apache.kafka" %% "kafka" % "0.11.0.0"
+</code>
+</pre>
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 90%;">import kafka.admin._
+
+List.fill(100000)(
+  AdminUtils.assignReplicasToBrokers(
+    brokerMetadatas = List(
+      100, 200, 300, 400, 500, 600 // 適当なborker名
+    ).map(kafka.admin.BrokerMetadata(_, None)),
+    nPartitions = 2,
+    replicationFactor = 3
+  )
+).distinct.map(
+  _.values.foldLeft(List[Int]())(_ ++ _).toSet.toList.sorted
+).foreach(println)
+</code>
+</pre>
+
+---
+class: middle
+
+4台か5台にしか分散しない
+<span style="font-size: 50%;">(brokerが6台より多くても分散しない!?)</span>
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 70%;">
+List(100, 200, 300, 400)
+List(100, 400, 500, 600)
+List(200, 300, 400, 500, 600)
+List(100, 200, 500, 600)
+List(100, 200, 400, 500, 600)
+List(100, 200, 300, 600)
+List(300, 400, 500, 600)
+List(100, 200, 300, 400, 600)
+List(100, 200, 300, 400, 600)
+List(100, 200, 500, 600)
+List(100, 200, 400, 500, 600)
+List(300, 400, 500, 600)
+List(100, 200, 300, 400, 500)
+List(100, 200, 300, 400, 500)
+List(100, 400, 500, 600)
+List(200, 300, 400, 500, 600)
+List(100, 300, 400, 500, 600)
+List(100, 400, 500, 600)
+List(100, 200, 300, 400)
+List(200, 300, 400, 500)
+List(200, 300, 400, 500)
+List(100, 200, 300, 500, 600)
+List(100, 200, 300, 500, 600)
+List(100, 200, 300, 600)
+List(100, 300, 400, 500, 600)
+List(100, 200, 300, 600)
+List(100, 200, 500, 600)
+List(300, 400, 500, 600)
+List(100, 200, 300, 400)
+List(200, 300, 400, 500)
+</code>
+</pre>
+
+---
+class: middle
+
+![割当がイケてない](kafka-03.png)
+
+---
+class: middle
+
+- topic名のhash値使って、ランダムにはならないようにしつつ、いい感じに分散されるように頑張った
+- [scalacheck](http://scalacheck.org/)というproperty based testingライブラリでテスト書いて重点的にチェックした
+
+---
+class: middle
+
+### 具体的な実装の話
+
+- [AdminUtils.addPartitions](https://github.com/apache/kafka/blob/0.11.0.0/core/src/main/scala/kafka/admin/AdminUtils.scala#L276) を使わない<br/><span style="font-size: 60%;">(必要な部分だけ残しつつ改造)</span>
+- 独自に割当を作った後に AdminUtils の<br/><span style="font-size: 80%;">[createOrUpdateTopicPartitionAssignmentPathInZK](https://github.com/apache/kafka/blob/0.11.0.0/core/src/main/scala/kafka/admin/AdminUtils.scala#L483)</span><br/>を呼ぶ
+
+
+---
+class: middle
+
+## 独自のpublishロジック
+
+2つのpartitionに対して
+
+- 普段はラウンドロビン
+- 片方が調子悪いと判断したら調子良いpartitionだけに送る
+- 回復したか？を判断して、良きタイミングでラウンドロビンに戻す
+- 全部調子悪そうだったら、(調子良いpartition見つかるまで)逆にラウンドロビン
+
+---
+class: middle
+
+## 公式クライアントがつらい
+
+- 公式clientのリトライ機能は、(場合によっては)失敗するとわかっているところに何度も再送してしまって意味がない!?ので、使わない!!!
+- リーダーが存在してるborkerが変更されているエラーが返ってきてるのに、またそこにpublishしようとする？？？など
+- タイムアウトもちゃんと設定しないと、届く可能性低いのに無駄に待つことになる
+- <span style="font-size: 50%;">(最新版で改善されているのかどうかは未確認)</span>
+
+
+---
+class: middle
+
+- kafkaにはpartition選択ロジックをカスタマイズするための専用クラスが用意されてる
+- <span style="font-size: 40%;"><https://github.com/apache/kafka/blob/0.11.0.0/clients/src/main/java/org/apache/kafka/clients/producer/Partitioner.java></span>
+- しかし<br/><span style="font-size: 140%;">使わなかった/使えなかった</span>
+
+---
+class: middle, center
+
+結論としては、partitioner使うと
+
+## 失敗したpartitionの<br/>状態管理が厳しい
+
+---
+class: middle
+
+もしpartitioner使いつつ、状態管理するなら?
+
+- グローバル変数経由でやりとり？<br/><span style="font-size: 60%;">テストやりづらくなる、辛い</span>
+- リフレクション経由で無理やりどうにかする？<br/><span style="font-size: 60%;">それさえ出来るのか不明、出来たとしても辛いのでやりたくない</span>
+
+---
+class: middle
+
+- producerの外で独自に状態管理して、指定する場合はsendメソッドの引数でpartitionを明示
+- <span style="font-size: 40%;"><https://github.com/apache/kafka/blob/0.11.0.0/clients/src/main/java/org/apache/kafka/clients/producer/Producer.java#L76></span>
+
+
+---
+class: middle
+
+- 想定通り、これによって(2台以上同時に死なない限り)publish失敗がなくなった
+- broker側のversion上げる(broker再起動する)ときも、これがないとpublish微妙に失敗すると思うのですが、みなさんどうしてるのか？
+- replicaやackの設定が違う？
+
+---
+class: middle, center
+
+## おわり
+
+質問タイムなど
+
+    </textarea>
+    <script src="//gnab.github.io/remark/downloads/remark-0.14.0.min.js" type="text/javascript"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
