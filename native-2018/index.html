@@ -60,6 +60,10 @@ class: center, middle
 
 # scala-native
 
+<https://github.com/scala-native/scala-native>
+
+ScalaMatsuri 2018
+
 ---
 class: middle
 
@@ -69,11 +73,29 @@ class: middle
 - github [@xuwei-k](https://github.com/xuwei-k)
 - blog <https://xuwei-k.hatenablog.com>
 
+---
+class: middle
+
+- [Scala忍者](https://xuwei-k.hatenablog.com/entry/20170531/1496180871)
+- [未来から送られてきた関数型プログラミングロボット](https://xuwei-k.hatenablog.com/entry/20150919/1442669746)
 
 ---
-class: middle, center
+class: middle
+
+## [2017年のOSS活動](https://xuwei-k.hatenablog.com/entry/2017/12/31/105336)
+
+- 出したpull request 825
+- mergeされたpull request 750
+- 4520 contributions
+
+---
+class: middle
 
 # 前回のScalaMatsuriのときに0.1リリース
+
+- 2017年はじめ頃
+- 作者発表してた
+- 0.1がリリースされてることを聞いて、その場でscalazの対応始めた
 
 ---
 class: middle, center
@@ -81,11 +103,27 @@ class: middle, center
 # 現在の最新安定版は0.3.6
 
 ---
-class: middle, center
+class: middle
 
 - コンパイル自体はJVMが必要
 - LLVMによって実行時にはバイナリが出力される(JVMなくても動く)
 - JVMより起動時間が速くて便利(?)
+
+---
+class: middle
+
+- JavaのclassはScalaで再実装
+- すでにscala-jsが実装済みで再利用可能なものはコピペしてある
+- openjdkとはライセンス的に相容れないので、そのまま翻訳するとまずい！(辛い)
+
+---
+class: middle
+
+# 辛いところ
+- "ぬるぽ" が <span style="font-size: 150%;">ない</span> 
+- そのまま落ちる！
+- "ぬるぽ" は偉大！
+
 
 ---
 class: middle, center
@@ -95,23 +133,23 @@ class: middle, center
 <https://mvnrepository.com/artifact/org.scala-native/scalalib/usages>
 
 ---
-class: middle, center
+class: middle
 
-# テストライブラリ
+## テストライブラリ
 - scalatest
 - utest
 - scalaprops
 
 ---
-class: middle, center
+class: middle
 
-# コマンドラインパーサー
+## コマンドラインパーサー
 
 - scopt
 - case-app
 
 ---
-class: middle, center
+class: middle
 
 - scalaz 関数型プログラミングライブラリ
 - argonaut jsonパーサー、シリアライザ
@@ -123,17 +161,37 @@ class: middle, center
 - scalapb-argonaut protobuf <=> jsonの変換ライブラリ
 
 ---
-class: middle, center
+class: middle
+
+## 他にも色々あります
+
+---
+class: middle
 
 # まだサポートしてないこと
 
-- windows
+- [windows](https://github.com/scala-native/scala-native/issues/113)
 - マルチスレッド
 - デバッガー
 
-## おわり
+---
+class: middle, center
 
-質問タイムなど
+## 自分の今までのscala-native関連blog
+
+<https://xuwei-k.hatenablog.com/search?q=scala-native>
+
+---
+class: middle, center
+
+## scalazのscala-native対応
+
+<https://github.com/scalaz/scalaz/pull/1322>
+
+---
+class: middle, center
+
+ここからライブコーディングや質問会やGitHub見ながらの説明
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-0.14.0.min.js" type="text/javascript"></script>
