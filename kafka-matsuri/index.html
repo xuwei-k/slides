@@ -4,13 +4,13 @@
     <title>Apache Kafkaを使ったマイクロサービス基盤</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <script async src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <style type="text/css">
       @import url(//fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
       @import url(//fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
-      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
       body {
         font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
@@ -65,7 +65,7 @@ class: center, middle
 
 # Apache Kafka<br/>を使った<br/>マイクロサービス基盤
 
-[2016/01/31 Scala Matsuri](http://scalamatsuri.org/)
+[2016/01/31 Scala Matsuri](https://scalamatsuri.org/)
 
 ![CC-BY-NC-SA](https://licensebuttons.net/l/by-nc-sa/3.0/88x31.png)
 
@@ -83,7 +83,7 @@ class: middle
 
 - twitter [@xuwei_k](https://twitter.com/xuwei_k)
 - github [@xuwei-k](https://github.com/xuwei-k)
-- blog <http://xuwei-k.hatenablog.com>
+- blog <https://xuwei-k.hatenablog.com>
 
 ---
 class: middle
@@ -114,10 +114,10 @@ class: center, middle
 
 ## Kafkaとは
 
-![kafka](http://kafka.apache.org/images/kafka_logo.png)
+![kafka](https://kafka.apache.org/images/logo.png)
 
 https://github.com/apache/kafka
-http://kafka.apache.org/
+https://kafka.apache.org/
 
 
 ---
@@ -180,7 +180,7 @@ class: middle, center
 
 いっぱいはてブついてて多分わかりやすい(?)ので<br/>あとは以下の記事か、公式ドキュメントを
 
-## [Apache Kafkaに入門した](http://deeeet.com/writing/2015/09/01/apache-kafka/)
+## [Apache Kafkaに入門した](https://deeeet.com/writing/2015/09/01/apache-kafka/)
 
 ---
 class: middle
@@ -378,10 +378,10 @@ class: middle
 ---
 class: middle
 
-## [設定について](http://kafka.apache.org/documentation.html#configuration)
+## [設定について](https://kafka.apache.org/documentation.html#configuration)
 
 - 結構多くの設定項目がある
-- [デフォルトだとat least onceにならない](http://permalink.gmane.org/gmane.comp.apache.kafka.user/8519)
+- [デフォルトだとat least onceにならない](https://permalink.gmane.org/gmane.comp.apache.kafka.user/8519)
 - 接続情報などの、当たり前に変える設定を除いて紹介
 - まだまだ設定を調整しての試験をやりきれていない
 - 0.8のときに調査検証したのが主なので、0.9になってもっと色々あるかも？
@@ -468,8 +468,8 @@ class: middle
 
 ## 依存関係図
 
-- [依存関係図 0.8.2.1](http://xuwei-k.github.io/kafka-0.8.2.1-dependency-graph.svg)
-- [依存関係図 0.9.0.0](http://xuwei-k.github.io/kafka-0.9.0.0-dependency-graph.svg)
+- [依存関係図 0.8.2.1](https://xuwei-k.github.io/kafka-0.8.2.1-dependency-graph.svg)
+- [依存関係図 0.9.0.0](https://xuwei-k.github.io/kafka-0.9.0.0-dependency-graph.svg)
 
 ---
 class: middle
@@ -603,7 +603,7 @@ class: middle
 class: middle
 
 - LinkedinやConfluentのBlogをちゃんと読むべき
- - 例 [How to choose the number of topics/partitions in a Kafka cluster?](http://www.confluent.io/blog/how-to-choose-the-number-of-topicspartitions-in-a-kafka-cluster/)
+ - 例 [How to choose the number of topics/partitions in a Kafka cluster?](https://www.confluent.io/blog/how-to-choose-the-number-of-topicspartitions-in-a-kafka-cluster/)
 - ConfluentはLinkedinでKafka作ってた人達が独立して立ち上げた会社
 - 大半のコミッターがConfluentにいる
 - Sparkにおける[Databricks](https://databricks.com/)のような
@@ -632,7 +632,7 @@ class: middle
 ## GCチューニングに役立つ情報
 
 - <https://github.com/chewiebug/GCViewer>
-- <http://docs.oracle.com/javase/jp/8/docs/technotes/guides/vm/gctuning/toc.html>
+- <https://docs.oracle.com/javase/jp/8/docs/technotes/guides/vm/gctuning/toc.html>
 
 ---
 class: middle
@@ -673,7 +673,7 @@ class: middle
 
 ## GCとの戦い
 
-- 負荷試験環境で[jmap](http://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html)とか実行できるようにJDKも入れておく?
+- 負荷試験環境で[jmap](https://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html)とか実行できるようにJDKも入れておく?
 - とにかくFull GCを起こさずマイナーGCのみになるように頑張る?
 - Full GC発生諦めて、別の方向性の対策
  - 今のところそんなものはなし
@@ -761,8 +761,8 @@ class: middle
     </textarea>
     <script src="//remarkjs.com/downloads/remark-0.12.min.js" type="text/javascript"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://remarkjs.com/downloads/remark-0.12.min.js" type="text/javascript"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://remarkjs.com/downloads/remark-0.12.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript">
       var slideshow = remark.create({
         highlightStyle: "railscasts"
