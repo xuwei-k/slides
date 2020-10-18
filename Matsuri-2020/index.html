@@ -1,0 +1,446 @@
+<DOCTYPE html>
+<html>
+  <head>
+    <title>ScalafixやWartremoverの独自ルールを仕事で活用する</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3 {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# ScalafixやWartremoverの独自ルールを仕事で活用する
+
+ScalaMatsuri 2020
+アンカンファレンス
+
+---
+class: middle
+
+<img src="image/xuwei.gif" alt="icon" width="200" height="200" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog <https://xuwei-k.hatenablog.com>
+
+---
+class: middle
+
+<img src="image/3935.png" />
+
+---
+class: middle
+
+- 毎回強制にしてもいいが、厳しすぎてダルい、他のpull reqとコンフリクトしたら辛いので、現在は週一回全自動削除pull reqが来る運用にしている
+
+<https://scalacenter.github.io/scalafix/docs/rules/RemoveUnused.html>
+
+---
+class: middle
+
+<img src="image/5520-1.png" />
+
+---
+class: middle
+
+2番目の要素だけ使うならevalでいいのに、なぜかapplyが大量に使われていたので
+
+<img src="image/5520-2.png" />
+
+- <https://github.com/scalaz/scalaz/blob/v7.2.30/core/src/main/scala/scalaz/StateT.scala#L8-L21>
+
+---
+class: middle
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 60%;">
+import scalafix.v1.{Patch, SemanticDocument, SemanticRule}
+import scala.meta._
+import scalafix.v1._
+
+class ReplaceScalazState extends SemanticRule("ReplaceScalazState") {
+
+  override def fix(implicit doc: SemanticDocument): Patch = {
+    doc.tree.collect {
+      case t: Term.Apply
+          if t.fun.symbol.displayName == "apply" && t.symbol.owner.value == "scalaz/IndexedStateT#" && t.args.size == 1 =>
+        val Term.Select(_, method) = t.fun
+        Patch.replaceTree(method, "eval")
+      case t: Defn.Val if t.pats.size == 1 && t.rhs.symbol.owner.value == "scalaz/IndexedStateT#" =>
+        t.pats match {
+          case List(x @ Pat.Tuple(List(Pat.Wildcard(), p))) =>
+            Patch.replaceTree(x, p.toString)
+          case _ =>
+            Patch.empty
+        }
+    }.asPatch
+  }
+}
+</code>
+</pre>
+
+---
+class: middle
+
+どちらでもいいけど、混在してるの微妙なので揃えたかった
+
+<img src="image/5677.png" />
+
+---
+class: middle
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 60%;">
+import scala.meta._
+import scalafix.v1._
+
+class ScalazEitherInfix extends SemanticRule("ScalazEitherInfix") {
+  override def fix(implicit doc: SemanticDocument): Patch = {
+    doc.tree.collect {
+      case x: Type.Apply if """scalaz/`\/`#""" == x.tpe.symbol.value && x.args.size == 2 =>
+        Patch.replaceTree(x, s"""${x.args(0)} \\/ ${x.args(1)}""")
+    }.asPatch
+  }
+}
+</code>
+</pre>
+
+---
+class: middle
+
+<img src="image/5934.png" />
+
+---
+class: middle
+
+<pre>
+<code class="scala hljs remark-code" style="font-size: 60%;">
+import scalafix.v1._
+import scala.meta.Pat.{ Extract, Wildcard }
+import scala.meta.Term.Select
+import scala.meta._
+
+class NonFatalLog extends SemanticRule("NonFatalLog") {
+  override def fix(implicit doc: SemanticDocument): Patch = {
+    doc.tree.collect {
+      case c @ Case(Extract(x, List(Wildcard())), None, _) =>
+        // ↑ try catchのcase部分かつWildcardで潰してるやつ取り出し
+        val patch1 = x match {
+          case Select(_, Term.Name("NonFatal")) =>
+            // 歴史的都合で `case scala.util.control.NonFatal(_)` となってる部分あったからついでに書き換え
+            Option(Patch.addGlobalImport(importer"scala.util.control.NonFatal"))
+          case Term.Name("NonFatal") =>
+            Option(Patch.empty)
+          case _ =>
+            None
+        }
+        patch1.map { p =>
+          List(
+            p,
+            Patch.addGlobalImport(importer"独自のLoggerのimport追加"),
+            Patch.replaceTree(
+              c.pat,
+              s"NonFatal(e)" // 変数bindするように変更
+            ),
+            Patch.replaceTree(
+              c.body,
+              s"""変数 `e` と、独自のLogger使ってログ出す処理。 ${c.body} はそのまま後ろに残す """
+            )
+          ).asPatch
+        }.asPatch
+    }.asPatch
+  }
+}
+</code>
+</pre>
+
+---
+class: middle
+
+<img src="image/6037-1.png" />
+
+---
+class: middle
+
+使い捨てなので完全に波動拳な雑コードで草
+
+<img src="image/6037-2.png" height="600" />
+
+---
+class: middle
+
+<img src="image/6210-1.png" />
+
+---
+class: middle
+
+<img src="image/6210-2.png" />
+
+---
+class: middle
+
+<img src="image/6357-1.png" />
+
+---
+class: middle
+
+- <https://github.com/liancheng/scalafix-organize-imports>
+- それぞれがIDEの設定バラバラだと、特に変える必要ないのに毎回import部分が変更されてしまう
+- 差分が意味なく増えるだけならまだしも、意味のないコンフリクトにつながる
+- このorganize-importとscalafmt組み合わせることにより、import文をほぼ強制的に一意にする
+- 導入後、コンフリクトする確率が実際にたぶん減った、はず
+
+
+---
+class: middle
+
+<img src="image/6357-2.png" />
+
+---
+class: middle
+
+<img src="image/6406-1.png" />
+
+---
+class: middle
+
+<img src="image/6406-2.png" />
+
+---
+class: middle
+
+<img src="image/6414.png" />
+
+---
+class: middle
+
+<img src="image/6442.png" />
+
+---
+class: middle
+
+<img src="image/6538.png" />
+
+---
+class: middle
+
+これもある意味仕事でやる必要があったから
+
+- [play-wsのstandalone版に自動書き換えするscalafixのruleを書いた](https://xuwei-k.hatenablog.com/entry/2020/03/25/112953)
+- https://github.com/xuwei-k/play-ws-scalafix
+
+---
+class: middle
+
+scalafix本体への貢献
+
+[improve RemoveUnused rule](https://github.com/scalacenter/scalafix/pull/1114)
+
+---
+class: middle
+
+`Throwable` から `NonFatal` に書き換え
+
+https://gist.github.com/xuwei-k/3fa03b1c9f1f55bbd830c35f04e5e19a
+
+作れたから作ったが、これは単にgrepやsedでいけるような・・・
+
+---
+class: middle
+
+# ここから独自Wartremoverの話
+
+---
+class: middle
+
+<img src="image/wart-1.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-2.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-3.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-4.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-5.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-6.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-7.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-8.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-9.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-10.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-11.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-12.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-13.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-14.png" />
+
+---
+class: middle
+
+- https://stackoverflow.com/a/26585903
+- https://github.com/slick/slick/blob/eecc74fa1ba8e477e6fbd991b5b9bbb87b8f3918/slick/src/main/scala/slick/ast/Node.scala#L170-L173
+
+
+---
+class: middle
+
+<img src="image/wart-15.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-16.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-17.png" />
+
+
+
+---
+class: middle
+
+<img src="image/wart-18.png" />
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-0.15.0.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      const slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
