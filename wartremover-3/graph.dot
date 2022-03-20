@@ -1,0 +1,27 @@
+digraph "wartremover" {
+  graph[
+    rankdir="LR"
+  ]
+  node [
+    shape="record"
+    style="filled"
+  ]
+  edge [
+    arrowtail="none"
+  ]
+
+  "compiler"[label=<Scala 3<BR/>compiler>]
+  "plugin"[label=<WartRemover<BR/>Compiler<BR/>Plugin>]
+  "test"[label=<scalatest<BR/>の普通のtest>]
+  "macro"[label=<Test Macro>]
+  "traverser"[label=<Traverser<BR/>Universe>]
+  "rules-1"[label=<組み込みWart>]
+  "rules-2"[label=<独自Wart>]
+
+  "compiler" -> "plugin"
+  "plugin" -> "traverser"
+  "test" -> "macro"
+  "macro" -> "traverser"
+  "traverser" -> "rules-1"
+  "traverser" -> "rules-2"
+}
