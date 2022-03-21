@@ -259,7 +259,7 @@ class: middle, center
 ## [単純なcompiler plugin<br/>とは別の専用macroがある！](https://github.com/wartremover/wartremover/blob/d3be1992dabab95a4c6e9fe5ce897b0f02feb89d/core/src/main/scala-2/org/wartremover/test/WartTestTraverser.scala)
 
 ---
-class: middle
+class: middle, center
 
 <embed src="graph.svg" type="image/svg+xml" />
 
@@ -653,7 +653,7 @@ class: middle
 ---
 class: middle
 
-Exprのmatch楽しい！便利！最高！
+## Exprのmatch楽しい！<br/>便利！最高！
 
 
 ```scala
@@ -682,11 +682,11 @@ t.asExpr match {
 ```
 
 ---
-class: middle
+class: middle, center
 
 報告したbugその1
 
-<https://github.com/lampepfl/dotty/issues/14708>
+## [Scala 3 issue 14708](https://github.com/lampepfl/dotty/issues/14708)
 
 ---
 class: middle
@@ -707,7 +707,7 @@ case '{
 ---
 class: middle
 
-両方の変数を参照出来るけど何これ？ 🤔
+### 両方の変数を参照出来るけど何これ？ 🤔
 
 ```scala
 import scala.quoted.*
@@ -728,7 +728,7 @@ class: middle
 
 報告したbugその2
 
-<https://github.com/lampepfl/dotty/issues/14696>
+## [Scala 3 issue 14696](https://github.com/lampepfl/dotty/issues/14696)
 
 ```java
 java.lang.VerifyError: Bad local variable type
@@ -867,6 +867,7 @@ class: middle
 - 6〜7割のテストがそのまま通った？
 - 残りが色々辛い
 - そもそもScala 3で原理的に解決されてるもの
+  - 明らかに違う型を `==` で比較するとエラー
   - ProductやSerializableに推論されなくなった
   - implicitに型書くのが必須化
   - implicit conversion禁止
@@ -956,7 +957,7 @@ class: middle, center
 ---
 class: middle, center
 
-おわり
+## おわり
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-0.15.0.min.js" type="text/javascript"></script>
