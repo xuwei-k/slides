@@ -1,0 +1,224 @@
+<DOCTYPE html>
+<html>
+  <head>
+    <title>Scalafix and Wartremover 2023</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3, h4 {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .s {
+        font-size: 85%;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Scalafix<br /><span style="font-size: 60%;">and</span><br />Wartremover<br /><span style="font-size: 60%;">2023</span>
+
+[ScalaMatsuri 2023](https://scalamatsuri.org)
+
+2023-04-16
+
+---
+class: middle
+
+<img src="image/xuwei.gif" alt="icon" style="zoom: 0.3" />
+
+- twitter [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog <https://xuwei-k.hatenablog.com>
+
+---
+class: middle
+
+- 2020: [ScalafixやWartremoverの独自ルールを仕事で活用する](https://xuwei-k.github.io/slides/Matsuri-2020/#1)
+- 2022: [WartremoverのScala 3対応](https://xuwei-k.github.io/slides/wartremover-3/#1)
+
+---
+class: middle
+
+## wartremover
+
+- Compiler plugin
+- Linter
+- [TASTy inspector](https://docs.scala-lang.org/scala3/reference/metaprogramming/tasty-inspect.html)でcompile時とは別に動かす方法増やした
+- 原理上、全ての型情報を扱えるので、何でも正確に判断できる
+- ここ数年ほとんど[@xuwei-k](https://github.com/xuwei-k)しか[コミットしてない](https://github.com/wartremover/wartremover/graphs/contributors)
+
+---
+class: middle
+
+
+## wartremover
+
+- Scala 2と3で全く別のコードを書く必要があるデメリット
+- SemanticDBの生成が遅いので、それを考慮するとSemanticRuleよりwartremoverの方が実行速い？
+- 型情報扱わないなら使うべきではない
+  - 言い換えるとscalafixのSyntacticRuleで良いなら必要ない
+
+---
+class: middle
+
+### 残してあるがscalafixの<br/>SyntacticRuleで十分な例
+
+AsInstanceOf,
+IsInstanceOf,
+Throw,
+Var,
+While,
+Return,
+Null,
+ExplicitImplicitTypes,
+DefaultArguments
+
+---
+class: middle
+
+## scalafix
+
+- SyntacticRuleとSemanticRuleで実行できることや、実行速度が異なる
+- [@xuwei-k](https://github.com/xuwei-k)はscalafix自体のコミッターではない
+  - 稀にpull reqする程度
+- 自作でOSSのrule多数公開してる
+  - この発表の2023-04-16時点で75個
+  - https://github.com/xuwei-k/scalafix-rules
+
+---
+class: middle
+
+## scalafix
+
+- Linterにもなるし、書き換えも出来る
+- SyntacticRuleはとても速い
+- rule実行するたびにcompileやり直さなくてよい
+  - wartremoverでもScala 3なら同様
+
+---
+class: middle
+
+### 近況
+
+- 本当に毎日のレベルで仕事かOSSでscalafix書いてる(今までの合計数百)
+- scalafixとwartremoverそれぞれ長所も短所あるので両方使ってる
+
+---
+class: middle
+
+### 近況
+
+- wartremoverのScala 3対応はほぼ終わった
+- wartremoverもscalafixも独自rule色々足した
+- scala-jsでscalafix作るためのサイト作ったことにより大幅にscalafix書きやすくなった
+
+---
+class: middle
+
+### <https://xuwei-k.github.io/scalameta-ast/>
+
+- [日本語blog](https://xuwei-k.hatenablog.com/entry/2022/10/21/150300)
+- Scalaコードを入力すると、scala-jsとscalametaで変換の後のAST表示してくれる
+- かなり細かく機能つけた
+
+---
+class: middle
+
+### <https://xuwei-k.github.io/scalameta-ast/>
+
+- dialect選択
+- SyntacticRule、SemanticRuleの雛形生成
+- Ruleの雛形においての細かい設定
+  - package、rule名、import style
+
+---
+class: middle
+
+### <https://xuwei-k.github.io/scalameta-ast/>
+
+- inputとoutput両方をscalafmtでformat
+  - jsで動かすためにscalafmt独自forkしていて面倒
+- scalafmtの設定も自由に可能
+- browserのlocal strageに前回の状態保存
+- scalametaのversion選択可能
+
+---
+class: middle
+
+### wartremoverの近況
+
+- [wartremoverのsbt pluginにscalafixのようなinput task追加した](https://xuwei-k.hatenablog.com/entry/2023/04/10/122421)
+- [Scala 3で独自にunion typeのleast upper boundを計算する仕組みを作った](https://xuwei-k.hatenablog.com/entry/2023/03/04/114947)
+
+---
+class: middle
+
+## Live Codingや<br />既存のrule説明
+
+---
+class: middle
+
+
+## おわり
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-0.15.0.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script type="text/javascript">
+      const slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
