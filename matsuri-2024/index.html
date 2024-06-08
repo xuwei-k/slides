@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scalaプロジェクトのビルド速度改善</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      ul li ul li {
+        font-size: 75%;
+      }
+      p {
+        font-size: 150%;
+      }
+      li {
+        font-size: 30px;
+      }
+      .remark-slide-content h1 {
+        font-size: 70px;
+      }
+      .remark-slide-content h2 {
+        font-size: 50px;
+      }
+      h1, h2, h3, h4 {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-weight: normal;
+        text-align: center;
+      }
+      img {
+        max-width : 100%;
+        max-height : 70%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px gray solid;
+      }
+      .s {
+        font-size: 85%;
+      }
+      .remark-code, .remark-inline-code {
+        font-size: 20px;
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      }
+      /* Two-column layout */
+      .left-column {
+        width: 50%;
+        float: left;
+      }
+      .right-column {
+        width: 45%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Scalaプロジェクトの<br/>ビルド速度改善
+
+[ScalaMatsuri 2024](https://scalamatsuri.org)
+
+2024-06-08
+
+---
+class: middle
+
+<img src="image/xuwei.gif" alt="icon" style="zoom: 0.3" />
+
+- X(旧twitter) [@xuwei_k](https://twitter.com/xuwei_k)
+- github [@xuwei-k](https://github.com/xuwei-k)
+- blog <https://xuwei-k.hatenablog.com>
+
+---
+class: middle
+
+## 誰？
+
+- Scala 2.8出る直前くらいから使ってる
+- 2009年
+- 仕事でのScala歴が13年以上？
+- Scala 2本体その他色々なScala関連OSSの権限持って貢献してる
+
+---
+class: middle
+
+## 前提の話
+
+- build速度とは？
+- 扱わないこと、方向性
+- 速度改善の目的
+
+---
+class: middle
+
+## 前提の話
+
+- どれが効果があるか？優先度高いか？は難しい
+- 手法をひたすら色々紹介していく流れ
+
+---
+class: middle
+
+## 前提の話
+
+- そもそも普通にボトルネック探したらScalaやsbtに限らない部分の最適化の余地の方が多い場合も多々
+
+---
+class: middle
+
+## OSSか、それ以外か
+
+- よほど巨大で活発でなければOSSではあまり問題にならない？
+- OSSの種類にもよる
+ - 広い意味でIOがないライブラリなら楽
+
+---
+class: middle
+
+## OSSか、それ以外か
+
+- OSSは大抵GitHub Actionsなどで無料の範囲で済む
+- よってOSSは富豪的に並列実行してることが多々
+- 普通の？プロダクト開発とは全然異なる
+
+---
+class: middle
+
+## 普通の？プロダクト開発
+
+- 通常CIのお金的コストがかかる
+- 複数人で活発に開発
+  - される場合がある
+- CIは普通は速く終わるほど良いはず
+
+---
+class: middle
+
+## 扱うこと
+
+- compileの速度とtest実行、その他含めた速度？
+- ローカルにも恩恵はあるが主にCIでの速度
+
+---
+class: middle
+
+## 扱うこと
+
+- 自分の経験や普段使用してる技術を元に話すので、全てを網羅してるわけではない
+- 主にsbt前提
+- 他でも使えるがGitHub Actions(のような)CIのシステム想定
+
+---
+class: middle
+
+## 目的やトレードオフ
+
+- 速くなればお金はかかっていいのか？
+- 速くなればビルドの設定が複雑になってもいいのか？
+
+---
+class: middle
+
+## 目的やトレードオフ
+
+- 一時的に速くなっても継続的にメンテ不可能なほどビルドが複雑になってしまったら駄目では
+
+---
+class: middle
+
+## 目的やトレードオフ
+
+- 使うお金を増やさずに速度も全体の効率も改善したい？
+- build速度改善のために、どの程度人間の工数かけるのか？
+
+---
+class: middle
+
+## 扱わないこと
+
+- Bazel
+- gitのproject分ける
+- Compiler内部の深い話
+
+---
+class: middle
+
+## Bazelのような<br/>差分buildとtest
+
+- 究極的な理想としてはこれ
+- 本気で巨大なmonorepoで頑張るなら潜在的な可能性としては1番良い？
+
+---
+class: middle
+
+## Bazelのような<br/>差分buildとtest
+
+- 2024年の時点のsbtで正確に徹底的にやるには厳しい部分が多い
+- sbt 2にはそういう機能をもっと入れたいらしい
+
+---
+class: middle
+
+## GitのProject分ける？
+
+- monorepoのメリットは捨てたくない
+
+---
+class: middle
+
+## 基本
+
+- sbtのproject分ける
+- ボトルネックの予想、把握、計測
+- sbtの設定見直す
+- CIの設定見直す
+
+---
+class: middle
+
+## sbtのproject<br/>を適切に分ける
+
+- 一番大事かもしれない
+- Scala compiler内部は一部しか並列化されていない
+- 大まかにはScala 2も3も同様
+
+---
+class: middle
+
+## sbtのproject<br/>を適切に分ける
+
+- CPUコアやメモリやネットワーク、ディクスのIOがボトルネックでないなら、分割すればある程度までスケールする
+- 分割をし過ぎると別の辛さも発生する
+
+---
+class: middle
+
+## sbtのproject<br/>を適切に分ける
+
+- 分割する単位の目安は？
+- 1つのsub projectで数万行単位？
+
+---
+class: middle
+
+## sbtのproject<br/>を適切に分ける
+
+- 本来は速度のためではなくコードの意味で分割するべき
+- 個人的な経験として、少なくともsub project数は百程度ならまだ普通に扱える
+
+---
+class: middle
+
+## -Dsbt.traces=true
+
+---
+class: middle
+
+## sbtで絶対に使うべき<br/>taskごとのtrace機能
+
+- https://github.com/sbt/sbt/pull/4576
+- デフォルトだと細かいtask全部記録して少し扱いづらいので独自に改造して使ったりしてる
+
+---
+class: middle
+
+## sbtで絶対に使うべき<br/>taskごとのtrace機能
+
+- それをGitHub Actionsでより手軽に記録して見る方法も
+- https://xuwei-k.hatenablog.com/entry/2024/06/01/103536
+
+---
+class: middle
+
+## 余計なsub project間の<br/>依存削除や整理
+
+- 必要ないのにdependsOnしない
+- 必要ないのに "test->test" の依存をしない
+
+---
+class: middle
+
+## 基本？
+
+- sbtやScalaはそれぞれ最新版を使う
+- どの程度速度に直結するか？というと場合によるが
+
+---
+class: middle
+
+## テストの並列度の理解や設定
+
+- https://xuwei-k.hatenablog.com/entry/2020/03/14/234758
+- https://xuwei-k.hatenablog.com/entry/2024/05/03/101725
+
+---
+class: middle
+
+## テストの並列度の理解や設定
+
+- sub projectごとにforkするかしないか？がとても重要
+- それによって設定も変わる
+- 適切に並列実行するには、DBなどの外部のものが衝突しないようにする工夫
+
+---
+class: middle
+
+## DBなどの外部リソース
+
+- もはやScalaやsbtに限らない話
+- 適切な単位、タイミングで立ち上げて、それらのCPUやメモリやコネクション数も見てみる
+
+---
+class: middle
+
+## DBなどの立ち上げ方
+
+- https://testcontainers.com
+- testcontainersは便利だが、多過ぎると効率悪い
+
+---
+class: middle
+
+## DBなどの立ち上げ方
+
+- 複数のミドルウェアを使うなら、それを並列で立ち上げるみたいな地味な工夫
+- 数秒から数十秒節約
+
+---
+class: middle
+
+## sbtはcommandを避け<br/>全てtaskに
+
+- commandは合成可能ではない
+- commandは並列実行できない
+- taskにしておけば並列実行可能
+
+---
+class: middle
+
+## sbtはcommandを避け<br/>全てtaskに
+
+- sbt "all task1 task2 task3"
+- のようにすれば可能な範囲で並列実行
+- inputTaskはtoTaskメソッドでtaskに変換可能
+
+---
+class: middle
+
+## sbtを立ち上げる回数を<br/>出来るだけ減らす
+
+- 1回立ち上げるごとに、数秒から、(巨大だと)数十秒無駄になる
+- もちろん、1回に詰め込み過ぎるとわかりづらくなるデメリットはある
+
+---
+class: middle
+
+## wartremoverやscalafix<br/>のためのsemanticdb生成
+
+- 遅い
+- 他に代表的なlinterやcompiler plugin？🤔
+- ある程度使うと、compile速度の半分がそれになる!?
+
+---
+class: middle
+
+## wartremover
+
+- ここ数年自分がほぼメンテしてる
+- 詳細は何度も過去に話をしたのでそちら参照
+
+---
+class: middle
+
+## 以前のscalafixや<br/>wartremoverの話
+
+- https://xuwei-k.github.io/slides/Matsuri-2020/
+- https://xuwei-k.github.io/slides/matsuri-2023/
+- https://xuwei-k.github.io/slides/wartremover-3/
+
+---
+class: middle
+
+## wartremover
+
+- Scala 3の場合は、compileと別のタイミングで実行可能だが、色々辛い
+- compileと同時の時より遅い
+- compileと同時とは稀に違う結果になる？
+
+---
+class: middle
+
+## scalafixのための<br/>semanticdb生成
+
+- scalafixはSyntacticRuleならあまり影響ない
+- 有効と無効を簡単に切り替えられるようにした方がいい
+- 例えばCIでは有効化して、デプロイ時には無効化など？
+
+---
+class: middle
+
+## sbtの細かいテクニック
+
+- set key := value は若干遅い？
+- インタラクティブにsettingを変更する方法
+- ローカルでたまに使うには便利だが
+
+---
+class: middle
+
+## sbtの細かいテクニック
+
+- sbt内部でのトポロジカルソートやり直し？
+- sbt -Dkey=value で指定し sys.props で取得がいい？
+- あるいは環境変数
+
+---
+class: middle
+
+## sbtの[Extracted.runTask](https://github.com/sbt/sbt/blob/586e0a752cd5d0f0335deaa910c4355e0e0a0e56/main/src/main/scala/sbt/Extracted.scala#L60)メソッド避ける
+
+- そもそもsbtに多少詳しい人しか使わないと思う
+- 同様の[runInputTask](https://github.com/sbt/sbt/blob/586e0a752cd5d0f0335deaa910c4355e0e0a0e56/main/src/main/scala/sbt/Extracted.scala#L78)なども
+- 直接taskを実行できて便利だが、競合したり、無駄に同じtaskが複数回実行される危険がある
+
+---
+class: middle
+
+## sbtのrunTaskメソッド避ける
+
+- 面倒でも必要に応じてDef.taskDynなど使いつつ、普通のtaskとして依存関係を持たせて定義や実行するべき
+
+
+---
+class: middle
+
+## 使ってないコードを<br/>効率よく消す方法
+
+- 直接速度に影響するほど大量でなければ、そこまで大きく変わらないが
+- 速度以外の側面でも無駄なコード少ないに越したことはない
+
+---
+class: middle
+
+## 使ってないコードを<br/>効率よく消す方法
+
+- 最近はIntelliJ IDEAが賢いのでそれ使うとわりと見つかる
+- scalaのcompiler option指定でも
+
+---
+class: middle
+
+## IntelliJ IDEAの使ってない<br/>コード検知機能
+
+- そのproject内部でグローバルに検知してくれる
+- 多少誤検知ある
+- companion objectにimplicitでinstance定義したときにobjectが使ってない判定される
+
+---
+class: middle
+
+## 使ってないコード効率よく消す<br/>自作ツール例
+
+- https://xuwei-k.hatenablog.com/entry/2023/02/08/115510
+- https://github.com/xuwei-k/unused-code
+- https://xuwei-k.hatenablog.com/entry/2022/02/14/152706
+
+---
+class: middle
+
+## compile速度
+
+- macroが必ず遅くなるわけではないが、結果的にmacroが原因なことは多い
+- compiler pluginも種類によっては注意
+- circeのautoのような再帰的に導出するものは、裏で重複して展開される可能性が高まるって爆発するので絶対ダメ
+
+---
+class: middle
+
+## compile速度のプロファイル
+
+- https://github.com/scala/scala/pull/7364
+- Scala 2のChrome traceを1度は実行してみましょう
+- -Yprofile-trace
+
+---
+class: middle
+
+## compile速度のプロファイル
+
+- Scala 3にも入る？
+- https://github.com/scala/scala3/pull/19897
+
+---
+class: middle
+
+## Scala 3のinlineでの<br/>compile速度爆発との戦い
+
+- 前にblog書いた
+- https://xuwei-k.hatenablog.com/entry/2022/03/30/142529
+
+---
+class: middle
+
+## compile速度のプロファイル
+
+- Scala 3用で独自に作ったが、公式に前述のものが入れば必要なくなりそう
+- https://xuwei-k.hatenablog.com/entry/2022/11/12/160933
+- https://github.com/xuwei-k/scala3profile
+
+---
+class: middle
+
+## compileとtestでJVMのprofile
+
+- 個人的によく使ってる https://visualvm.github.io/
+- その他JVMには色々あるので使えるものはなんでも使おう
+
+---
+class: middle
+
+## testでJVMのprofile
+
+- 余計なスレッドや、スレッドプール、コネクションプールが作られ過ぎていないか？
+- ActorSystem気軽に作ると結構無駄なので注意
+
+---
+class: middle
+
+## testでのprofile
+
+- CIでは、JVMとその他含めてメモリが効率的に使えているか？
+- 意味なくメモリなどを使い過ぎているプロセスはないか？
+- JVMには色々なツールが揃ってるのでフル活用
+
+---
+class: middle
+
+## CI上での計測
+
+- GitHub Actionsだと、例えばこういうものも
+- https://github.com/catchpoint/workflow-telemetry-action
+- ただし、細かい部分不満がある、一部正しく取れない
+
+---
+class: middle
+
+## CIでのキャッシュ効率
+
+- 独自にS3保存などの方がいい場合も？
+- https://synamon.hatenablog.com/entry/2022/11/18/173223 
+- keyの設計を必ずしっかり
+- https://xuwei-k.hatenablog.com/entry/2020/03/16/005728
+
+---
+class: middle
+
+## CIでのキャッシュ効率
+
+- GitHub Actions公式の制約に注意
+- 容量の制約
+- default branchで保存しないと他で使えない
+- しっかりキャッシュがヒットしてるか定期的にログなどで確認
+
+---
+class: middle
+
+## CIで並列job
+
+- お金で時間を買う方法
+- 効率は犠牲になるが、ある程度までなら簡単に速くなるので、人間が工夫を頑張る工数は節約
+- テスト名のhashでやるなど
+- https://labs.septeni.co.jp/entry/2018/11/23/170627
+
+---
+class: middle
+
+## CIで並列job
+
+- compileは1つでその後testなどは分岐？
+- その場合にsbtのremote cacheではなくworkspace丸ごとuploadしたほうが速い、といったノウハウ
+- あるいは、相対的にcompileのコストが低いなら、最初から富豪的にcompileも重複して実行？
+
+---
+class: middle
+
+## sbt-projectmatrix<br/>の使用検討
+
+- https://github.com/sbt/sbt-projectmatrix
+- デフォルトではsbtは "++ 3.x" などでscala versionを切り替えるが、これは状態を変更している
+- 状態を変更しないと他のversionでbuildが出来ないのはデメリット
+
+---
+class: middle
+
+## sbt-projectmatrix<br/>の使用検討
+
+- Scalaのversion以外でも他にも色々な意味でcross buildしたい場合
+- sbt 2ではこれがデフォルトになる？
+- 普通に設定したら並列にできないものまで並列で可能になるので
+
+---
+class: middle
+
+## sbt-projectmatrix<br/>の使用検討
+
+- 全体としての効率重視したい場合？
+- CIのjob分けるより、効率はいいはず？
+
+---
+class: middle
+
+## sbtのconcurrentRestrictions
+
+- 以前のテストの並列の話のblogにも書いたが
+- デフォルトのままではなく細かく変えた方がいい場合は多々ある
+
+---
+class: middle
+
+## 個々のtest時間を集計してみる
+
+- 例えばscalatestだと `-oD` のようなオプションがあります
+- それをさらにいい感じに集計しないと・・・
+- これだけでボトルネックわかるか？というと
+
+---
+class: middle
+
+## pipelineの有効化検討
+
+- ThisBuild / usePipelining := true
+- Scala 2にも3にもある
+- 3に入ったのは最近(2024年4月)
+- https://github.com/scala/scala3/pull/18880
+
+---
+class: middle
+
+## pipelineの有効化検討
+
+- 今回のScala祭で話がある？
+- 普通のcompile option設定ではなく、build toolと連携した特別な設定が必要
+
+---
+class: middle
+
+## pipelineの有効化検討
+
+- 最大、数割程度速くなる可能性？
+- まだそこまで広く使われてないので、罠にハマる可能性もありそう
+
+---
+class: middle
+
+## buildファイルの<br/>Scala書き過ぎない
+
+- sbtが多少？好きな人以外は、そもそもそこを頑張らないと思うが
+- 使わない部分も必ずcompileされるので
+- sbtとしてのbuildファイルに書く必然性がないものは他の場所に
+
+---
+class: middle
+
+## 使っているsbt plugin見直す
+
+- 稀にsbt pluginせいで遅いことがある。あった
+- ほぼ使ってないものや、メンテされてない古いものは場合によって脱却しよう
+- maven centralではなく古い非推奨な`repo.scala-sbt.org`のresolverに置いてあるものも注意
+
+---
+class: middle
+
+## テストの依存の工夫
+
+- https://xuwei-k.hatenablog.com/entry/2022/10/09/124418
+
+---
+class: middle
+
+- 数日前書いた記事
+- Scalaやsbt直接関係ない
+- build時間の統計取ったり様々な角度から
+- https://xuwei-k.hatenablog.com/entry/2024/06/07/074942
+
+---
+class: middle
+
+## まとめ
+
+- Scalaのcompileそのものが原因で遅いことはないとは言い切れないが、そこだけがボトルネックになるのは非常に稀です
+- 仮にcompileが遅くても、CI全体で見るとtest時間も結構な割合を占めるはずで、そこはあまりScala特有ではない
+
+---
+class: middle
+
+## まとめ
+
+- 色々やって、それでももっと速くしたい場合は、最終的にはお金でスケールする余地を残して、作ってるプロダクトがCI程度のお金が大したことないほど儲ければ問題ないのでは？
+
+---
+class: middle
+
+## まとめ
+
+- 今回紹介したような手法ほぼ全て試してもまだ圧倒的に遅いと感じるならば、他の言語やbuild toolを検討した方がいい可能性はある？
+- 思っている以上に手段は数多くあるので、目的に応じて適度に頑張りましょう
+
+---
+class: middle
+
+## おわり
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-0.15.0.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      const slideshow = remark.create({
+        highlightStyle: "railscasts"
+      });
+      slideshow.on('beforeShowSlide', function (slide) {
+        $("a[href^='http://']").attr("target", "_blank");
+        $("a[href^='https://']").attr("target", "_blank");
+      });
+    </script>
+  </body>
+</html>
